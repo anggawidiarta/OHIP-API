@@ -28,4 +28,7 @@ coverage
 *.sw?
 .env
 
+# IDE directories and files
+_App.vue
+
 *.tsbuildinfo
