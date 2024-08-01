@@ -26,12 +26,42 @@
               This page is used to generate an access token for your
               application.
             </p>
-            <button
-              @click="generateAccessToken"
-              class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
-            >
-              Generate Access Token
-            </button>
+            <div class="grid grid-cols-2 w-fit gap-3">
+              <button
+                @click="generateAccessToken"
+                class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
+              >
+                Generate Access Token
+              </button>
+              <button
+                disabled
+                @click="generateAccessToken"
+                class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
+              >
+                Generate Access Token
+              </button>
+              <button
+                disabled
+                @click="generateAccessToken"
+                class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
+              >
+                Generate Access Token
+              </button>
+              <button
+                disabled
+                @click="generateAccessToken"
+                class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
+              >
+                Generate Access Token
+              </button>
+              <button
+                disabled
+                @click="generateAccessToken"
+                class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
+              >
+                Generate Access Token
+              </button>
+            </div>
           </div>
         </header>
       </div>
