@@ -34,29 +34,31 @@
                 Generate Access Token
               </button>
               <button
-                disabled
+                :disabled="!token?true:false"
                 @click="generateAccessToken"
                 class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
               >
                 Generate Access Token
               </button>
               <button
-                disabled
+              :disabled="!token?true:false"
+
                 @click="generateAccessToken"
                 class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
               >
                 Generate Access Token
               </button>
               <button
-                disabled
-                @click="generateAccessToken"
+              
+              :disabled="!token?true:false"
+              @click="generateAccessToken"
                 class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
               >
                 Generate Access Token
               </button>
               <button
-                disabled
-                @click="generateAccessToken"
+              :disabled="!token?true:false"
+              @click="generateAccessToken"
                 class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
               >
                 Generate Access Token
@@ -80,6 +82,8 @@ import { ref } from "vue";
 import apiService from "@/services/apiService";
 import axios from "axios";
 
+const token = ref("");
+
 const {
   VITE_CLIENT_ID,
   VITE_CLIENT_SECRET,
@@ -87,11 +91,13 @@ const {
   VITE_PASSWORD,
   VITE_BASE_URL,
 } = import.meta.env;
+//  url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`
 
+//`http://localhost:5173/api/oauth/v1/tokens`
 const generateAccessToken = async () => {
   try {
     const response = await axios({
-      url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`,
+      url: `${VITE_BASE_URL}/api/oauth/v1/tokens`,
       method: "POST",
       data: {
         username: VITE_USERNAME,

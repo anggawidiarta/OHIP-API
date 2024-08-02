@@ -18,7 +18,7 @@ export default defineConfig({
           "https://ca03-mtca1ua-oc.hospitality-api.ap-sydney-1.ocs.oc-test.com",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
-        ws: true,
+      
       },
     },
   },
