@@ -28,7 +28,7 @@
             </p>
             <button
                 @click="generateAccessToken"
-                class="bg-yellow-500 my-4 text-white text-2xl font-medium px-4 py-2 rounded shadow"
+                class="bg-yellow-700 hover:bg-yellow-300 my-4 text-white text-2xl font-medium px-4 py-2 rounded shadow transition-all duration-150"
               >
                 Generate Access Token
               </button>
