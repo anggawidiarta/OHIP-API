@@ -26,13 +26,14 @@
               This page is used to generate an access token for your
               application.
             </p>
-            <div class="grid grid-cols-2 w-fit gap-3">
-              <button
+            <button
                 @click="generateAccessToken"
-                class="bg-green-500 text-white text-2xl font-medium px-4 py-2 rounded shadow"
+                class="bg-yellow-500 my-4 text-white text-2xl font-medium px-4 py-2 rounded shadow"
               >
                 Generate Access Token
               </button>
+              <p class="text-red-500 mb-2">*You Need To Generate Access Token First To Use These Functions</p>
+            <div class="grid grid-cols-2 w-fit gap-3">
               <button
                 :disabled="!token?true:false"
                 @click="generateAccessToken"
@@ -116,6 +117,7 @@ const generateAccessToken = async () => {
           "Basic " + btoa(VITE_CLIENT_ID + ":" + VITE_CLIENT_SECRET),
       },
     });
+    token.value = response.data;
     console.log(response.data);
   } catch (error) {
     console.log(error);
