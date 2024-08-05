@@ -17,6 +17,47 @@ const {
   VITE_APP_KEY,
 } = import.meta.env;
 
+// #region params
+const roomStayStartDate = ref(new Date().toISOString().split("T")[0]);
+const roomStayEndDate = ref(
+  new Date(new Date().setDate(new Date().getDate() + 1))
+    .toISOString()
+    .split("T")[0]
+);
+const roomStayQuantity = ref();
+const childAge = ref();
+const ratePlanCode = ref();
+const roomTypeCode = ref();
+const includeClosedRates = ref();
+const includeDefaultRatePlanSet = ref();
+const ratePlanSet = ref();
+const pagePointerKey = ref();
+const bucket1Count = ref();
+const bucket2Count = ref();
+const bucket3Count = ref();
+const bucket4Count = ref();
+const bucket5Count = ref();
+const fullStayTimeSpanStartDate = ref();
+const fullStayTimeSpanEndDate = ref();
+const prevailingRate = ref();
+const rateCategory = ref();
+const rateClass = ref();
+const rateGroup = ref();
+const features = ref();
+const reservationGuestId = ref();
+const reservationGuestIdType = ref();
+const hotelReservationId = ref();
+const hotelReservationIdType = ref();
+const ratePlanInfo = ref();
+const returnOnlyAvailableRateCodes = ref();
+const resGuaranteeInfo = ref();
+const roomTypeInfo = ref();
+const membershipIdNumber = ref();
+const smokingPreference = ref();
+const adults = ref();
+const children = ref(0);
+// #endregion
+
 //  url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`
 
 const generateAccessToken = async () => {
@@ -44,22 +85,50 @@ const generateAccessToken = async () => {
   } catch (error) {
     console.log(error);
   } finally {
-    console.log(VITE_CLIENT_ID);
+    // console.log(VITE_CLIENT_ID);
   }
 };
 
 const getHotelAvailability = async () => {
   try {
-    console.log("Access Token:", token.value.access_token); // Log the access token
     const response = await axios({
       url: `http://localhost:5173/api/par/v1/hotels/SUMBA/availability`,
       method: "GET",
       params: {
-        roomStayStartDate: "2024-08-05",
-        roomStayEndDate: "2024-08-06",
-        roomStayQuantity: 2,
-        adults: 1,
-        children: 0,
+        roomStayStartDate: roomStayStartDate.value,
+        roomStayEndDate: roomStayEndDate.value,
+        roomStayQuantity: roomStayQuantity.value,
+        adults: adults.value,
+        children: children.value,
+        childAge: childAge.value,
+        ratePlanCode: ratePlanCode.value,
+        roomTypeCode: roomTypeCode.value,
+        includeClosedRates: includeClosedRates.value,
+        includeDefaultRatePlanSet: includeDefaultRatePlanSet.value,
+        ratePlanSet: ratePlanSet.value,
+        pagePointerKey: pagePointerKey.value,
+        bucket1Count: bucket1Count.value,
+        bucket2Count: bucket2Count.value,
+        bucket3Count: bucket3Count.value,
+        bucket4Count: bucket4Count.value,
+        bucket5Count: bucket5Count.value,
+        fullStayTimeSpanStartDate: fullStayTimeSpanStartDate.value,
+        fullStayTimeSpanEndDate: fullStayTimeSpanEndDate.value,
+        prevailingRate: prevailingRate.value,
+        rateCategory: rateCategory.value,
+        rateClass: rateClass.value,
+        rateGroup: rateGroup.value,
+        features: features.value,
+        reservationGuestId: reservationGuestId.value,
+        reservationGuestIdType: reservationGuestIdType.value,
+        hotelReservationId: hotelReservationId.value,
+        hotelReservationIdType: hotelReservationIdType.value,
+        ratePlanInfo: ratePlanInfo.value,
+        returnOnlyAvailableRateCodes: returnOnlyAvailableRateCodes.value,
+        resGuaranteeInfo: resGuaranteeInfo.value,
+        roomTypeInfo: roomTypeInfo.value,
+        membershipIdNumber: membershipIdNumber.value,
+        smokingPreference: smokingPreference.value,
         limit: 5,
       },
       headers: {
@@ -69,12 +138,41 @@ const getHotelAvailability = async () => {
         "Access-Control-Allow-Origin": "*",
         "cache-control": "no-cache",
         "x-hotelid": "SUMBA",
-        "x-app-key": VITE_APP_KEY,
         Authorization: "Bearer " + token.value.access_token,
       },
     });
     jsonData.value = response.data;
     console.log(jsonData);
+    console.log(adults);
+  } catch (error) {
+    console.error(
+      "Error fetching hotel availability:",
+      error.response ? error.response.data : error.message
+    );
+  } finally {
+    console.log(VITE_CLIENT_ID);
+  }
+};
+
+const getRatePlanDetail = async () => {
+  try {
+    const response = await axios({
+      url: `http://localhost:5173/api/par/v1/hotels/SUMBA/rates/${ratePlanCode}`,
+      method: "GET",
+      params: {},
+      headers: {
+        "Accept-Language": "*",
+        "Content-Type": "application/json",
+        "x-app-key": VITE_APP_KEY,
+        "Access-Control-Allow-Origin": "*",
+        "cache-control": "no-cache",
+        "x-hotelid": "SUMBA",
+        Authorization: "Bearer " + token.value.access_token,
+      },
+    });
+    jsonData.value = response.data;
+    console.log(jsonData);
+    console.log(adults);
   } catch (error) {
     console.error(
       "Error fetching hotel availability:",
@@ -110,9 +208,7 @@ const getHotelAvailability = async () => {
             </svg>
           </div>
         </nav>
-        <header
-          class="container items-center px-4 mt-10 h-full lg:flex lg:mt-0"
-        >
+        <header class="container px-4 mt-10 lg:flex lg:mt-16">
           <div class="w-full">
             <h1 class="text-4xl font-bold capitalize lg:text-6xl">
               Generate Access Token Page
@@ -134,48 +230,239 @@ const getHotelAvailability = async () => {
             <p class="mb-2 text-green-500" v-else-if="token">
               " Token Has Been Generated Successfully
             </p>
-            <div class="flex flex-col gap-3 w-fit">
-              <button
-                :disabled="!token ? true : false"
-                @click="getHotelAvailability"
-                class="px-4 py-2 text-2xl font-medium text-white bg-green-500 rounded shadow"
+            <div class="flex flex-col gap-6 w-full">
+              <!-- #region getHotelAvailability -->
+              <div
+                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
               >
-                Search Hotel Availability
-              </button>
-              <button
-                :disabled="!token ? true : false"
-                @click="generateAccessToken"
-                class="px-4 py-2 text-2xl font-medium text-white bg-green-500 rounded shadow"
+                <label class="flex gap-2 items-center input input-bordered">
+                  Start Date:
+                  <input type="date" v-model="roomStayStartDate" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  End Date:
+                  <input type="date" v-model="roomStayEndDate" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Room Quantity:
+                  <input
+                    type="number"
+                    v-model="roomStayQuantity"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Adults:
+                  <input type="number" v-model="adults" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Children:
+                  <input type="number" v-model="children" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Child Age:
+                  <input type="number" v-model="childAge" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Plan Code:
+                  <input type="text" v-model="ratePlanCode" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Room Type Code:
+                  <input type="text" v-model="roomTypeCode" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Include Closed Rates:
+                  <input type="checkbox" v-model="includeClosedRates" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Include Default Rate Plan Set:
+                  <input type="checkbox" v-model="includeDefaultRatePlanSet" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Plan Set:
+                  <input type="text" v-model="ratePlanSet" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Page Pointer Key:
+                  <input type="text" v-model="pagePointerKey" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Bucket 1 Count:
+                  <input type="number" v-model="bucket1Count" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Bucket 2 Count:
+                  <input type="number" v-model="bucket2Count" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Bucket 3 Count:
+                  <input type="number" v-model="bucket3Count" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Bucket 4 Count:
+                  <input type="number" v-model="bucket4Count" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Bucket 5 Count:
+                  <input type="number" v-model="bucket5Count" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Full Stay Time Span Start Date:
+                  <input
+                    type="date"
+                    v-model="fullStayTimeSpanStartDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Full Stay Time Span End Date:
+                  <input
+                    type="date"
+                    v-model="fullStayTimeSpanEndDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Prevailing Rate:
+                  <input type="text" v-model="prevailingRate" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Category:
+                  <input type="text" v-model="rateCategory" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Class:
+                  <input type="text" v-model="rateClass" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Group:
+                  <input type="text" v-model="rateGroup" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Features:
+                  <input type="text" v-model="features" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Reservation Guest ID:
+                  <input
+                    type="text"
+                    v-model="reservationGuestId"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Reservation Guest ID Type:
+                  <input
+                    type="text"
+                    v-model="reservationGuestIdType"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Hotel Reservation ID:
+                  <input
+                    type="text"
+                    v-model="hotelReservationId"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Hotel Reservation ID Type:
+                  <input
+                    type="text"
+                    v-model="hotelReservationIdType"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Plan Info:
+                  <input type="text" v-model="ratePlanInfo" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Return Only Available Rate Codes:
+                  <input
+                    type="checkbox"
+                    v-model="returnOnlyAvailableRateCodes"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Res Guarantee Info:
+                  <input type="text" v-model="resGuaranteeInfo" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Room Type Info:
+                  <input type="text" v-model="roomTypeInfo" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Membership ID Number:
+                  <input
+                    type="text"
+                    v-model="membershipIdNumber"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Smoking Preference:
+                  <input type="text" v-model="smokingPreference" class="grow" />
+                </label>
+                <button
+                  :disabled="!token ? true : false"
+                  @click="getHotelAvailability"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
+                >
+                  Search Hotel Availability
+                </button>
+              </div>
+              <!-- #endregion -->
+
+              <!-- #region getRatePlanDetail -->
+              <div
+                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
               >
-                Generate Access Token
-              </button>
-              <button
-                :disabled="!token ? true : false"
-                @click="generateAccessToken"
-                class="px-4 py-2 text-2xl font-medium text-white bg-green-500 rounded shadow"
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Plan Code:
+                  <input type="number" v-model="ratePlanCode" class="grow" />
+                </label>
+                <button
+                  :disabled="!token ? true : false"
+                  @click="getRatePlanDetail"
+                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                >
+                  Get Rate Plan Code Details
+                </button>
+              </div>
+              <!-- #endregion -->
+
+              <!-- #region getAvailableGuanranteeCodes  -->
+              <div
+                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
               >
-                Generate Access Token
-              </button>
-              <button
-                :disabled="!token ? true : false"
-                @click="generateAccessToken"
-                class="px-4 py-2 text-2xl font-medium text-white bg-green-500 rounded shadow"
-              >
-                Generate Access Token
-              </button>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Plan Code:
+                  <input type="number" v-model="ratePlanCode" class="grow" />
+                </label>
+                <button
+                  :disabled="!token ? true : false"
+                  @click="getRatePlanDetail"
+                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                >
+                  Get Rate Plan Code Details
+                </button>
+              </div>
             </div>
           </div>
         </header>
       </div>
     </div>
-    <div class="w-full flex flex-col md:w-4/12">
+    <div class="flex flex-col w-full md:w-4/12">
       <img
         v-if="!token"
         src="https://images.unsplash.com/photo-1536147116438-62679a5e01f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
         alt="Leafs"
-        class="object-cover w-full h-48 md:h-screen"
+        class="object-cover w-full h-full"
       />
-      <div v-else class="p-3 h-full">
+      <div v-else class="p-3">
         <JsonViewer
           :value="token"
           copyable
@@ -185,7 +472,7 @@ const getHotelAvailability = async () => {
           theme="jv-dark"
         />
       </div>
-      <div v-if="jsonData && token" class="p-3 h-full">
+      <div v-if="jsonData && token" class="p-3">
         <JsonViewer
           :value="jsonData"
           copyable
