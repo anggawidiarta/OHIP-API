@@ -58,6 +58,11 @@ const adults = ref();
 const children = ref(0);
 const arrivalDate = ref(new Date().toISOString().split("T")[0]);
 const includeInactiveFlag = ref(false);
+const ticketPostingRhythm = ref(""); // New variable
+const fetchInstructions = ref(""); // New variable
+const sellSeparate = ref(""); // New variable
+const includeGroup = ref(""); // New variable
+const descriptionWildCard = ref(""); // New variable
 // #endregion
 
 //  url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`
@@ -247,7 +252,18 @@ const getPackages = async () => {
     const response = await axios({
       url: `http://localhost:5173/api/rtp/v1/packages`,
       method: "GET",
-      params: {},
+      params: {
+        adults: adults.value,
+        children: children.value,
+        hotelId: "SUMBA",
+        startDate: "",
+        endDate: "",
+        ticketPostingRhythm: ticketPostingRhythm.value,
+        fetchInstructions: fetchInstructions.value,
+        sellSeparate: sellSeparate.value,
+        includeGroup: includeGroup.value,
+        descriptionWildCard: descriptionWildCard.value,
+      },
       headers: {
         "Accept-Language": "*",
         "Content-Type": "application/json",
@@ -569,10 +585,42 @@ const getPackages = async () => {
                 class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
               >
                 <label class="flex gap-2 items-center input input-bordered">
-                  Include Active Flag:
+                  Ticket Posting Rhythm:
                   <input
-                    type="checkbox"
-                    v-model="includeInactiveFlag"
+                    type="text"
+                    v-model="ticketPostingRhythm"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Fetch Instructions:
+                  <input
+                    type="text"
+                    v-model="fetchInstructions"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Sell Separate:
+                  <input
+                    type="text"
+                    v-model="sellSeparate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Include Group:
+                  <input
+                    type="text"
+                    v-model="includeGroup"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Description Wild Card:
+                  <input
+                    type="text"
+                    v-model="descriptionWildCard"
                     class="grow"
                   />
                 </label>
