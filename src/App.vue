@@ -98,7 +98,7 @@ const {
 const generateAccessToken = async () => {
   try {
     const response = await axios({
-      url: `${VITE_BASE_URL}/api/oauth/v1/tokens`,
+      url: `http://localhost:5173/api/oauth/v1/tokens`,
       method: "POST",
       data: {
         username: VITE_USERNAME,
@@ -113,6 +113,7 @@ const generateAccessToken = async () => {
         "Content-Type": "application/x-www-form-urlencoded",
         "Access-Control-Allow-Origin": "*",
         "cache-control": "no-cache",
+        "x-app-key":"8fef043d-1e98-47b2-99fc-7eed01c167fe",
         Authorization:
           "Basic " + btoa(VITE_CLIENT_ID + ":" + VITE_CLIENT_SECRET),
       },
