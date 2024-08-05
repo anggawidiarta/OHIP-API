@@ -295,7 +295,7 @@ const getPackages = async () => {
 
 <template>
   <div class="flex flex-wrap">
-    <div class="mb-10 w-full md:w-8/12">
+    <div class="mb-10 w-full md:w-3/4">
       <div class="container mx-auto h-full sm:p-10">
         <nav class="flex justify-between items-center px-4">
           <div class="text-4xl font-bold">
@@ -641,7 +641,7 @@ const getPackages = async () => {
         </header>
       </div>
     </div>
-    <div class="flex flex-col w-full md:w-4/12">
+    <div class="flex flex-col w-full md:w-3/12">
       <img
         v-if="!token"
         src="https://images.unsplash.com/photo-1536147116438-62679a5e01f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
