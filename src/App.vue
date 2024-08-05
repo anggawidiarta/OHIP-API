@@ -59,11 +59,17 @@ const adults = ref();
 const children = ref(0);
 const arrivalDate = ref(new Date().toISOString().split("T")[0]);
 const includeInactiveFlag = ref(false);
-const ticketPostingRhythm = ref("");
-const fetchInstructions = ref("");
-const sellSeparate = ref("");
-const includeGroup = ref("");
-const descriptionWildCard = ref("");
+const ticketPostingRhythm = ref();
+const fetchInstructions = ref();
+const sellSeparate = ref();
+const includeGroup = ref();
+const descriptionWildCard = ref();
+const startDate = ref(new Date().toISOString().split("T")[0]);
+const endDate = ref(
+  new Date(new Date().setDate(new Date().getDate() + 1))
+    .toISOString()
+    .split("T")[0]
+);
 // #endregion
 
 //  url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`
@@ -257,8 +263,8 @@ const getPackages = async () => {
         adults: adults.value,
         children: children.value,
         hotelId: "SUMBA",
-        startDate: "",
-        endDate: "",
+        startDate: startDate.value,
+        endDate: endDate.value,
         ticketPostingRhythm: ticketPostingRhythm.value,
         fetchInstructions: fetchInstructions.value,
         sellSeparate: sellSeparate.value,
@@ -585,6 +591,14 @@ const getPackages = async () => {
               <div
                 class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
               >
+                <label class="flex gap-2 items-center input input-bordered">
+                  Start Date:
+                  <input type="date" v-model="startDate" class="grow" />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  End Date:
+                  <input type="date" v-model="endDate" class="grow" />
+                </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Ticket Posting Rhythm:
                   <input
