@@ -56,6 +56,8 @@ const membershipIdNumber = ref();
 const smokingPreference = ref();
 const adults = ref();
 const children = ref(0);
+const arrivalDate = ref(new Date().toISOString().split("T")[0]);
+const includeInactiveFlag = ref(false);
 // #endregion
 
 //  url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`
@@ -81,7 +83,6 @@ const generateAccessToken = async () => {
       },
     });
     token.value = response.data;
-    console.log(response.data);
   } catch (error) {
     console.log(error);
   } finally {
@@ -142,8 +143,6 @@ const getHotelAvailability = async () => {
       },
     });
     jsonData.value = response.data;
-    console.log(jsonData);
-    console.log(adults);
   } catch (error) {
     console.error(
       "Error fetching hotel availability:",
@@ -180,6 +179,93 @@ const getRatePlanDetail = async () => {
     );
   } finally {
     console.log(VITE_CLIENT_ID);
+  }
+};
+
+const getAvailableGuarantee = async () => {
+  try {
+    const response = await axios({
+      url: `http://localhost:5173/api/par/v1/hotels/SUMBA/guarantees`,
+      method: "GET",
+      params: {
+        ratePlanCode: ratePlanCode.value,
+        arrivalDate: arrivalDate.value,
+        hotelId: "SUMBA",
+      },
+      headers: {
+        "Accept-Language": "*",
+        "Content-Type": "application/json",
+        "x-app-key": VITE_APP_KEY,
+        "Access-Control-Allow-Origin": "*",
+        "cache-control": "no-cache",
+        "x-hotelid": "SUMBA",
+        Authorization: "Bearer " + token.value.access_token,
+      },
+    });
+    jsonData.value = response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching hotel availability:",
+      error.response ? error.response.data : error.message
+    );
+  } finally {
+    // console.log(VITE_CLIENT_ID);
+  }
+};
+
+const getPaymentMethod = async () => {
+  try {
+    const response = await axios({
+      url: `http://localhost:5173/api/lov/v1/listOfValues/hotels/SUMBA/paymentMethods`,
+      method: "GET",
+      params: {
+        includeInactiveFlag: includeInactiveFlag.value,
+      },
+      headers: {
+        "Accept-Language": "*",
+        "Content-Type": "application/json",
+        "x-app-key": VITE_APP_KEY,
+        "Access-Control-Allow-Origin": "*",
+        "cache-control": "no-cache",
+        "x-hotelid": "SUMBA",
+        Authorization: "Bearer " + token.value.access_token,
+      },
+    });
+    jsonData.value = response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching hotel availability:",
+      error.response ? error.response.data : error.message
+    );
+  } finally {
+    // console.log(VITE_CLIENT_ID);
+  }
+};
+
+const getPackages = async () => {
+  try {
+    const response = await axios({
+      url: `http://localhost:5173/api/rtp/v1/packages`,
+      method: "GET",
+      params: {},
+      headers: {
+        "Accept-Language": "*",
+        "Content-Type": "application/json",
+        "x-app-key": VITE_APP_KEY,
+        "Access-Control-Allow-Origin": "*",
+        "cache-control": "no-cache",
+        "x-hotelid": "SUMBA",
+        Authorization: "Bearer " + token.value.access_token,
+      },
+    });
+    jsonData.value = response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching hotel availability:",
+      error.response ? error.response.data : error.message
+    );
+  } finally {
+    // console.log(VITE_CLIENT_ID);
   }
 };
 </script>
@@ -442,14 +528,63 @@ const getRatePlanDetail = async () => {
                   Rate Plan Code:
                   <input type="number" v-model="ratePlanCode" class="grow" />
                 </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Arrival Date:
+                  <input type="date" v-model="arrivalDate" class="grow" />
+                </label>
                 <button
                   :disabled="!token ? true : false"
-                  @click="getRatePlanDetail"
+                  @click="getAvailableGuarantee"
                   class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
                 >
-                  Get Rate Plan Code Details
+                  Get Available Guarantee
                 </button>
               </div>
+              <!-- #endregion -->
+
+              <!-- #region getPaymentMethods  -->
+              <div
+                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+              >
+                <label class="flex gap-2 items-center input input-bordered">
+                  Include Active Flag:
+                  <input
+                    type="checkbox"
+                    v-model="includeInactiveFlag"
+                    class="grow"
+                  />
+                </label>
+                <button
+                  :disabled="!token ? true : false"
+                  @click="getPaymentMethod"
+                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                >
+                  Get Payment Methods
+                </button>
+              </div>
+              <!-- #endregion -->
+
+              <!-- #region getPackages  -->
+              <div
+                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+              >
+                <label class="flex gap-2 items-center input input-bordered">
+                  Include Active Flag:
+                  <input
+                    type="checkbox"
+                    v-model="includeInactiveFlag"
+                    class="grow"
+                  />
+                </label>
+                <button
+                  :disabled="!token ? true : false"
+                  @click="getPackages"
+                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                >
+                  Get Available Packages
+                </button>
+              </div>
+              <!-- #endregion -->
             </div>
           </div>
         </header>
