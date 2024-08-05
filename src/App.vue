@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap">
-    <div class="w-full sm:w-8/12 mb-10">
+    <div class="w-full md:w-8/12 mb-10">
       <div class="container mx-auto h-full sm:p-10">
         <nav class="flex px-4 justify-between items-center">
           <div class="text-4xl font-bold">
@@ -27,7 +27,7 @@
         >
           <div class="w-full">
             <h1 class="text-4xl lg:text-6xl font-bold capitalize">
-              Search Hotel Availability
+              Generate Access Token Page
             </h1>
             <div class="w-20 h-2 bg-green-700 my-4"></div>
             <p class="text-xl mb-10">
@@ -46,7 +46,7 @@
             <p class="text-green-500 mb-2" v-else-if="token">
               " Token Has Been Generated Successfully
             </p>
-            <div class="grid grid-cols-2 w-fit gap-3">
+            <div class="flex flex-col w-fit gap-3">
               <button
                 :disabled="!token ? true : false"
                 @click="generateAccessToken"
@@ -80,15 +80,15 @@
         </header>
       </div>
     </div>
-    <div class="w-full sm:w-4/12">
+    <div class="w-full md:w-4/12">
       <img
         v-if="!token"
         src="https://images.unsplash.com/photo-1536147116438-62679a5e01f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
         alt="Leafs"
-        class="w-full h-48 object-cover sm:h-screen"
+        class="w-full h-48 object-cover md:h-screen"
       />
-      <div v-else class="p-3 h-full overflow-y-auto whitespace-pre-wrap">
-        {{token.access_token}}
+      <div v-else class="p-3 h-full">
+        <JsonViewer :value="token" copyable expandable boxed sort theme="jv-light"/>
       </div>
     </div>
   </div>
@@ -97,6 +97,7 @@
 <!-- eslint-disable -->
 <script setup>
 import { ref } from "vue";
+import { JsonViewer } from "vue3-json-viewer";
 import apiService from "@/services/apiService";
 import axios from "axios";
 
