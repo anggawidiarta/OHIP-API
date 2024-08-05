@@ -7,6 +7,7 @@ import axios from "axios";
 const token = ref("");
 const isLoading = ref(true);
 const jsonData = ref({});
+const hotelId = ref("SUMBA");
 
 const {
   VITE_CLIENT_ID,
@@ -58,11 +59,11 @@ const adults = ref();
 const children = ref(0);
 const arrivalDate = ref(new Date().toISOString().split("T")[0]);
 const includeInactiveFlag = ref(false);
-const ticketPostingRhythm = ref(""); // New variable
-const fetchInstructions = ref(""); // New variable
-const sellSeparate = ref(""); // New variable
-const includeGroup = ref(""); // New variable
-const descriptionWildCard = ref(""); // New variable
+const ticketPostingRhythm = ref("");
+const fetchInstructions = ref("");
+const sellSeparate = ref("");
+const includeGroup = ref("");
+const descriptionWildCard = ref("");
 // #endregion
 
 //  url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`
@@ -161,7 +162,7 @@ const getHotelAvailability = async () => {
 const getRatePlanDetail = async () => {
   try {
     const response = await axios({
-      url: `http://localhost:5173/api/par/v1/hotels/SUMBA/rates/${ratePlanCode}`,
+      url: `http://localhost:5173/api/par/v1/hotels/SUMBA/rates/${ratePlanCode.value}`,
       method: "GET",
       params: {},
       headers: {
@@ -594,27 +595,15 @@ const getPackages = async () => {
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Fetch Instructions:
-                  <input
-                    type="text"
-                    v-model="fetchInstructions"
-                    class="grow"
-                  />
+                  <input type="text" v-model="fetchInstructions" class="grow" />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Sell Separate:
-                  <input
-                    type="text"
-                    v-model="sellSeparate"
-                    class="grow"
-                  />
+                  <input type="text" v-model="sellSeparate" class="grow" />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Include Group:
-                  <input
-                    type="text"
-                    v-model="includeGroup"
-                    class="grow"
-                  />
+                  <input type="text" v-model="includeGroup" class="grow" />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Description Wild Card:
