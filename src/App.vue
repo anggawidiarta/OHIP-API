@@ -291,6 +291,38 @@ const getPackages = async () => {
     // console.log(VITE_CLIENT_ID);
   }
 };
+
+const getGuestProfile = async () => {
+  try {
+    const response = await axios({
+      url: "http://localhost:5173/api",
+      params: {
+        profileName: "",
+        givenName: "",
+        profileType: "",
+        summaryInfo: "",
+        hotelId:'',
+        limit:'',
+        city:'',
+        state:'',
+        postalCode:'',
+        communication:'',
+        membership:'',
+        searchType:'',
+        fetchInstructions:'',
+      },
+      headers: {
+        "Accept-Language": "*",
+        "Content-Type": "application/json",
+        "x-app-key": VITE_APP_KEY,
+        "Access-Control-Allow-Origin": "*",
+        "cache-control": "no-cache",
+        "x-hotelid": "SUMBA",
+        Authorization: "Bearer " + token.value.access_token,
+      },
+    });
+  } catch (error) {}
+};
 </script>
 
 <template>
