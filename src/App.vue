@@ -301,15 +301,15 @@ const getGuestProfile = async () => {
         givenName: "",
         profileType: "",
         summaryInfo: "",
-        hotelId:'',
-        limit:'',
-        city:'',
-        state:'',
-        postalCode:'',
-        communication:'',
-        membership:'',
-        searchType:'',
-        fetchInstructions:'',
+        hotelId: "",
+        limit: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        communication: "",
+        membership: "",
+        searchType: "",
+        fetchInstructions: "",
       },
       headers: {
         "Accept-Language": "*",
@@ -321,7 +321,12 @@ const getGuestProfile = async () => {
         Authorization: "Bearer " + token.value.access_token,
       },
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error(
+      "Error fetching hotel availability:",
+      error.response ? error.response.data : error.message
+    );
+  }
 };
 </script>
 
