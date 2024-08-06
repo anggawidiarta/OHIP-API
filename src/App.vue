@@ -295,7 +295,7 @@ const getPackages = async () => {
 
 <template>
   <div class="flex flex-wrap">
-    <div class="mb-10 w-full md:w-3/4">
+    <div class="mb-10 w-full">
       <div class="container mx-auto h-full sm:p-10">
         <nav class="flex justify-between items-center px-4">
           <div class="text-4xl font-bold">
@@ -342,7 +342,7 @@ const getPackages = async () => {
             <div class="flex flex-col gap-6 w-full">
               <!-- #region getHotelAvailability -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Start Date:
@@ -641,12 +641,12 @@ const getPackages = async () => {
         </header>
       </div>
     </div>
-    <div class="flex flex-col w-full md:w-3/12">
+    <div class="flex flex-col w-full">
       <img
         v-if="!token"
         src="https://images.unsplash.com/photo-1536147116438-62679a5e01f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
         alt="Leafs"
-        class="object-cover w-full h-full"
+        class="object-cover w-full h-24"
       />
       <div v-else class="p-3">
         <JsonViewer
