@@ -174,7 +174,7 @@ const getHotelAvailability = async () => {
       error.response ? error.response.data : error.message
     );
   } finally {
-    console.log(VITE_CLIENT_ID);
+    // console.log(VITE_CLIENT_ID);
   }
 };
 
@@ -203,7 +203,7 @@ const getRatePlanDetail = async () => {
       error.response ? error.response.data : error.message
     );
   } finally {
-    console.log(VITE_CLIENT_ID);
+    // console.log(VITE_CLIENT_ID);
   }
 };
 
@@ -223,7 +223,7 @@ const getAvailableGuarantee = async () => {
         "x-app-key": VITE_APP_KEY,
         "Access-Control-Allow-Origin": "*",
         "cache-control": "no-cache",
-        "x-hotelid": "SUMBA",
+        "x-hotelid": hotelId.value,
         Authorization: "Bearer " + token.value.access_token,
       },
     });
@@ -252,7 +252,7 @@ const getPaymentMethod = async () => {
         "x-app-key": VITE_APP_KEY,
         "Access-Control-Allow-Origin": "*",
         "cache-control": "no-cache",
-        "x-hotelid": "SUMBA",
+        "x-hotelid": hotelId.value,
         Authorization: "Bearer " + token.value.access_token,
       },
     });

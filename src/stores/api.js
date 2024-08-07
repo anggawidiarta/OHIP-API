@@ -28,6 +28,7 @@ export const useApisStore = defineStore("apis", () => {
     roomTypeCode: null,
     includeClosedRates: null,
     includeDefaultRatePlanSet: null,
+    limit: 5,
     ratePlanSet: null,
     pagePointerKey: null,
     bucket1Count: null,
@@ -69,7 +70,6 @@ export const useApisStore = defineStore("apis", () => {
     givenName: null,
     profileType: null,
     summaryInfo: null,
-    limit: null,
     city: null,
     state: null,
     postalCode: null,
@@ -147,7 +147,7 @@ export const useApisStore = defineStore("apis", () => {
           roomTypeInfo: params.roomTypeInfo,
           membershipIdNumber: params.membershipIdNumber,
           smokingPreference: params.smokingPreference,
-          limit: 5,
+          limit: params.limit,
         },
         headers: {
           "Accept-Language": "*",
@@ -187,8 +187,6 @@ export const useApisStore = defineStore("apis", () => {
         },
       });
       jsonData.value = response.data;
-      console.log(jsonData);
-      console.log(adults);
     } catch (error) {
       console.error(
         "Error fetching hotel availability:",
@@ -244,7 +242,7 @@ export const useApisStore = defineStore("apis", () => {
           "x-app-key": VITE_APP_KEY,
           "Access-Control-Allow-Origin": "*",
           "cache-control": "no-cache",
-          "x-hotelid": "SUMBA",
+          "x-hotelid": hotelId.value,
           Authorization: "Bearer " + token.value.access_token,
         },
       });
@@ -323,7 +321,7 @@ export const useApisStore = defineStore("apis", () => {
           "x-app-key": VITE_APP_KEY,
           "Access-Control-Allow-Origin": "*",
           "cache-control": "no-cache",
-          "x-hotelid": "SUMBA",
+          "x-hotelid": hotelId.value,
           Authorization: "Bearer " + token.value.access_token,
         },
       });
