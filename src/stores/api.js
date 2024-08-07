@@ -10,24 +10,56 @@ const {
   VITE_PASSWORD,
 } = import.meta.env;
 
+const hotelId = ref("SUMBA");
+
+const getHeaders = (token) => ({
+  "Accept-Language": "*",
+  "Content-Type": "application/json",
+  "x-app-key": VITE_APP_KEY,
+  "Access-Control-Allow-Origin": "*",
+  "cache-control": "no-cache",
+  "x-hotelid": hotelId.value,
+  Authorization: `Bearer ${token}`,
+});
+
+const makeAxiosRequest = async (config) => {
+  try {
+    const response = await axios(config);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error in Axios request:`,
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
 export const useApisStore = defineStore("apis", () => {
   const token = ref("");
   const jsonData = ref(null);
-  const hotelId = ref("SUMBA");
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
     roomStayEndDate: new Date(new Date().setDate(new Date().getDate() + 1))
       .toISOString()
       .split("T")[0],
+    limit: 5,
+    children: 0,
+    arrivalDate: new Date().toISOString().split("T")[0],
+    includeInactiveFlag: false,
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: new Date(new Date().setDate(new Date().getDate() + 1))
+      .toISOString()
+      .split("T")[0],
+    profileName: "*",
+    // Additional parameters
     roomStayQuantity: null,
     childAge: null,
     ratePlanCode: null,
     roomTypeCode: null,
     includeClosedRates: null,
     includeDefaultRatePlanSet: null,
-    limit: 5,
-    ratePlanSet: null,
     pagePointerKey: null,
     bucket1Count: null,
     bucket2Count: null,
@@ -52,19 +84,11 @@ export const useApisStore = defineStore("apis", () => {
     membershipIdNumber: null,
     smokingPreference: null,
     adults: null,
-    children: 0,
-    arrivalDate: new Date().toISOString().split("T")[0],
-    includeInactiveFlag: false,
     ticketPostingRhythm: null,
     fetchInstructions: null,
     sellSeparate: null,
     includeGroup: null,
     descriptionWildCard: null,
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setDate(new Date().getDate() + 1))
-      .toISOString()
-      .split("T")[0],
-    profileName: "*",
     givenName: null,
     profileType: null,
     summaryInfo: null,
@@ -93,242 +117,134 @@ export const useApisStore = defineStore("apis", () => {
           "Access-Control-Allow-Origin": "*",
           "cache-control": "no-cache",
           "x-app-key": VITE_APP_KEY,
-          Authorization:
-            "Basic " + btoa(VITE_CLIENT_ID + ":" + VITE_CLIENT_SECRET),
+          Authorization: `Basic ${btoa(
+            `${VITE_CLIENT_ID}:${VITE_CLIENT_SECRET}`
+          )}`,
         },
       });
       token.value = response.data;
     } catch (error) {
       console.log(error);
-    } finally {
-      // console.log(VITE_CLIENT_ID);
     }
   };
 
-  const getHotelAvailability = async () => {
-    try {
-      const response = await axios({
-        url: `http://localhost:5173/api/par/v1/hotels/${hotelId.value}/availability`,
-        method: "GET",
-        params: {
-          roomStayStartDate: params.roomStayStartDate,
-          roomStayEndDate: params.roomStayEndDate,
-          roomStayQuantity: params.roomStayQuantity,
-          adults: params.adults,
-          children: params.children,
-          childAge: params.childAge,
-          ratePlanCode: params.ratePlanCode,
-          roomTypeCode: params.roomTypeCode,
-          includeClosedRates: params.includeClosedRates,
-          includeDefaultRatePlanSet: params.includeDefaultRatePlanSet,
-          ratePlanSet: params.ratePlanSet,
-          pagePointerKey: params.pagePointerKey,
-          bucket1Count: params.bucket1Count,
-          bucket2Count: params.bucket2Count,
-          bucket3Count: params.bucket3Count,
-          bucket4Count: params.bucket4Count,
-          bucket5Count: params.bucket5Count,
-          fullStayTimeSpanStartDate: params.fullStayTimeSpanStartDate,
-          fullStayTimeSpanEndDate: params.fullStayTimeSpanEndDate,
-          prevailingRate: params.prevailingRate,
-          rateCategory: params.rateCategory,
-          rateClass: params.rateClass,
-          rateGroup: params.rateGroup,
-          features: params.features,
-          reservationGuestId: params.reservationGuestId,
-          reservationGuestIdType: params.reservationGuestIdType,
-          hotelReservationId: params.hotelReservationId,
-          hotelReservationIdType: params.hotelReservationIdType,
-          ratePlanInfo: params.ratePlanInfo,
-          returnOnlyAvailableRateCodes: params.returnOnlyAvailableRateCodes,
-          resGuaranteeInfo: params.resGuaranteeInfo,
-          roomTypeInfo: params.roomTypeInfo,
-          membershipIdNumber: params.membershipIdNumber,
-          smokingPreference: params.smokingPreference,
-          limit: params.limit,
-        },
-        headers: {
-          "Accept-Language": "*",
-          "Content-Type": "application/json",
-          "x-app-key": VITE_APP_KEY,
-          "Access-Control-Allow-Origin": "*",
-          "cache-control": "no-cache",
-          "x-hotelid": hotelId.value,
-          Authorization: "Bearer " + token.value.access_token,
-        },
-      });
-      jsonData.value = response.data;
-    } catch (error) {
-      console.error(
-        "Error fetching hotel availability:",
-        error.response ? error.response.data : error.message
-      );
-    } finally {
-      console.log(VITE_CLIENT_ID);
-    }
+  const apiEndpoints = {
+    hotelAvailability: `/par/v1/hotels/${hotelId.value}/availability`,
+    ratePlanDetail: `/par/v1/hotels/${hotelId.value}/rates/${params.ratePlanCode}`,
+    availableGuarantee: `/par/v1/hotels/${hotelId.value}/guarantees`,
+    paymentMethod: `/lov/v1/listOfValues/hotels/${hotelId.value}/paymentMethods`,
+    packages: `/rtp/v1/packages`,
+    guestProfile: `/crm/v1/profiles`,
   };
 
-  const getRatePlanDetail = async () => {
-    try {
-      const response = await axios({
-        url: `http://localhost:5173/api/par/v1/hotels/${hotelId.value}/rates/${ratePlanCode.value}`,
-        method: "GET",
-        params: {},
-        headers: {
-          "Accept-Language": "*",
-          "Content-Type": "application/json",
-          "x-app-key": VITE_APP_KEY,
-          "Access-Control-Allow-Origin": "*",
-          "cache-control": "no-cache",
-          "x-hotelid": "SUMBA",
-          Authorization: "Bearer " + token.value.access_token,
-        },
-      });
-      jsonData.value = response.data;
-    } catch (error) {
-      console.error(
-        "Error fetching hotel availability:",
-        error.response ? error.response.data : error.message
-      );
-    } finally {
-      console.log(VITE_CLIENT_ID);
-    }
+  const getRequestConfig = (url, additionalParams = {}) => ({
+    url: `http://localhost:5173/api${url}`,
+    method: "GET",
+    params: { ...additionalParams },
+    headers: getHeaders(token.value.access_token),
+  });
+
+  const fetchData = async (endpoint, additionalParams = {}) => {
+    jsonData.value = await makeAxiosRequest(
+      getRequestConfig(endpoint, additionalParams)
+    );
   };
 
-  const getAvailableGuarantee = async () => {
-    try {
-      const response = await axios({
-        url: `http://localhost:5173/api/par/v1/hotels/SUMBA/guarantees`,
-        method: "GET",
-        params: {
-          ratePlanCode: params.ratePlanCode,
-          arrivalDate: params.arrivalDate,
-          hotelId: hotelId.value,
-        },
-        headers: {
-          "Accept-Language": "*",
-          "Content-Type": "application/json",
-          "x-app-key": VITE_APP_KEY,
-          "Access-Control-Allow-Origin": "*",
-          "cache-control": "no-cache",
-          "x-hotelid": hotelId.value,
-          Authorization: "Bearer " + token.value.access_token,
-        },
-      });
-      jsonData.value = response.data;
-    } catch (error) {
-      console.error(
-        "Error fetching hotel availability:",
-        error.response ? error.response.data : error.message
-      );
-    } finally {
-      // console.log(VITE_CLIENT_ID);
-    }
-  };
+  const getHotelAvailability = () =>
+    fetchData(apiEndpoints.hotelAvailability, {
+      roomStayStartDate: params.roomStayStartDate,
+      roomStayEndDate: params.roomStayEndDate,
+      roomStayQuantity: params.roomStayQuantity,
+      adults: params.adults,
+      children: params.children,
+      childAge: params.childAge,
+      ratePlanCode: params.ratePlanCode,
+      roomTypeCode: params.roomTypeCode,
+      includeClosedRates: params.includeClosedRates,
+      includeDefaultRatePlanSet: params.includeDefaultRatePlanSet,
+      ratePlanSet: params.ratePlanSet,
+      pagePointerKey: params.pagePointerKey,
+      bucket1Count: params.bucket1Count,
+      bucket2Count: params.bucket2Count,
+      bucket3Count: params.bucket3Count,
+      bucket4Count: params.bucket4Count,
+      bucket5Count: params.bucket5Count,
+      fullStayTimeSpanStartDate: params.fullStayTimeSpanStartDate,
+      fullStayTimeSpanEndDate: params.fullStayTimeSpanEndDate,
+      prevailingRate: params.prevailingRate,
+      rateCategory: params.rateCategory,
+      rateClass: params.rateClass,
+      rateGroup: params.rateGroup,
+      features: params.features,
+      reservationGuestId: params.reservationGuestId,
+      reservationGuestIdType: params.reservationGuestIdType,
+      hotelReservationId: params.hotelReservationId,
+      hotelReservationIdType: params.hotelReservationIdType,
+      ratePlanInfo: params.ratePlanInfo,
+      returnOnlyAvailableRateCodes: params.returnOnlyAvailableRateCodes,
+      resGuaranteeInfo: params.resGuaranteeInfo,
+      roomTypeInfo: params.roomTypeInfo,
+      membershipIdNumber: params.membershipIdNumber,
+      smokingPreference: params.smokingPreference,
+      limit: params.limit,
+    });
 
-  const getPaymentMethod = async () => {
-    try {
-      const response = await axios({
-        url: `http://localhost:5173/api/lov/v1/listOfValues/hotels/${hotelId.value}/paymentMethods`,
-        method: "GET",
-        params: {
-          includeInactiveFlag: params.includeInactiveFlag,
-        },
-        headers: {
-          "Accept-Language": "*",
-          "Content-Type": "application/json",
-          "x-app-key": VITE_APP_KEY,
-          "Access-Control-Allow-Origin": "*",
-          "cache-control": "no-cache",
-          "x-hotelid": hotelId.value,
-          Authorization: "Bearer " + token.value.access_token,
-        },
-      });
-      jsonData.value = response.data;
-    } catch (error) {
-      console.error(
-        "Error fetching hotel availability:",
-        error.response ? error.response.data : error.message
-      );
-    } finally {
-      // console.log(VITE_CLIENT_ID);
-    }
-  };
+  const getRatePlanDetail = () => fetchData(apiEndpoints.ratePlanDetail);
 
-  const getPackages = async () => {
-    try {
-      const response = await axios({
-        url: `http://localhost:5173/api/rtp/v1/packages`,
-        method: "GET",
-        params: {
-          adults: params.adults,
-          children: params.children,
-          hotelId: hotelId.value,
-          startDate: params.startDate,
-          endDate: params.endDate,
-          ticketPostingRhythm: params.ticketPostingRhythm,
-          fetchInstructions: params.fetchInstructions,
-          sellSeparate: params.sellSeparate,
-          includeGroup: params.includeGroup,
-          descriptionWildCard: params.descriptionWildCard,
-        },
-        headers: {
-          "Accept-Language": "*",
-          "Content-Type": "application/json",
-          "x-app-key": VITE_APP_KEY,
-          "Access-Control-Allow-Origin": "*",
-          "cache-control": "no-cache",
-          "x-hotelid": hotelId.value,
-          Authorization: "Bearer " + token.value.access_token,
-        },
-      });
-      jsonData.value = response.data;
-    } catch (error) {
-      console.error(
-        "Error fetching hotel availability:",
-        error.response ? error.response.data : error.message
-      );
-    } finally {
-      // console.log(VITE_CLIENT_ID);
-    }
-  };
+  const getAvailableGuarantee = () =>
+    fetchData(apiEndpoints.availableGuarantee, {
+      ratePlanCode: params.ratePlanCode,
+      arrivalDate: params.arrivalDate,
+      hotelId: hotelId.value,
+    });
 
-  const getGuestProfile = async () => {
-    try {
-      const response = await axios({
-        url: "http://localhost:5173/api/crm/v1/profiles",
-        method: "GET",
-        params: {
-          profileName: params.profileName,
-          givenName: params.givenName,
-          profileType: params.profileType,
-          summaryInfo: params.summaryInfo,
-          hotelId: hotelId.value,
-          limit: params.limit,
-          city: params.city,
-          state: params.state,
-          postalCode: params.postalCode,
-          communication: params.communication,
-          membership: params.membership,
-          searchType: params.searchType,
-          fetchInstructions: params.fetchInstructionsGuest,
-        },
-        headers: {
-          "Accept-Language": "*",
-          "Content-Type": "application/json",
-          "x-app-key": VITE_APP_KEY,
-          "Access-Control-Allow-Origin": "*",
-          "cache-control": "no-cache",
-          "x-hotelid": hotelId.value,
-          Authorization: "Bearer " + token.value.access_token,
-        },
-      });
-      jsonData.value = response.data;
-    } catch (error) {
-      console.error(
-        "Error fetching hotel availability:",
-        error.response ? error.response.data : error.message
-      );
-    }
+  const getPaymentMethod = () =>
+    fetchData(apiEndpoints.paymentMethod, {
+      includeInactiveFlag: params.includeInactiveFlag,
+    });
+
+  const getPackages = () =>
+    fetchData(apiEndpoints.packages, {
+      adults: params.adults,
+      children: params.children,
+      hotelId: hotelId.value,
+      startDate: params.startDate,
+      endDate: params.endDate,
+      ticketPostingRhythm: params.ticketPostingRhythm,
+      fetchInstructions: params.fetchInstructions,
+      sellSeparate: params.sellSeparate,
+      includeGroup: params.includeGroup,
+      descriptionWildCard: params.descriptionWildCard,
+    });
+
+  const getGuestProfile = () =>
+    fetchData(apiEndpoints.guestProfile, {
+      profileName: params.profileName,
+      givenName: params.givenName,
+      profileType: params.profileType,
+      summaryInfo: params.summaryInfo,
+      hotelId: hotelId.value,
+      limit: params.limit,
+      city: params.city,
+      state: params.state,
+      postalCode: params.postalCode,
+      communication: params.communication,
+      membership: params.membership,
+      searchType: params.searchType,
+      fetchInstructions: params.fetchInstructionsGuest,
+    });
+
+  return {
+    token,
+    jsonData,
+    hotelId,
+    params,
+    generateAccessToken,
+    getHotelAvailability,
+    getRatePlanDetail,
+    getAvailableGuarantee,
+    getPaymentMethod,
+    getPackages,
+    getGuestProfile,
   };
 });
