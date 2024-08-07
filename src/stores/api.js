@@ -3,7 +3,6 @@ import { reactive, ref } from "vue";
 import axios from "axios";
 
 const {
-  VITE_BASE_URL,
   VITE_APP_KEY,
   VITE_CLIENT_ID,
   VITE_CLIENT_SECRET,
@@ -13,7 +12,6 @@ const {
 
 export const useApisStore = defineStore("apis", () => {
   const token = ref("");
-  const isLoading = ref(true);
   const jsonData = ref(null);
   const hotelId = ref("SUMBA");
 
@@ -66,7 +64,7 @@ export const useApisStore = defineStore("apis", () => {
     endDate: new Date(new Date().setDate(new Date().getDate() + 1))
       .toISOString()
       .split("T")[0],
-    profileName: null,
+    profileName: "*",
     givenName: null,
     profileType: null,
     summaryInfo: null,
@@ -263,16 +261,16 @@ export const useApisStore = defineStore("apis", () => {
         url: `http://localhost:5173/api/rtp/v1/packages`,
         method: "GET",
         params: {
-          adults: adults.value,
-          children: children.value,
-          hotelId: "SUMBA",
-          startDate: startDate.value,
-          endDate: endDate.value,
-          ticketPostingRhythm: ticketPostingRhythm.value,
-          fetchInstructions: fetchInstructions.value,
-          sellSeparate: sellSeparate.value,
-          includeGroup: includeGroup.value,
-          descriptionWildCard: descriptionWildCard.value,
+          adults: params.adults,
+          children: params.children,
+          hotelId: hotelId.value,
+          startDate: params.startDate,
+          endDate: params.endDate,
+          ticketPostingRhythm: params.ticketPostingRhythm,
+          fetchInstructions: params.fetchInstructions,
+          sellSeparate: params.sellSeparate,
+          includeGroup: params.includeGroup,
+          descriptionWildCard: params.descriptionWildCard,
         },
         headers: {
           "Accept-Language": "*",
@@ -280,7 +278,7 @@ export const useApisStore = defineStore("apis", () => {
           "x-app-key": VITE_APP_KEY,
           "Access-Control-Allow-Origin": "*",
           "cache-control": "no-cache",
-          "x-hotelid": "SUMBA",
+          "x-hotelid": hotelId.value,
           Authorization: "Bearer " + token.value.access_token,
         },
       });
@@ -301,19 +299,19 @@ export const useApisStore = defineStore("apis", () => {
         url: "http://localhost:5173/api/crm/v1/profiles",
         method: "GET",
         params: {
-          profileName: profileName.value,
-          givenName: givenName.value,
-          profileType: profileType.value,
-          summaryInfo: summaryInfo.value,
-          hotelId: "SUMBA",
-          limit: limit.value,
-          city: city.value,
-          state: state.value,
-          postalCode: postalCode.value,
-          communication: communication.value,
-          membership: membership.value,
-          searchType: searchType.value,
-          fetchInstructions: fetchInstructionsGuest.value,
+          profileName: params.profileName,
+          givenName: params.givenName,
+          profileType: params.profileType,
+          summaryInfo: params.summaryInfo,
+          hotelId: hotelId.value,
+          limit: params.limit,
+          city: params.city,
+          state: params.state,
+          postalCode: params.postalCode,
+          communication: params.communication,
+          membership: params.membership,
+          searchType: params.searchType,
+          fetchInstructions: params.fetchInstructionsGuest,
         },
         headers: {
           "Accept-Language": "*",
