@@ -60,6 +60,7 @@ export const useApisStore = defineStore("apis", () => {
     roomTypeCode: null,
     includeClosedRates: null,
     includeDefaultRatePlanSet: null,
+    ratePlanSet: null,
     pagePointerKey: null,
     bucket1Count: null,
     bucket2Count: null,
