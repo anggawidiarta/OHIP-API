@@ -49,7 +49,7 @@ const store = useApisStore();
             >
               Generate Access Token
             </button>
-            <p class="mb-2 text-red-500" v-if="!token">
+            <p class="mb-2 text-red-500" v-if="!store.token">
               *You Need To Generate Access Token First To Use These Functions
             </p>
             <p class="mb-2 text-green-500" v-else-if="store.token">
@@ -330,8 +330,8 @@ const store = useApisStore();
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getHotelAvailability"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getHotelAvailability"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Search Hotel Availability
@@ -352,7 +352,7 @@ const store = useApisStore();
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
+                  :disabled="!store.token ? true : false"
                   @click="store.getRatePlanDetail"
                   class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
                 >
@@ -382,7 +382,7 @@ const store = useApisStore();
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
+                  :disabled="!store.token ? true : false"
                   @click="store.getAvailableGuarantee"
                   class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
                 >
@@ -404,7 +404,7 @@ const store = useApisStore();
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
+                  :disabled="!store.token ? true : false"
                   @click="store.getPaymentMethod"
                   class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
                 >
@@ -474,8 +474,8 @@ const store = useApisStore();
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getPackages"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getPackages"
                   class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
                 >
                   Get Available Packages
@@ -525,7 +525,11 @@ const store = useApisStore();
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Limit:
-                  <input type="number" v-model="store.params.limit" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.limit"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   City:
@@ -533,35 +537,55 @@ const store = useApisStore();
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   State:
-                  <input type="text" v-model="store.params.state" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.state"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Postal Code:
-                  <input type="text" v-model="store.params.postalCode" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.postalCode"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Communication:
-                  <input type="text" v-model="communication" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.communication"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Membership:
-                  <input type="text" v-model="membership" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.membership"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Search Type:
-                  <input type="text" v-model="searchType" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.searchType"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Fetch Instructions:
                   <input
                     type="text"
-                    v-model="fetchInstructionsGuest"
+                    v-model="store.params.fetchInstructions"
                     class="grow"
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getGuestProfile"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getGuestProfile"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Guest Profile
@@ -575,14 +599,14 @@ const store = useApisStore();
     </div>
     <div class="flex flex-col w-full">
       <img
-        v-if="!token"
+        v-if="!store.token"
         src="https://images.unsplash.com/photo-1536147116438-62679a5e01f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
         alt="Leafs"
         class="object-cover w-full h-24"
       />
       <div v-else class="p-3">
         <JsonViewer
-          :value="token"
+          :value="store.token"
           copyable
           expandable
           boxed
@@ -590,9 +614,9 @@ const store = useApisStore();
           theme="jv-dark"
         />
       </div>
-      <div v-if="jsonData && token" class="p-3">
+      <div v-if="store.jsonData && store.jsonData" class="p-3">
         <JsonViewer
-          :value="jsonData"
+          :value="store.jsonData"
           copyable
           expandable
           boxed
