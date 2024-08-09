@@ -117,6 +117,7 @@ export const useApisStore = defineStore("apis", () => {
     membership: null,
     searchType: "Any",
     fetchInstructionsGuest: null,
+    guestProfileId: null,
   });
 
   const generateAccessToken = async () => {
