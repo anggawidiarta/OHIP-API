@@ -266,6 +266,69 @@ export const useApisStore = defineStore("apis", () => {
         if (profileIds.includes(params.guestProfileId)) {
           console.log("Profile Id Exists");
           // TODO: Implement the POST request for creating the reservation
+          const reservationData = {
+            reservations: {
+              reservation: {
+                reservationGuests: {
+                  profileInfo: {
+                    profileIdList: {
+                      id: params.guestProfileId,
+                      type: "Profile",
+                    },
+                  },
+                },
+                reservationPaymentMethods: {
+                  paymentMethod: "CA",
+                },
+                markAsRecentlyAccessed: true,
+                hotelId: this.hotelId,
+                reservationStatus: "Reserved",
+                roomStay: {
+                  guarantee: {
+                    onHold: false,
+                    guaranteeCode: "6PMHOLD",
+                  },
+                  roomRates: {
+                    sourceCode: "WEB",
+                    numberOfUnits: 1,
+                    rates: {
+                      rate: {
+                        start: params.startDate,
+                        end: params.endDate,
+                        base: {
+                          amountBeforeTax: 50,
+                          currencyCode: "USD",
+                        },
+                      },
+                    },
+                    start: this.currentdate,
+                    marketCode: "LEISURE",
+                    end: this.currentdateplus1,
+                    roomTypeCharged: this.roomTypeCode,
+                    ratePlanCode: this.ratePlanCode,
+                    roomType: this.roomTypeCode,
+                    pseudoRoom: false,
+                  },
+                  guestCounts: {
+                    children: params.children,
+                    adults: params.adults,
+                  },
+                  departureDate: this.currentdateplus1,
+                  arrivalDate: this.currentdate,
+                },
+              },
+            },
+            fetchInstructions: "Reservation",
+          };
+
+          const response = await axios({
+            url: `http://localhost:5173/api/rsv/v1/hotels/${hotelId.value}/reservations`,
+            method: "POST",
+            data: reservationData,
+            headers: getHeaders(token.value.access_token),
+          });
+
+          console.log(response.data);
         } else {
           console.log("Profile Id Does Not Exist");
         }
