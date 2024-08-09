@@ -235,6 +235,30 @@ export const useApisStore = defineStore("apis", () => {
       fetchInstructions: params.fetchInstructionsGuest,
     });
 
+  const createReservationWithExistingGuest = async () => {
+    try {
+      await getGuestProfile();
+      if (
+        jsonData.value &&
+        Array.isArray(jsonData.value.profileSummaries.profileInfo)
+      ) {
+        console.log("Data Received From GetGuestProfile");
+        profileIds = extractProfileIds(jsonData.value);
+        console.log(profileIds);
+        if (profileIds.includes(params.guestProfileId)) {
+          console.log("Profile Id Exists");
+          // TODO: Implement the POST request for creating the reservation
+        } else {
+          console.log("Profile Id Does Not Exist");
+        }
+      } else {
+        console.log("No Profile Data Received From GetGuestProfile");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     token,
     jsonData,
