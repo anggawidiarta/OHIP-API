@@ -1,12 +1,14 @@
 <!-- eslint-disable -->
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { JsonViewer } from "vue3-json-viewer";
 import axios from "axios";
 
 import { useApisStore } from "@/stores/api";
 
 const store = useApisStore();
+
+
 </script>
 
 <template>
@@ -58,7 +60,7 @@ const store = useApisStore();
             <div class="flex flex-col gap-6 w-full">
               <!-- #region getHotelAvailability -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Start Date:
@@ -341,7 +343,7 @@ const store = useApisStore();
 
               <!-- #region getRatePlanDetail -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
@@ -354,7 +356,7 @@ const store = useApisStore();
                 <button
                   :disabled="!store.token ? true : false"
                   @click="store.getRatePlanDetail"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Rate Plan Code Details
                 </button>
@@ -363,7 +365,7 @@ const store = useApisStore();
 
               <!-- #region getAvailableGuanranteeCodes  -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
@@ -384,7 +386,7 @@ const store = useApisStore();
                 <button
                   :disabled="!store.token ? true : false"
                   @click="store.getAvailableGuarantee"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Available Guarantee
                 </button>
@@ -393,7 +395,7 @@ const store = useApisStore();
 
               <!-- #region getPaymentMethods  -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Include Active Flag:
@@ -406,7 +408,7 @@ const store = useApisStore();
                 <button
                   :disabled="!store.token ? true : false"
                   @click="store.getPaymentMethod"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Payment Methods
                 </button>
@@ -415,7 +417,7 @@ const store = useApisStore();
 
               <!-- #region getPackages  -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Start Date:
@@ -476,7 +478,7 @@ const store = useApisStore();
                 <button
                   :disabled="!store.token ? true : false"
                   @click="store.getPackages"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Available Packages
                 </button>
@@ -485,7 +487,7 @@ const store = useApisStore();
 
               <!-- #region getGuestProfile -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Profile Name:
@@ -594,24 +596,132 @@ const store = useApisStore();
               <!-- #endregion -->
 
               <!-- #region createReservation -->
-              <div class="flex flex-col gap-4 p-4 bg-white rounded-lg shadow">
-                <h3 class="text-xl font-semibold">Create Reservation with Existing Guest</h3>
+              <form
+                @submit.prevent="store.createReservationWithExistingGuest"
+                class="grid grid-cols-2 items-center gap-4 p-4 bg-white rounded-lg shadow"
+              >
+                <h3 class="col-span-2 text-xl font-semibold text-black">
+                  Form Create Reservation with Existing Guest
+                </h3>
                 <label class="flex gap-2 items-center input input-bordered">
                   Guest Profile ID:
                   <input
+                    required
                     type="text"
                     v-model="store.params.guestProfileId"
                     class="grow"
                   />
                 </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Start Date:
+                  <input
+                    type="date"
+                    v-model="store.params.startDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate End Date:
+                  <input
+                    type="date"
+                    v-model="store.params.endDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Room Type Charged:
+                  <input
+                    type="text"
+                    v-model="store.params.roomTypeCharged"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Plan Code:
+                  <input
+                    type="text"
+                    v-model="store.params.ratePlanCode"
+                    class="grow"
+                    required
+                  />
+                </label>
+                <label class="form-control w-full">
+                  <select
+                    class="select select-bordered w-full"
+                    v-model="store.params.roomType"
+                    title="Room Type:"
+                    required
+                  >
+                    <option disabled selected>Room Type:</option>
+                    <option value="KS1B">KS1B</option>
+                    <option value="KT1B">KT1B</option>
+                    <option value="LA1B">LA1B</option>
+                    <option value="LB1B">LB1B</option>
+                    <option value="MR1B">MR1B</option>
+                    <option value="RK1B">RK1B</option>
+                    <option value="WA1B">WA1B</option>
+                  </select>
+                </label>
+                <label class="form-control w-full">
+                  <select
+                    class="select select-bordered w-full"
+                    v-model="store.params.guaranteeCode"
+                    title="Room Type:"
+                    required
+                  >
+                    <option disabled selected>Guarantee Code:</option>
+                    <option value="CC">CC</option>
+                    <option value="CHECK IN">CHECK IN</option>
+                    <option value="DRQ">DB</option>
+                    <option value="DRV">DRV</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Children:
+                  <input
+                    type="text"
+                    v-model="store.params.children"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Adults:
+                  <input
+                    type="text"
+                    v-model="store.params.adults"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Arrival Date:
+                  <input
+                    type="date"
+                    v-model="store.params.arrivalDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Departure Date:
+                  <input
+                    type="date"
+                    v-model="store.params.departureDate"
+                    class="grow"
+                  />
+                </label>
                 <button
                   :disabled="!store.token"
-                  @click="store.createReservationWithExistingGuest"
                   class="px-4 py-2 text-lg font-medium text-white bg-blue-500 rounded shadow w-fit"
                 >
                   Create Reservation
                 </button>
-              </div>
+                <p
+                  class="text-red-500 font-bold text-end"
+                  v-if="store.isGuestProfileNotFound"
+                >
+                  *Guest Profile Id Is Not Found
+                </p>
+              </form>
 
               <!-- #endregion -->
             </div>

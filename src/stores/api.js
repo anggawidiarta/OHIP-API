@@ -47,7 +47,6 @@ const extractProfileIds = (profileData) => {
       });
     });
   }
-
   return extractedProfileIds;
 };
 
@@ -55,6 +54,7 @@ export const useApisStore = defineStore("apis", () => {
   let profileIds = [];
   const token = ref("");
   const jsonData = ref(null);
+  const isGuestProfileNotFound = ref(false);
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -73,7 +73,7 @@ export const useApisStore = defineStore("apis", () => {
     // Additional parameters
     roomStayQuantity: null,
     childAge: null,
-    ratePlanCode: null,
+    ratePlanCode: "FITRACK",
     roomTypeCode: null,
     includeClosedRates: null,
     includeDefaultRatePlanSet: null,
@@ -118,6 +118,12 @@ export const useApisStore = defineStore("apis", () => {
     searchType: "Any",
     fetchInstructionsGuest: null,
     guestProfileId: null,
+    departureDate: new Date(new Date().setDate(new Date().getDate() + 1))
+      .toISOString()
+      .split("T")[0],
+    roomType: null,
+    roomTypeCharged: null,
+    guaranteeCode: null,
   });
 
   const generateAccessToken = async () => {
@@ -281,12 +287,12 @@ export const useApisStore = defineStore("apis", () => {
                   paymentMethod: "CA",
                 },
                 markAsRecentlyAccessed: true,
-                hotelId: this.hotelId,
+                hotelId: hotelId.value,
                 reservationStatus: "Reserved",
                 roomStay: {
                   guarantee: {
                     onHold: false,
-                    guaranteeCode: "6PMHOLD",
+                    guaranteeCode: params.guaranteeCode,
                   },
                   roomRates: {
                     sourceCode: "WEB",
@@ -301,20 +307,20 @@ export const useApisStore = defineStore("apis", () => {
                         },
                       },
                     },
-                    start: this.currentdate,
+                    start: params.startDate,
                     marketCode: "LEISURE",
-                    end: this.currentdateplus1,
-                    roomTypeCharged: this.roomTypeCode,
-                    ratePlanCode: this.ratePlanCode,
-                    roomType: this.roomTypeCode,
+                    end: params.endDate,
+                    roomTypeCharged: params.roomTypeCharged,
+                    ratePlanCode: params.ratePlanCode,
+                    roomType: params.roomType,
                     pseudoRoom: false,
                   },
                   guestCounts: {
                     children: params.children,
                     adults: params.adults,
                   },
-                  departureDate: this.currentdateplus1,
-                  arrivalDate: this.currentdate,
+                  departureDate: params.departureDate,
+                  arrivalDate: params.arrivalDate,
                 },
               },
             },
@@ -330,6 +336,7 @@ export const useApisStore = defineStore("apis", () => {
 
           console.log(response.data);
         } else {
+          isGuestProfileNotFound.value = true;
           console.log("Profile Id Does Not Exist");
         }
       } else {
@@ -341,6 +348,7 @@ export const useApisStore = defineStore("apis", () => {
   };
 
   return {
+    isGuestProfileNotFound,
     token,
     jsonData,
     hotelId,
