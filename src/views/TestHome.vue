@@ -592,6 +592,28 @@ const store = useApisStore();
                 </button>
               </div>
               <!-- #endregion -->
+
+              <!-- #region createReservation -->
+              <div class="flex flex-col gap-4 p-4 bg-white rounded-lg shadow">
+                <h3 class="text-xl font-semibold">Create Reservation with Existing Guest</h3>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Guest Profile ID:
+                  <input
+                    type="text"
+                    v-model="store.params.guestProfileId"
+                    class="grow"
+                  />
+                </label>
+                <button
+                  :disabled="!store.token"
+                  @click="store.createReservationWithExistingGuest"
+                  class="px-4 py-2 text-lg font-medium text-white bg-blue-500 rounded shadow w-fit"
+                >
+                  Create Reservation
+                </button>
+              </div>
+
+              <!-- #endregion -->
             </div>
           </div>
         </header>
@@ -614,7 +636,7 @@ const store = useApisStore();
           theme="jv-dark"
         />
       </div>
-      <div v-if="store.jsonData && store.jsonData" class="p-3">
+      <div v-if="store.jsonData && store.token" class="p-3">
         <JsonViewer
           :value="store.jsonData"
           copyable
