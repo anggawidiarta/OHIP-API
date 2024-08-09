@@ -352,5 +352,6 @@ export const useApisStore = defineStore("apis", () => {
     getPaymentMethod,
     getPackages,
     getGuestProfile,
+    createReservationWithExistingGuest,
   };
 });
