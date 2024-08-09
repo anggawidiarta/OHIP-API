@@ -35,7 +35,24 @@ const makeAxiosRequest = async (config) => {
   }
 };
 
+const extractProfileIds = (profileData) => {
+  const extractedProfileIds = [];
+
+  if (profileData && Array.isArray(profileData.profileSummaries.profileInfo)) {
+    profileData.profileSummaries.profileInfo.forEach((profile) => {
+      profile.profileIdList.forEach((profileIdObj) => {
+        if (profileIdObj.type === "Profile" && profileIdObj.id) {
+          extractedProfileIds.push(profileIdObj.id);
+        }
+      });
+    });
+  }
+
+  return extractedProfileIds;
+};
+
 export const useApisStore = defineStore("apis", () => {
+  let profileIds = [];
   const token = ref("");
   const jsonData = ref(null);
 
