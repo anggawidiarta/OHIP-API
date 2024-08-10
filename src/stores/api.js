@@ -378,5 +378,6 @@ export const useApisStore = defineStore("apis", () => {
     getPackages,
     getGuestProfile,
     createReservationWithExistingGuest,
+    getReservation,
   };
 });
