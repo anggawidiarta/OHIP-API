@@ -164,6 +164,9 @@ export const useApisStore = defineStore("apis", () => {
     paymentMethod: `/lov/v1/listOfValues/hotels/${hotelId.value}/paymentMethods`,
     packages: `/rtp/v1/packages`,
     guestProfile: `/crm/v1/profiles`,
+    getResevartion: `/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}`,
+    putReservation: `/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}`,
+    postCancelReservation: `/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}/cancellations`,
   };
 
   const getRequestConfig = (url, additionalParams = {}) => ({
