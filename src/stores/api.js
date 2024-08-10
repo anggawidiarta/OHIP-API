@@ -354,6 +354,8 @@ export const useApisStore = defineStore("apis", () => {
     }
   };
 
+  const getReservation = () => fetchData(apiEndpoints.getResevartion);
+
   return {
     isGuestProfileNotFound,
     token,
