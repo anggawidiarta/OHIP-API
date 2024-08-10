@@ -7,8 +7,6 @@ import axios from "axios";
 import { useApisStore } from "@/stores/api";
 
 const store = useApisStore();
-
-
 </script>
 
 <template>
