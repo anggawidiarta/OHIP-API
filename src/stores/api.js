@@ -340,8 +340,16 @@ export const useApisStore = defineStore("apis", () => {
             data: reservationData,
             headers: getHeaders(token.value.access_token),
           });
-
+          reservationResponseData.value = await response.data;
+          const reservationLink =
+            await reservationResponseData.value.links.find((link) =>
+              link.href.includes("/reservations/")
+            );
+          reservationId.value = (await reservationLink)
+            ? reservationLink.href.match(/reservations\/(\d+)/)[1]
+            : null;
           console.log(response.data);
+          console.log(reservationId.value);
         } else {
           isGuestProfileNotFound.value = true;
           console.log("Profile Id Does Not Exist");
