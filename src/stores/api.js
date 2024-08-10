@@ -52,6 +52,10 @@ const extractProfileIds = (profileData) => {
 
 export const useApisStore = defineStore("apis", () => {
   let profileIds = [];
+
+  const reservationId = ref();
+  const reservationResponseData = ref();
+
   const token = ref("");
   const jsonData = ref(null);
   const isGuestProfileNotFound = ref(false);
