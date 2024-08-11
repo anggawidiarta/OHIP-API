@@ -596,7 +596,7 @@ const store = useApisStore();
               <!-- #region createReservation -->
               <form
                 @submit.prevent="store.createReservationWithExistingGuest"
-                class="grid grid-cols-2 items-center gap-4 p-4 bg-white rounded-lg shadow"
+                class="grid grid-cols-2 gap-4 items-center p-4 bg-white rounded-lg shadow"
               >
                 <h3 class="col-span-2 text-xl font-semibold text-black">
                   Form Create Reservation with Existing Guest
@@ -643,9 +643,9 @@ const store = useApisStore();
                     required
                   />
                 </label>
-                <label class="form-control w-full">
+                <label class="w-full form-control">
                   <select
-                    class="select select-bordered w-full"
+                    class="w-full select select-bordered"
                     v-model="store.params.roomType"
                     title="Room Type:"
                     required
@@ -660,9 +660,9 @@ const store = useApisStore();
                     <option value="WA1B">WA1B</option>
                   </select>
                 </label>
-                <label class="form-control w-full">
+                <label class="w-full form-control">
                   <select
-                    class="select select-bordered w-full"
+                    class="w-full select select-bordered"
                     v-model="store.params.guaranteeCode"
                     title="Room Type:"
                     required
@@ -714,24 +714,50 @@ const store = useApisStore();
                   Create Reservation
                 </button>
                 <p
-                  class="text-red-500 font-bold text-end col-span-full"
+                  class="col-span-full font-bold text-red-500 text-end"
                   v-if="store.isGuestProfileNotFound"
                 >
                   *Guest Profile Id Is Not Found
                 </p>
                 <p
                   v-if="store.errorMessage"
-                  class="text-red-500 font-bold text-end col-span-full"
+                  class="col-span-full font-bold text-red-500 text-end"
                 >
                   {{ store.errorMessage }}
                 </p>
                 <p
                   v-if="store.reservationId"
-                  class="text-green-500 text-xl font-bold text-end col-span-full"
+                  class="col-span-full text-xl font-bold text-green-500 text-end"
                 >
                   Reservation Id: {{ store.reservationId }}
                 </p>
               </form>
+              <!-- #endregion -->
+
+              <!-- #region getReservation -->
+              <div
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              >
+                <button
+                  :disabled="!store.token"
+                  @click="store.getReservation"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
+                >
+                  Get Reservation
+                </button>
+                <div class="col-span-full" v-if="store.guestReservationData">
+                  <p class="font-semibold text-green-500">
+                    Guest Data by Reservation Id : {{ store.reservationId }}
+                  </p>
+                  <JsonViewer
+                    :value="store.guestReservationData"
+                    copyable
+                    expandable
+                    boxed
+                    theme="jv-dark"
+                  />
+                </div>
+              </div>
               <!-- #endregion -->
             </div>
           </div>
