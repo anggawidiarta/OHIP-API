@@ -1,64 +1,22 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import axios from "axios";
-
-const {
-  VITE_APP_KEY,
-  VITE_CLIENT_ID,
-  VITE_CLIENT_SECRET,
-  VITE_USERNAME,
-  VITE_PASSWORD,
-} = import.meta.env;
+import {
+  getHeaders,
+  makeAxiosRequest,
+  extractProfileIds,
+} from "@/services/apiService";
+import { getApiEndpoints, ENV_VARS } from "@/config/constants";
 
 const hotelId = ref("SUMBA");
 
-const getHeaders = (token) => ({
-  "Accept-Language": "*",
-  "Content-Type": "application/json",
-  "x-app-key": VITE_APP_KEY,
-  "Access-Control-Allow-Origin": "*",
-  "cache-control": "no-cache",
-  "x-hotelid": hotelId.value,
-  Authorization: `Bearer ${token}`,
-});
-
-const makeAxiosRequest = async (config) => {
-  try {
-    const response = await axios(config);
-    return response.data;
-  } catch (error) {
-    console.error(
-      `Error in Axios request:`,
-      error.response ? error.response.data : error.message
-    );
-    throw error;
-  }
-};
-
-const extractProfileIds = (profileData) => {
-  const extractedProfileIds = [];
-
-  if (profileData && Array.isArray(profileData.profileSummaries.profileInfo)) {
-    profileData.profileSummaries.profileInfo.forEach((profile) => {
-      profile.profileIdList.forEach((profileIdObj) => {
-        if (profileIdObj.type === "Profile" && profileIdObj.id) {
-          extractedProfileIds.push(profileIdObj.id);
-        }
-      });
-    });
-  }
-  return extractedProfileIds;
-};
-
 export const useApisStore = defineStore("apis", () => {
-  let profileIds = [];
-
   const reservationId = ref();
   const reservationResponseData = ref();
-
   const token = ref("");
   const jsonData = ref(null);
   const isGuestProfileNotFound = ref(false);
+  const errorMessage = ref(""); // Added this line
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -73,8 +31,6 @@ export const useApisStore = defineStore("apis", () => {
     endDate: new Date(new Date().setDate(new Date().getDate() + 1))
       .toISOString()
       .split("T")[0],
-    profileName: "*",
-    // Additional parameters
     roomStayQuantity: null,
     childAge: null,
     ratePlanCode: "FITRACK",
@@ -112,6 +68,7 @@ export const useApisStore = defineStore("apis", () => {
     includeGroup: null,
     descriptionWildCard: null,
     givenName: null,
+    profileName: "*",
     profileType: "Guest",
     summaryInfo: true,
     city: null,
@@ -130,14 +87,16 @@ export const useApisStore = defineStore("apis", () => {
     guaranteeCode: null,
   });
 
+  const API_ENDPOINTS = getApiEndpoints();
+
   const generateAccessToken = async () => {
     try {
       const response = await axios({
         url: `http://localhost:5173/api/oauth/v1/tokens`,
         method: "POST",
         data: {
-          username: VITE_USERNAME,
-          password: VITE_PASSWORD,
+          username: ENV_VARS.VITE_USERNAME,
+          password: ENV_VARS.VITE_PASSWORD,
           grant_type: "password",
         },
         withCredentials: true,
@@ -145,9 +104,9 @@ export const useApisStore = defineStore("apis", () => {
           "Content-Type": "application/x-www-form-urlencoded",
           "Access-Control-Allow-Origin": "*",
           "cache-control": "no-cache",
-          "x-app-key": VITE_APP_KEY,
+          "x-app-key": ENV_VARS.VITE_APP_KEY,
           Authorization: `Basic ${btoa(
-            `${VITE_CLIENT_ID}:${VITE_CLIENT_SECRET}`
+            `${ENV_VARS.VITE_CLIENT_ID}:${ENV_VARS.VITE_CLIENT_SECRET}`
           )}`,
         },
       });
@@ -155,18 +114,6 @@ export const useApisStore = defineStore("apis", () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const apiEndpoints = {
-    hotelAvailability: `/par/v1/hotels/${hotelId.value}/availability`,
-    ratePlanDetail: `/par/v1/hotels/${hotelId.value}/rates/${params.ratePlanCode}`,
-    availableGuarantee: `/par/v1/hotels/${hotelId.value}/guarantees`,
-    paymentMethod: `/lov/v1/listOfValues/hotels/${hotelId.value}/paymentMethods`,
-    packages: `/rtp/v1/packages`,
-    guestProfile: `/crm/v1/profiles`,
-    getResevartion: `/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}`,
-    putReservation: `/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}`,
-    postCancelReservation: `/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}/cancellations`,
   };
 
   const getRequestConfig = (url, additionalParams = {}) => ({
@@ -183,7 +130,7 @@ export const useApisStore = defineStore("apis", () => {
   };
 
   const getHotelAvailability = () =>
-    fetchData(apiEndpoints.hotelAvailability, {
+    fetchData(API_ENDPOINTS.hotelAvailability, {
       roomStayStartDate: params.roomStayStartDate,
       roomStayEndDate: params.roomStayEndDate,
       roomStayQuantity: params.roomStayQuantity,
@@ -221,22 +168,22 @@ export const useApisStore = defineStore("apis", () => {
       limit: params.limit,
     });
 
-  const getRatePlanDetail = () => fetchData(apiEndpoints.ratePlanDetail);
+  const getRatePlanDetail = () => fetchData(API_ENDPOINTS.ratePlanDetail);
 
   const getAvailableGuarantee = () =>
-    fetchData(apiEndpoints.availableGuarantee, {
+    fetchData(API_ENDPOINTS.availableGuarantee, {
       ratePlanCode: params.ratePlanCode,
       arrivalDate: params.arrivalDate,
       hotelId: hotelId.value,
     });
 
   const getPaymentMethod = () =>
-    fetchData(apiEndpoints.paymentMethod, {
+    fetchData(API_ENDPOINTS.paymentMethod, {
       includeInactiveFlag: params.includeInactiveFlag,
     });
 
   const getPackages = () =>
-    fetchData(apiEndpoints.packages, {
+    fetchData(API_ENDPOINTS.packages, {
       adults: params.adults,
       children: params.children,
       hotelId: hotelId.value,
@@ -250,7 +197,7 @@ export const useApisStore = defineStore("apis", () => {
     });
 
   const getGuestProfile = () =>
-    fetchData(apiEndpoints.guestProfile, {
+    fetchData(API_ENDPOINTS.guestProfile, {
       profileName: params.profileName,
       givenName: params.givenName,
       profileType: params.profileType,
@@ -268,108 +215,159 @@ export const useApisStore = defineStore("apis", () => {
 
   const createReservationWithExistingGuest = async () => {
     try {
+      reservationId.value = null;
       await getGuestProfile();
-      if (
-        jsonData.value &&
-        Array.isArray(jsonData.value.profileSummaries.profileInfo)
-      ) {
-        console.log("Data Received From GetGuestProfile");
-        profileIds = extractProfileIds(jsonData.value);
-        console.log(profileIds);
-        if (profileIds.includes(params.guestProfileId)) {
-          console.log("Profile Id Exists");
-          // TODO: Implement the POST request for creating the reservation
-          const reservationData = {
-            reservations: {
-              reservation: {
-                reservationGuests: {
-                  profileInfo: {
-                    profileIdList: {
-                      id: params.guestProfileId,
-                      type: "Profile",
-                    },
-                  },
-                },
-                reservationPaymentMethods: {
-                  paymentMethod: "CA",
-                },
-                markAsRecentlyAccessed: true,
-                hotelId: hotelId.value,
-                reservationStatus: "Reserved",
-                roomStay: {
-                  guarantee: {
-                    onHold: false,
-                    guaranteeCode: params.guaranteeCode,
-                  },
-                  roomRates: {
-                    sourceCode: "WEB",
-                    numberOfUnits: 1,
-                    rates: {
-                      rate: {
-                        start: params.startDate,
-                        end: params.endDate,
-                        base: {
-                          amountBeforeTax: 50,
-                          currencyCode: "USD",
-                        },
-                      },
-                    },
-                    start: params.startDate,
-                    marketCode: "LEISURE",
-                    end: params.endDate,
-                    roomTypeCharged: params.roomTypeCharged,
-                    ratePlanCode: params.ratePlanCode,
-                    roomType: params.roomType,
-                    pseudoRoom: false,
-                  },
-                  guestCounts: {
-                    children: params.children,
-                    adults: params.adults,
-                  },
-                  departureDate: params.departureDate,
-                  arrivalDate: params.arrivalDate,
-                },
-              },
-            },
-            fetchInstructions: "Reservation",
-          };
-
-          const response = await axios({
-            url: `http://localhost:5173/api/rsv/v1/hotels/${hotelId.value}/reservations`,
-            method: "POST",
-            data: reservationData,
-            headers: getHeaders(token.value.access_token),
-          });
-          reservationResponseData.value = await response.data;
-          const reservationLink =
-            await reservationResponseData.value.links.find((link) =>
-              link.href.includes("/reservations/")
-            );
-          reservationId.value = (await reservationLink)
-            ? reservationLink.href.match(/reservations\/(\d+)/)[1]
-            : null;
-          console.log(response.data);
-          console.log(reservationId.value);
-        } else {
-          isGuestProfileNotFound.value = true;
-          console.log("Profile Id Does Not Exist");
-        }
-      } else {
+      if (!jsonData.value?.profileSummaries?.profileInfo) {
         console.log("No Profile Data Received From GetGuestProfile");
+        return;
       }
+
+      const profileIds = extractProfileIds(jsonData.value);
+      console.log("Profile IDs:", profileIds);
+
+      if (!profileIds.includes(params.guestProfileId)) {
+        isGuestProfileNotFound.value = true;
+        console.log("Profile Id Does Not Exist");
+        return;
+      }
+
+      console.log("Profile Id Exists");
+      const reservationData = createReservationData();
+      const response = await postReservation(reservationData);
+      handleReservationResponse(response);
     } catch (error) {
-      console.log(error);
+      console.error("Error creating reservation:", error);
+      errorMessage.value = "Error Profile ID Does Not Exist";
     }
   };
 
-  const getReservation = () => fetchData(apiEndpoints.getResevartion);
+  const createReservationData = () => ({
+    reservations: {
+      reservation: {
+        reservationGuests: {
+          profileInfo: {
+            profileIdList: {
+              id: params.guestProfileId,
+              type: "Profile",
+            },
+          },
+        },
+        reservationPaymentMethods: {
+          paymentMethod: "CA",
+        },
+        markAsRecentlyAccessed: true,
+        hotelId: hotelId.value,
+        reservationStatus: "Reserved",
+        roomStay: {
+          guarantee: {
+            onHold: false,
+            guaranteeCode: params.guaranteeCode,
+          },
+          roomRates: {
+            sourceCode: "WEB",
+            numberOfUnits: 1,
+            rates: {
+              rate: {
+                start: params.startDate,
+                end: params.endDate,
+                base: {
+                  amountBeforeTax: 50,
+                  currencyCode: "USD",
+                },
+              },
+            },
+            start: params.startDate,
+            marketCode: "LEISURE",
+            end: params.endDate,
+            roomTypeCharged: params.roomTypeCharged,
+            ratePlanCode: params.ratePlanCode,
+            roomType: params.roomType,
+            pseudoRoom: false,
+          },
+          guestCounts: {
+            children: params.children,
+            adults: params.adults,
+          },
+          departureDate: params.departureDate,
+          arrivalDate: params.arrivalDate,
+        },
+      },
+    },
+    fetchInstructions: "Reservation",
+  });
+
+  const postReservation = async (reservationData) => {
+    return axios({
+      url: `http://localhost:5173/api/rsv/v1/hotels/${hotelId.value}/reservations`,
+      method: "POST",
+      data: reservationData,
+      headers: getHeaders(token.value.access_token),
+    });
+  };
+
+  const handleReservationResponse = (response) => {
+    reservationResponseData.value = response.data;
+    const reservationLink = reservationResponseData.value.links.find((link) =>
+      link.href.includes("/reservations/")
+    );
+    reservationId.value = reservationLink
+      ? reservationLink.href.match(/reservations\/(\d+)/)[1]
+      : null;
+  };
+
+  const getReservation = () => fetchData(API_ENDPOINTS.getResevartion);
+
+  const putReservation = async (reservationId) => {
+    try {
+      const response = await axios({
+        url: `http://localhost:5173/api/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}`,
+        method: "PUT",
+        data: {
+          reservations: [
+            {
+              reservationIdList: [
+                {
+                  type: "Reservation",
+                  id: reservationId.value,
+                },
+              ],
+              comments: [
+                {
+                  comment: {
+                    commentTitle: "Reservation General Notes",
+                    notificationLocation: "GEN",
+                    type: "RESERVATION",
+                    internal: true,
+                    text: {
+                      value: "Adding a reservation note here",
+                    },
+                  },
+                },
+              ],
+              hotelId: hotelId.value,
+              customReference: "",
+              preRegistered: false,
+              allowMobileCheckout: false,
+            },
+          ],
+        },
+        headers: getHeaders(token.value.access_token),
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error updating reservation:", error);
+      throw error;
+    }
+  };
 
   return {
     isGuestProfileNotFound,
     token,
+    reservationId,
     jsonData,
     hotelId,
     params,
+    errorMessage, // Added this line
     generateAccessToken,
     getHotelAvailability,
     getRatePlanDetail,
@@ -379,5 +377,6 @@ export const useApisStore = defineStore("apis", () => {
     getGuestProfile,
     createReservationWithExistingGuest,
     getReservation,
+    putReservation,
   };
 });
