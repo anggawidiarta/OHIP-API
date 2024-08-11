@@ -1,353 +1,12 @@
 <!-- eslint-disable -->
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { JsonViewer } from "vue3-json-viewer";
 import axios from "axios";
 
-const token = ref("");
-const isLoading = ref(true);
-const jsonData = ref({});
-const hotelId = ref("SUMBA");
+import { useApisStore } from "@/stores/api";
 
-const {
-  VITE_CLIENT_ID,
-  VITE_CLIENT_SECRET,
-  VITE_USERNAME,
-  VITE_PASSWORD,
-  VITE_BASE_URL,
-  VITE_APP_KEY,
-} = import.meta.env;
-
-// #region params
-const roomStayStartDate = ref(new Date().toISOString().split("T")[0]);
-const roomStayEndDate = ref(
-  new Date(new Date().setDate(new Date().getDate() + 1))
-    .toISOString()
-    .split("T")[0]
-);
-const roomStayQuantity = ref();
-const childAge = ref();
-const ratePlanCode = ref();
-const roomTypeCode = ref();
-const includeClosedRates = ref();
-const includeDefaultRatePlanSet = ref();
-const ratePlanSet = ref();
-const pagePointerKey = ref();
-const bucket1Count = ref();
-const bucket2Count = ref();
-const bucket3Count = ref();
-const bucket4Count = ref();
-const bucket5Count = ref();
-const fullStayTimeSpanStartDate = ref();
-const fullStayTimeSpanEndDate = ref();
-const prevailingRate = ref();
-const rateCategory = ref();
-const rateClass = ref();
-const rateGroup = ref();
-const features = ref();
-const reservationGuestId = ref();
-const reservationGuestIdType = ref();
-const hotelReservationId = ref();
-const hotelReservationIdType = ref();
-const ratePlanInfo = ref();
-const returnOnlyAvailableRateCodes = ref();
-const resGuaranteeInfo = ref();
-const roomTypeInfo = ref();
-const membershipIdNumber = ref();
-const smokingPreference = ref();
-const adults = ref();
-const children = ref(0);
-const arrivalDate = ref(new Date().toISOString().split("T")[0]);
-const includeInactiveFlag = ref(false);
-const ticketPostingRhythm = ref();
-const fetchInstructions = ref();
-const sellSeparate = ref();
-const includeGroup = ref();
-const descriptionWildCard = ref();
-const startDate = ref(new Date().toISOString().split("T")[0]);
-const endDate = ref(
-  new Date(new Date().setDate(new Date().getDate() + 1))
-    .toISOString()
-    .split("T")[0]
-);
-const profileName = ref();
-const givenName = ref();
-const profileType = ref();
-const summaryInfo = ref();
-const guestHotelId = ref();
-const limit = ref();
-const city = ref();
-const state = ref();
-const postalCode = ref();
-const communication = ref();
-const membership = ref();
-const searchType = ref();
-const fetchInstructionsGuest = ref();
-// #endregion
-
-//  url: `https://cors-anywhere.herokuapp.com/${VITE_BASE_URL}/oauth/v1/tokens`
-
-const generateAccessToken = async () => {
-  try {
-    const response = await axios({
-      url: `http://localhost:5173/api/oauth/v1/tokens`,
-      method: "POST",
-      data: {
-        username: VITE_USERNAME,
-        password: VITE_PASSWORD,
-        grant_type: "password",
-      },
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Access-Control-Allow-Origin": "*",
-        "cache-control": "no-cache",
-        "x-app-key": VITE_APP_KEY,
-        Authorization:
-          "Basic " + btoa(VITE_CLIENT_ID + ":" + VITE_CLIENT_SECRET),
-      },
-    });
-    token.value = response.data;
-  } catch (error) {
-    console.log(error);
-  } finally {
-    // console.log(VITE_CLIENT_ID);
-  }
-};
-
-const getHotelAvailability = async () => {
-  try {
-    const response = await axios({
-      url: `http://localhost:5173/api/par/v1/hotels/SUMBA/availability`,
-      method: "GET",
-      params: {
-        roomStayStartDate: roomStayStartDate.value,
-        roomStayEndDate: roomStayEndDate.value,
-        roomStayQuantity: roomStayQuantity.value,
-        adults: adults.value,
-        children: children.value,
-        childAge: childAge.value,
-        ratePlanCode: ratePlanCode.value,
-        roomTypeCode: roomTypeCode.value,
-        includeClosedRates: includeClosedRates.value,
-        includeDefaultRatePlanSet: includeDefaultRatePlanSet.value,
-        ratePlanSet: ratePlanSet.value,
-        pagePointerKey: pagePointerKey.value,
-        bucket1Count: bucket1Count.value,
-        bucket2Count: bucket2Count.value,
-        bucket3Count: bucket3Count.value,
-        bucket4Count: bucket4Count.value,
-        bucket5Count: bucket5Count.value,
-        fullStayTimeSpanStartDate: fullStayTimeSpanStartDate.value,
-        fullStayTimeSpanEndDate: fullStayTimeSpanEndDate.value,
-        prevailingRate: prevailingRate.value,
-        rateCategory: rateCategory.value,
-        rateClass: rateClass.value,
-        rateGroup: rateGroup.value,
-        features: features.value,
-        reservationGuestId: reservationGuestId.value,
-        reservationGuestIdType: reservationGuestIdType.value,
-        hotelReservationId: hotelReservationId.value,
-        hotelReservationIdType: hotelReservationIdType.value,
-        ratePlanInfo: ratePlanInfo.value,
-        returnOnlyAvailableRateCodes: returnOnlyAvailableRateCodes.value,
-        resGuaranteeInfo: resGuaranteeInfo.value,
-        roomTypeInfo: roomTypeInfo.value,
-        membershipIdNumber: membershipIdNumber.value,
-        smokingPreference: smokingPreference.value,
-        limit: 5,
-      },
-      headers: {
-        "Accept-Language": "*",
-        "Content-Type": "application/json",
-        "x-app-key": VITE_APP_KEY,
-        "Access-Control-Allow-Origin": "*",
-        "cache-control": "no-cache",
-        "x-hotelid": "SUMBA",
-        Authorization: "Bearer " + token.value.access_token,
-      },
-    });
-    jsonData.value = response.data;
-  } catch (error) {
-    console.error(
-      "Error fetching hotel availability:",
-      error.response ? error.response.data : error.message
-    );
-  } finally {
-    // console.log(VITE_CLIENT_ID);
-  }
-};
-
-const getRatePlanDetail = async () => {
-  try {
-    const response = await axios({
-      url: `http://localhost:5173/api/par/v1/hotels/SUMBA/rates/${ratePlanCode.value}`,
-      method: "GET",
-      params: {},
-      headers: {
-        "Accept-Language": "*",
-        "Content-Type": "application/json",
-        "x-app-key": VITE_APP_KEY,
-        "Access-Control-Allow-Origin": "*",
-        "cache-control": "no-cache",
-        "x-hotelid": "SUMBA",
-        Authorization: "Bearer " + token.value.access_token,
-      },
-    });
-    jsonData.value = response.data;
-    console.log(jsonData);
-    console.log(adults);
-  } catch (error) {
-    console.error(
-      "Error fetching hotel availability:",
-      error.response ? error.response.data : error.message
-    );
-  } finally {
-    // console.log(VITE_CLIENT_ID);
-  }
-};
-
-const getAvailableGuarantee = async () => {
-  try {
-    const response = await axios({
-      url: `http://localhost:5173/api/par/v1/hotels/SUMBA/guarantees`,
-      method: "GET",
-      params: {
-        ratePlanCode: ratePlanCode.value,
-        arrivalDate: arrivalDate.value,
-        hotelId: "SUMBA",
-      },
-      headers: {
-        "Accept-Language": "*",
-        "Content-Type": "application/json",
-        "x-app-key": VITE_APP_KEY,
-        "Access-Control-Allow-Origin": "*",
-        "cache-control": "no-cache",
-        "x-hotelid": hotelId.value,
-        Authorization: "Bearer " + token.value.access_token,
-      },
-    });
-    jsonData.value = response.data;
-  } catch (error) {
-    console.error(
-      "Error fetching hotel availability:",
-      error.response ? error.response.data : error.message
-    );
-  } finally {
-    // console.log(VITE_CLIENT_ID);
-  }
-};
-
-const getPaymentMethod = async () => {
-  try {
-    const response = await axios({
-      url: `http://localhost:5173/api/lov/v1/listOfValues/hotels/SUMBA/paymentMethods`,
-      method: "GET",
-      params: {
-        includeInactiveFlag: includeInactiveFlag.value,
-      },
-      headers: {
-        "Accept-Language": "*",
-        "Content-Type": "application/json",
-        "x-app-key": VITE_APP_KEY,
-        "Access-Control-Allow-Origin": "*",
-        "cache-control": "no-cache",
-        "x-hotelid": hotelId.value,
-        Authorization: "Bearer " + token.value.access_token,
-      },
-    });
-    jsonData.value = response.data;
-  } catch (error) {
-    console.error(
-      "Error fetching hotel availability:",
-      error.response ? error.response.data : error.message
-    );
-  } finally {
-    // console.log(VITE_CLIENT_ID);
-  }
-};
-
-const getPackages = async () => {
-  try {
-    const response = await axios({
-      url: `http://localhost:5173/api/rtp/v1/packages`,
-      method: "GET",
-      params: {
-        adults: adults.value,
-        children: children.value,
-        hotelId: "SUMBA",
-        startDate: startDate.value,
-        endDate: endDate.value,
-        ticketPostingRhythm: ticketPostingRhythm.value,
-        fetchInstructions: fetchInstructions.value,
-        sellSeparate: sellSeparate.value,
-        includeGroup: includeGroup.value,
-        descriptionWildCard: descriptionWildCard.value,
-      },
-      headers: {
-        "Accept-Language": "*",
-        "Content-Type": "application/json",
-        "x-app-key": VITE_APP_KEY,
-        "Access-Control-Allow-Origin": "*",
-        "cache-control": "no-cache",
-        "x-hotelid": "SUMBA",
-        Authorization: "Bearer " + token.value.access_token,
-      },
-    });
-    jsonData.value = response.data;
-  } catch (error) {
-    console.error(
-      "Error fetching hotel availability:",
-      error.response ? error.response.data : error.message
-    );
-  } finally {
-    // console.log(VITE_CLIENT_ID);
-  }
-};
-
-const getGuestProfile = async () => {
-  try {
-    const response = await axios({
-      url: "http://localhost:5173/api/crm/v1/profiles",
-      method: "GET",
-      params: {
-        profileName: profileName.value,
-        givenName: givenName.value,
-        profileType: profileType.value,
-        summaryInfo: summaryInfo.value,
-        hotelId: "SUMBA",
-        limit: limit.value,
-        city: city.value,
-        state: state.value,
-        postalCode: postalCode.value,
-        communication: communication.value,
-        membership: membership.value,
-        searchType: searchType.value,
-        fetchInstructions: fetchInstructionsGuest.value,
-      },
-      headers: {
-        "Accept-Language": "*",
-        "Content-Type": "application/json",
-        "x-app-key": VITE_APP_KEY,
-        "Access-Control-Allow-Origin": "*",
-        "cache-control": "no-cache",
-        "x-hotelid": "SUMBA",
-        Authorization: "Bearer " + token.value.access_token,
-      },
-    });
-    jsonData.value = response.data;
-  } catch (error) {
-    console.error(
-      "Error fetching hotel availability:",
-      error.response ? error.response.data : error.message
-    );
-  }
-};
-
-const postGuestReservation = async () => {
-  try {
-  } catch (error) {}
-};
+const store = useApisStore();
 </script>
 
 <template>
@@ -385,99 +44,161 @@ const postGuestReservation = async () => {
               application.
             </p>
             <button
-              @click="generateAccessToken"
+              @click="store.generateAccessToken()"
               class="px-4 py-2 my-4 text-2xl font-medium text-white bg-yellow-700 rounded shadow transition-all duration-150 hover:bg-yellow-300"
             >
               Generate Access Token
             </button>
-            <p class="mb-2 text-red-500" v-if="!token">
+            <p class="mb-2 text-red-500" v-if="!store.token">
               *You Need To Generate Access Token First To Use These Functions
             </p>
-            <p class="mb-2 text-green-500" v-else-if="token">
+            <p class="mb-2 text-green-500" v-else-if="store.token">
               " Token Has Been Generated Successfully
             </p>
             <div class="flex flex-col gap-6 w-full">
               <!-- #region getHotelAvailability -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Start Date:
-                  <input type="date" v-model="roomStayStartDate" class="grow" />
+                  <input
+                    type="date"
+                    v-model="store.params.startDate"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   End Date:
-                  <input type="date" v-model="roomStayEndDate" class="grow" />
+                  <input
+                    type="date"
+                    v-model="store.params.endDate"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Room Quantity:
                   <input
                     type="number"
-                    v-model="roomStayQuantity"
+                    v-model="store.params.roomStayQuantity"
                     class="grow"
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Adults:
-                  <input type="number" v-model="adults" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.adults"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Children:
-                  <input type="number" v-model="children" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.children"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Child Age:
-                  <input type="number" v-model="childAge" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.childAge"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
-                  <input type="text" v-model="ratePlanCode" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.ratePlanCode"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Room Type Code:
-                  <input type="text" v-model="roomTypeCode" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.roomTypeCode"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Include Closed Rates:
-                  <input type="checkbox" v-model="includeClosedRates" />
+                  <input
+                    type="checkbox"
+                    v-model="store.params.includeClosedRates"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Include Default Rate Plan Set:
-                  <input type="checkbox" v-model="includeDefaultRatePlanSet" />
+                  <input
+                    type="checkbox"
+                    v-model="store.params.includeDefaultRatePlanSet"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Set:
-                  <input type="text" v-model="ratePlanSet" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.ratePlanSet"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Page Pointer Key:
-                  <input type="text" v-model="pagePointerKey" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.pagePointerKey"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Bucket 1 Count:
-                  <input type="number" v-model="bucket1Count" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.bucket1Count"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Bucket 2 Count:
-                  <input type="number" v-model="bucket2Count" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.bucket2Count"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Bucket 3 Count:
-                  <input type="number" v-model="bucket3Count" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.bucket3Count"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Bucket 4 Count:
-                  <input type="number" v-model="bucket4Count" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.bucket4Count"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Bucket 5 Count:
-                  <input type="number" v-model="bucket5Count" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.bucket5Count"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Full Stay Time Span Start Date:
                   <input
                     type="date"
-                    v-model="fullStayTimeSpanStartDate"
+                    v-model="store.params.fullStayTimeSpanStartDate"
                     class="grow"
                   />
                 </label>
@@ -485,35 +206,55 @@ const postGuestReservation = async () => {
                   Full Stay Time Span End Date:
                   <input
                     type="date"
-                    v-model="fullStayTimeSpanEndDate"
+                    v-model="store.params.fullStayTimeSpanEndDate"
                     class="grow"
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Prevailing Rate:
-                  <input type="text" v-model="prevailingRate" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.prevailingRate"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Category:
-                  <input type="text" v-model="rateCategory" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.rateCategory"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Class:
-                  <input type="text" v-model="rateClass" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.rateClass"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Group:
-                  <input type="text" v-model="rateGroup" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.rateGroup"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Features:
-                  <input type="text" v-model="features" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.features"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Reservation Guest ID:
                   <input
                     type="text"
-                    v-model="reservationGuestId"
+                    v-model="store.params.reservationGuestId"
                     class="grow"
                   />
                 </label>
@@ -521,7 +262,7 @@ const postGuestReservation = async () => {
                   Reservation Guest ID Type:
                   <input
                     type="text"
-                    v-model="reservationGuestIdType"
+                    v-model="store.params.reservationGuestIdType"
                     class="grow"
                   />
                 </label>
@@ -529,7 +270,7 @@ const postGuestReservation = async () => {
                   Hotel Reservation ID:
                   <input
                     type="text"
-                    v-model="hotelReservationId"
+                    v-model="store.params.hotelReservationId"
                     class="grow"
                   />
                 </label>
@@ -537,44 +278,60 @@ const postGuestReservation = async () => {
                   Hotel Reservation ID Type:
                   <input
                     type="text"
-                    v-model="hotelReservationIdType"
+                    v-model="store.params.hotelReservationIdType"
                     class="grow"
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Info:
-                  <input type="text" v-model="ratePlanInfo" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.ratePlanInfo"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Return Only Available Rate Codes:
                   <input
                     type="checkbox"
-                    v-model="returnOnlyAvailableRateCodes"
+                    v-model="store.params.returnOnlyAvailableRateCodes"
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Res Guarantee Info:
-                  <input type="text" v-model="resGuaranteeInfo" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.resGuaranteeInfo"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Room Type Info:
-                  <input type="text" v-model="roomTypeInfo" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.roomTypeInfo"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Membership ID Number:
                   <input
                     type="text"
-                    v-model="membershipIdNumber"
+                    v-model="store.params.membershipIdNumber"
                     class="grow"
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Smoking Preference:
-                  <input type="text" v-model="smokingPreference" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.smokingPreference"
+                    class="grow"
+                  />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getHotelAvailability"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getHotelAvailability"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Search Hotel Availability
@@ -584,16 +341,20 @@ const postGuestReservation = async () => {
 
               <!-- #region getRatePlanDetail -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
-                  <input type="number" v-model="ratePlanCode" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.ratePlanCode"
+                    class="grow"
+                  />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getRatePlanDetail"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getRatePlanDetail"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Rate Plan Code Details
                 </button>
@@ -602,20 +363,28 @@ const postGuestReservation = async () => {
 
               <!-- #region getAvailableGuanranteeCodes  -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
-                  <input type="number" v-model="ratePlanCode" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.ratePlanCode"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Arrival Date:
-                  <input type="date" v-model="arrivalDate" class="grow" />
+                  <input
+                    type="date"
+                    v-model="store.params.arrivalDate"
+                    class="grow"
+                  />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getAvailableGuarantee"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getAvailableGuarantee"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Available Guarantee
                 </button>
@@ -624,20 +393,20 @@ const postGuestReservation = async () => {
 
               <!-- #region getPaymentMethods  -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Include Active Flag:
                   <input
                     type="checkbox"
-                    v-model="includeInactiveFlag"
+                    v-model="store.params.includeInactiveFlag"
                     class="grow"
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getPaymentMethod"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getPaymentMethod"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Payment Methods
                 </button>
@@ -645,50 +414,69 @@ const postGuestReservation = async () => {
               <!-- #endregion -->
 
               <!-- #region getPackages  -->
-
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Start Date:
-                  <input type="date" v-model="startDate" class="grow" />
+                  <input
+                    type="date"
+                    v-model="store.params.startDate"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   End Date:
-                  <input type="date" v-model="endDate" class="grow" />
+                  <input
+                    type="date"
+                    v-model="store.params.endDate"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Ticket Posting Rhythm:
                   <input
                     type="text"
-                    v-model="ticketPostingRhythm"
+                    v-model="store.params.ticketPostingRhythm"
                     class="grow"
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Fetch Instructions:
-                  <input type="text" v-model="fetchInstructions" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.fetchInstructions"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Sell Separate:
-                  <input type="text" v-model="sellSeparate" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.sellSeparate"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Include Group:
-                  <input type="text" v-model="includeGroup" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.includeGroup"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Description Wild Card:
                   <input
                     type="text"
-                    v-model="descriptionWildCard"
+                    v-model="store.params.descriptionWildCard"
                     class="grow"
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getPackages"
-                  class="px-4 py-2 text-lg w-fit font-medium text-white bg-green-500 rounded shadow"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getPackages"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Available Packages
                 </button>
@@ -697,72 +485,253 @@ const postGuestReservation = async () => {
 
               <!-- #region getGuestProfile -->
               <div
-                class="grid grid-cols-1 lg:grid-cols-3 gap-3 p-3 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Profile Name:
-                  <input type="text" v-model="profileName" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.profileName"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Given Name:
-                  <input type="text" v-model="givenName" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.givenName"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Profile Type:
-                  <input type="text" v-model="profileType" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.profileType"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Summary Info:
-                  <input type="checkbox" v-model="summaryInfo" class="grow" />
+                  <input
+                    type="checkbox"
+                    v-model="store.params.summaryInfo"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Hotel ID:
-                  <input type="text" v-model="guestHotelId" class="grow" />
+                  <input type="text" v-model="store.hotelId" class="grow" />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Limit:
-                  <input type="number" v-model="limit" class="grow" />
+                  <input
+                    type="number"
+                    v-model="store.params.limit"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   City:
-                  <input type="text" v-model="city" class="grow" />
+                  <input type="text" v-model="store.params.city" class="grow" />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   State:
-                  <input type="text" v-model="state" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.state"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Postal Code:
-                  <input type="text" v-model="postalCode" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.postalCode"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Communication:
-                  <input type="text" v-model="communication" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.communication"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Membership:
-                  <input type="text" v-model="membership" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.membership"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Search Type:
-                  <input type="text" v-model="searchType" class="grow" />
+                  <input
+                    type="text"
+                    v-model="store.params.searchType"
+                    class="grow"
+                  />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
                   Fetch Instructions:
                   <input
                     type="text"
-                    v-model="fetchInstructionsGuest"
+                    v-model="store.params.fetchInstructions"
                     class="grow"
                   />
                 </label>
                 <button
-                  :disabled="!token ? true : false"
-                  @click="getGuestProfile"
+                  :disabled="!store.token ? true : false"
+                  @click="store.getGuestProfile"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Guest Profile
                 </button>
               </div>
+              <!-- #endregion -->
+
+              <!-- #region createReservation -->
+              <form
+                @submit.prevent="store.createReservationWithExistingGuest"
+                class="grid grid-cols-2 items-center gap-4 p-4 bg-white rounded-lg shadow"
+              >
+                <h3 class="col-span-2 text-xl font-semibold text-black">
+                  Form Create Reservation with Existing Guest
+                </h3>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Guest Profile ID:
+                  <input
+                    required
+                    type="text"
+                    v-model="store.params.guestProfileId"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Start Date:
+                  <input
+                    type="date"
+                    v-model="store.params.startDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate End Date:
+                  <input
+                    type="date"
+                    v-model="store.params.endDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Room Type Charged:
+                  <input
+                    type="text"
+                    v-model="store.params.roomTypeCharged"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Rate Plan Code:
+                  <input
+                    type="text"
+                    v-model="store.params.ratePlanCode"
+                    class="grow"
+                    required
+                  />
+                </label>
+                <label class="form-control w-full">
+                  <select
+                    class="select select-bordered w-full"
+                    v-model="store.params.roomType"
+                    title="Room Type:"
+                    required
+                  >
+                    <option disabled selected>Room Type:</option>
+                    <option value="KS1B">KS1B</option>
+                    <option value="KT1B">KT1B</option>
+                    <option value="LA1B">LA1B</option>
+                    <option value="LB1B">LB1B</option>
+                    <option value="MR1B">MR1B</option>
+                    <option value="RK1B">RK1B</option>
+                    <option value="WA1B">WA1B</option>
+                  </select>
+                </label>
+                <label class="form-control w-full">
+                  <select
+                    class="select select-bordered w-full"
+                    v-model="store.params.guaranteeCode"
+                    title="Room Type:"
+                    required
+                  >
+                    <option disabled selected>Guarantee Code:</option>
+                    <option value="CC">CC</option>
+                    <option value="CHECK IN">CHECK IN</option>
+                    <option value="DRQ">DB</option>
+                    <option value="DRV">DRV</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Children:
+                  <input
+                    type="text"
+                    v-model="store.params.children"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Adults:
+                  <input
+                    type="text"
+                    v-model="store.params.adults"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Arrival Date:
+                  <input
+                    type="date"
+                    v-model="store.params.arrivalDate"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Departure Date:
+                  <input
+                    type="date"
+                    v-model="store.params.departureDate"
+                    class="grow"
+                  />
+                </label>
+                <button
+                  :disabled="!store.token"
+                  class="px-4 py-2 text-lg font-medium text-white bg-blue-500 rounded shadow w-fit"
+                >
+                  Create Reservation
+                </button>
+                <p
+                  class="text-red-500 font-bold text-end col-span-full"
+                  v-if="store.isGuestProfileNotFound"
+                >
+                  *Guest Profile Id Is Not Found
+                </p>
+                <p
+                  v-if="store.errorMessage"
+                  class="text-red-500 font-bold text-end col-span-full"
+                >
+                  {{ store.errorMessage }}
+                </p>
+                <p
+                  v-if="store.reservationId"
+                  class="text-green-500 text-xl font-bold text-end col-span-full"
+                >
+                  Reservation Id: {{ store.reservationId }}
+                </p>
+              </form>
               <!-- #endregion -->
             </div>
           </div>
@@ -771,14 +740,14 @@ const postGuestReservation = async () => {
     </div>
     <div class="flex flex-col w-full">
       <img
-        v-if="!token"
+        v-if="!store.token"
         src="https://images.unsplash.com/photo-1536147116438-62679a5e01f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
         alt="Leafs"
         class="object-cover w-full h-24"
       />
       <div v-else class="p-3">
         <JsonViewer
-          :value="token"
+          :value="store.token"
           copyable
           expandable
           boxed
@@ -786,9 +755,9 @@ const postGuestReservation = async () => {
           theme="jv-dark"
         />
       </div>
-      <div v-if="jsonData && token" class="p-3">
+      <div v-if="store.jsonData && store.token" class="p-3">
         <JsonViewer
-          :value="jsonData"
+          :value="store.jsonData"
           copyable
           expandable
           boxed
