@@ -13,7 +13,7 @@ export const ENV_VARS = {
 export const getApiEndpoints = () => {
   const store = useApisStore();
   const ratePlanCode = store.params?.ratePlanCode || "*";
-  const reservationId = store.reservationId?.value || null;
+  const reservationId = store.reservationId?.value;
 
   return {
     hotelAvailability: `/par/v1/hotels/${ENV_VARS.HOTEL_ID}/availability`,
