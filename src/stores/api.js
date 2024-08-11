@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref } from "vue";
+import { reactive, ref, computed } from "vue";
 import axios from "axios";
 import {
   getHeaders,
@@ -13,10 +13,11 @@ const hotelId = ref("SUMBA");
 export const useApisStore = defineStore("apis", () => {
   const reservationId = ref();
   const reservationResponseData = ref();
+  const guestReservationData = ref();
   const token = ref("");
   const jsonData = ref(null);
   const isGuestProfileNotFound = ref(false);
-  const errorMessage = ref(""); // Added this line
+  const errorMessage = ref("");
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -87,7 +88,22 @@ export const useApisStore = defineStore("apis", () => {
     guaranteeCode: null,
   });
 
-  const API_ENDPOINTS = getApiEndpoints();
+  const API_ENDPOINTS = computed(() => {
+    const ratePlanCode = params.ratePlanCode || "*";
+    const reservationIdValue = reservationId.value;
+
+    return {
+      hotelAvailability: `/par/v1/hotels/${ENV_VARS.HOTEL_ID}/availability`,
+      ratePlanDetail: `/par/v1/hotels/${ENV_VARS.HOTEL_ID}/rates/${ratePlanCode}`,
+      availableGuarantee: `/par/v1/hotels/${ENV_VARS.HOTEL_ID}/guarantees`,
+      paymentMethod: `/lov/v1/listOfValues/hotels/${ENV_VARS.HOTEL_ID}/paymentMethods`,
+      packages: `/rtp/v1/packages`,
+      guestProfile: `/crm/v1/profiles`,
+      getReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}`,
+      putReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}`,
+      postCancelReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}/cancellations`,
+    };
+  });
 
   const generateAccessToken = async () => {
     try {
@@ -123,14 +139,20 @@ export const useApisStore = defineStore("apis", () => {
     headers: getHeaders(token.value.access_token),
   });
 
-  const fetchData = async (endpoint, additionalParams = {}) => {
-    jsonData.value = await makeAxiosRequest(
+  const fetchData = async (
+    responseVarName,
+    endpoint,
+    additionalParams = {}
+  ) => {
+    const responseVar =
+      responseVarName === "jsonData" ? jsonData : guestReservationData;
+    responseVar.value = await makeAxiosRequest(
       getRequestConfig(endpoint, additionalParams)
     );
   };
 
   const getHotelAvailability = () =>
-    fetchData(API_ENDPOINTS.hotelAvailability, {
+    fetchData("jsonData", API_ENDPOINTS.value.hotelAvailability, {
       roomStayStartDate: params.roomStayStartDate,
       roomStayEndDate: params.roomStayEndDate,
       roomStayQuantity: params.roomStayQuantity,
@@ -168,22 +190,23 @@ export const useApisStore = defineStore("apis", () => {
       limit: params.limit,
     });
 
-  const getRatePlanDetail = () => fetchData(API_ENDPOINTS.ratePlanDetail);
+  const getRatePlanDetail = () =>
+    fetchData("jsonData", API_ENDPOINTS.value.ratePlanDetail);
 
   const getAvailableGuarantee = () =>
-    fetchData(API_ENDPOINTS.availableGuarantee, {
+    fetchData("jsonData", API_ENDPOINTS.value.availableGuarantee, {
       ratePlanCode: params.ratePlanCode,
       arrivalDate: params.arrivalDate,
       hotelId: hotelId.value,
     });
 
   const getPaymentMethod = () =>
-    fetchData(API_ENDPOINTS.paymentMethod, {
+    fetchData("jsonData", API_ENDPOINTS.value.paymentMethod, {
       includeInactiveFlag: params.includeInactiveFlag,
     });
 
   const getPackages = () =>
-    fetchData(API_ENDPOINTS.packages, {
+    fetchData("jsonData", API_ENDPOINTS.value.packages, {
       adults: params.adults,
       children: params.children,
       hotelId: hotelId.value,
@@ -197,7 +220,7 @@ export const useApisStore = defineStore("apis", () => {
     });
 
   const getGuestProfile = () =>
-    fetchData(API_ENDPOINTS.guestProfile, {
+    fetchData("jsonData", API_ENDPOINTS.value.guestProfile, {
       profileName: params.profileName,
       givenName: params.givenName,
       profileType: params.profileType,
@@ -315,7 +338,8 @@ export const useApisStore = defineStore("apis", () => {
       : null;
   };
 
-  const getReservation = () => fetchData(API_ENDPOINTS.getResevartion);
+  const getReservation = () =>
+    fetchData("guestReservationData", API_ENDPOINTS.value.getReservation);
 
   const putReservation = async (reservationId) => {
     try {
@@ -364,10 +388,11 @@ export const useApisStore = defineStore("apis", () => {
     isGuestProfileNotFound,
     token,
     reservationId,
+    guestReservationData,
     jsonData,
     hotelId,
     params,
-    errorMessage, // Added this line
+    errorMessage,
     generateAccessToken,
     getHotelAvailability,
     getRatePlanDetail,
