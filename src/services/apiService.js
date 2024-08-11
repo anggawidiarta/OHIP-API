@@ -1,31 +1,39 @@
 import axios from "axios";
+import { ENV_VARS } from "@/config/constants";
 
-const apiClient = axios.create({
-  baseURL:
-    "https://ca03-mtca1ua-oc.hospitality-api.ap-sydney-1.ocs.oc-test.com",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
+export const getHeaders = (token) => ({
+  "Accept-Language": "*",
+  "Content-Type": "application/json",
+  "x-app-key": ENV_VARS.VITE_APP_KEY,
+  "Access-Control-Allow-Origin": "*",
+  "cache-control": "no-cache",
+  "x-hotelid": ENV_VARS.HOTEL_ID,
+  Authorization: `Bearer ${token}`,
 });
 
-export default {
-  getAccessToken(credentials) {
-    const data = {
-      client_id: credentials.clientId,
-      client_secret: credentials.clientSecret,
-      username: credentials.username,
-      password: credentials.password,
-      grant_type: "password", // Adjust according to your API requirements
-    };
+export const makeAxiosRequest = async (config) => {
+  try {
+    const response = await axios(config);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error in Axios request:`,
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
 
-    const authHeader =
-      "Basic " + btoa(credentials.clientId + ":" + credentials.clientSecret);
-
-    return apiClient.post("/oauth/v1/tokens", data, {
-      headers: {
-        Authorization: authHeader,
-      },
+export const extractProfileIds = (profileData) => {
+  const extractedProfileIds = [];
+  if (profileData && Array.isArray(profileData.profileSummaries.profileInfo)) {
+    profileData.profileSummaries.profileInfo.forEach((profile) => {
+      profile.profileIdList.forEach((profileIdObj) => {
+        if (profileIdObj.type === "Profile" && profileIdObj.id) {
+          extractedProfileIds.push(profileIdObj.id);
+        }
+      });
     });
-  },
+  }
+  return extractedProfileIds;
 };
