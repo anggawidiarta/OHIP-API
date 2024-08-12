@@ -759,6 +759,96 @@ const store = useApisStore();
                 </div>
               </div>
               <!-- #endregion -->
+
+              <!-- #region guestCancelReservation -->
+              <div
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-red-500 lg:grid-cols-3"
+              >
+                <label class="flex gap-2 items-center input input-bordered">
+                  Reservation ID:
+                  <input
+                    type="text"
+                    v-model="store.reservationId"
+                    class="grow"
+                  />
+                </label>
+                <button
+                  :disabled="!store.token"
+                  @click="store.cancelReservation"
+                  class="px-4 py-2 text-lg font-medium text-white bg-red-500 rounded shadow w-fit"
+                >
+                  Cancel Reservation
+                </button>
+                <p
+                  v-if="store.cancelSuccessMessage"
+                  class="col-span-full text-xl font-bold text-green-500 text-end"
+                >
+                  {{ store.cancelSuccessMessage }}
+                </p>
+                <p
+                  v-if="store.cancelErrorMessage"
+                  class="col-span-full text-xl font-bold text-red-500 text-end"
+                >
+                  {{ store.cancelErrorMessage }}
+                </p>
+              </div>
+              <!-- #endregion -->
+
+              <!-- #region updateReservation -->
+              <form
+                @submit.prevent="store.putReservation"
+                class="grid grid-cols-2 gap-4 items-center p-4 bg-white rounded-lg shadow"
+              >
+                <h3 class="col-span-2 text-xl font-semibold text-black">
+                  Update Reservation
+                </h3>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Reservation ID:
+                  <input
+                    required
+                    type="text"
+                    v-model="store.reservationId"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Comment Title:
+                  <input
+                    required
+                    type="text"
+                    v-model="store.params.commentTitle"
+                    class="grow"
+                  />
+                </label>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Comment Text:
+                  <input
+                    required
+                    type="text"
+                    v-model="store.params.commentText"
+                    class="grow"
+                  />
+                </label>
+                <button
+                  :disabled="!store.token"
+                  class="px-4 py-2 text-lg font-medium text-white bg-blue-500 rounded shadow w-fit"
+                >
+                  Update Reservation
+                </button>
+                <p
+                  v-if="store.updateReservationError"
+                  class="col-span-full font-bold text-red-500 text-end"
+                >
+                  {{ store.updateReservationError }}
+                </p>
+                <p
+                  v-if="store.updateReservationSuccess"
+                  class="col-span-full text-xl font-bold text-green-500 text-end"
+                >
+                  {{ store.updateReservationSuccess }}
+                </p>
+              </form>
+              <!-- #endregion -->
             </div>
           </div>
         </header>
