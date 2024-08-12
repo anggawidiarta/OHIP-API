@@ -1,11 +1,20 @@
 <script setup>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, onUnmounted } from "vue";
 import { useApisStore } from "@/stores/api";
 
 const store = useApisStore();
+let intervalId;
+
 onMounted(() => {
   console.log("ReservationView");
   store.generateAccessToken();
+  intervalId = setInterval(() => {
+    store.generateAccessToken();
+  }, 3600 * 1000); // 3600 * 1000 = 1 hour in milliseconds
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
 });
 </script>
 
