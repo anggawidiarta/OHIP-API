@@ -12,12 +12,16 @@ const hotelId = ref("SUMBA");
 
 export const useApisStore = defineStore("apis", () => {
   const reservationId = ref();
+  const cancelSuccessMessage = ref("");
+  const cancelErrorMessage = ref("");
   const reservationResponseData = ref();
   const guestReservationData = ref();
   const token = ref("");
   const jsonData = ref(null);
   const isGuestProfileNotFound = ref(false);
   const errorMessage = ref("");
+  const updateReservationError = ref("");
+  const updateReservationSuccess = ref("");
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -86,6 +90,8 @@ export const useApisStore = defineStore("apis", () => {
     roomType: null,
     roomTypeCharged: null,
     guaranteeCode: null,
+    commentTitle: "Reservation General Notes",
+    commentText: "Adding a reservation note here",
   });
 
   const API_ENDPOINTS = computed(() => {
@@ -101,6 +107,7 @@ export const useApisStore = defineStore("apis", () => {
       guestProfile: `/crm/v1/profiles`,
       getReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}`,
       putReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}`,
+      postReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations`,
       postCancelReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}/cancellations`,
     };
   });
@@ -238,6 +245,7 @@ export const useApisStore = defineStore("apis", () => {
 
   const createReservationWithExistingGuest = async () => {
     try {
+      isGuestProfileNotFound.value = false;
       reservationId.value = null;
       await getGuestProfile();
       if (!jsonData.value?.profileSummaries?.profileInfo) {
@@ -258,6 +266,8 @@ export const useApisStore = defineStore("apis", () => {
       const reservationData = createReservationData();
       const response = await postReservation(reservationData);
       handleReservationResponse(response);
+
+      isGuestProfileNotFound.value = false;
     } catch (error) {
       console.error("Error creating reservation:", error);
       errorMessage.value = "Error Profile ID Does Not Exist";
@@ -321,7 +331,7 @@ export const useApisStore = defineStore("apis", () => {
 
   const postReservation = async (reservationData) => {
     return axios({
-      url: `http://localhost:5173/api/rsv/v1/hotels/${hotelId.value}/reservations`,
+      url: `http://localhost:5173/api${API_ENDPOINTS.value.postReservation}`,
       method: "POST",
       data: reservationData,
       headers: getHeaders(token.value.access_token),
@@ -341,8 +351,10 @@ export const useApisStore = defineStore("apis", () => {
   const getReservation = () =>
     fetchData("guestReservationData", API_ENDPOINTS.value.getReservation);
 
-  const putReservation = async (reservationId) => {
+  const putReservation = async () => {
     try {
+      updateReservationError.value = "";
+      updateReservationSuccess.value = "";
       const response = await axios({
         url: `http://localhost:5173/api/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}`,
         method: "PUT",
@@ -358,12 +370,12 @@ export const useApisStore = defineStore("apis", () => {
               comments: [
                 {
                   comment: {
-                    commentTitle: "Reservation General Notes",
+                    commentTitle: params.commentTitle,
                     notificationLocation: "GEN",
                     type: "RESERVATION",
                     internal: true,
                     text: {
-                      value: "Adding a reservation note here",
+                      value: params.commentText,
                     },
                   },
                 },
@@ -377,10 +389,54 @@ export const useApisStore = defineStore("apis", () => {
         },
         headers: getHeaders(token.value.access_token),
       });
+      updateReservationSuccess.value = "Reservation updated successfully!";
       return response.data;
     } catch (error) {
       console.error("Error updating reservation:", error);
+      updateReservationError.value =
+        "Error updating reservation: " + error.message;
       throw error;
+    }
+  };
+
+  const postCancelReservation = async (reservationId) => {
+    try {
+      const response = await axios({
+        url: `http://localhost:5173/api/rsv/v1/hotels/${hotelId.value}/reservations/${reservationId.value}/cancellations`,
+        method: "POST",
+        headers: getHeaders(token.value.access_token),
+        data: {
+          reason: {
+            code: "DUP",
+            description: "Trip Cancelled",
+          },
+          reservations: {
+            reservationIdList: {
+              id: reservationId.value,
+
+              type: "Reservation",
+            },
+            hotelId: hotelId.value,
+          },
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error cancelling reservation:", error);
+      throw error;
+    }
+  };
+
+  const cancelReservation = async () => {
+    try {
+      const response = await postCancelReservation(reservationId);
+      cancelSuccessMessage.value = "Reservation cancelled successfully!";
+      cancelErrorMessage.value = "";
+      console.log(response);
+    } catch (error) {
+      cancelSuccessMessage.value = "";
+      cancelErrorMessage.value =
+        "Error cancelling reservation: " + error.message;
     }
   };
 
@@ -392,6 +448,8 @@ export const useApisStore = defineStore("apis", () => {
     jsonData,
     hotelId,
     params,
+    cancelErrorMessage,
+    cancelSuccessMessage,
     errorMessage,
     generateAccessToken,
     getHotelAvailability,
@@ -403,5 +461,7 @@ export const useApisStore = defineStore("apis", () => {
     createReservationWithExistingGuest,
     getReservation,
     putReservation,
+    postCancelReservation,
+    cancelReservation,
   };
 });
