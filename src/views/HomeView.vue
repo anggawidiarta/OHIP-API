@@ -872,7 +872,7 @@ const store = useApisStore();
         alt="Leafs"
         class="object-cover w-full h-24"
       />
-      <div v-else class="p-3">
+      <div v-else class="p-5">
         <JsonViewer
           :value="store.token"
           copyable
