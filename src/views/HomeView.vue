@@ -2,9 +2,12 @@
 <script setup>
 import { ref, watch } from "vue";
 import { JsonViewer } from "vue3-json-viewer";
-import axios from "axios";
+import JsonViewerComponent from "@/components/JsonViewerComponent.vue";
+import HeaderComponent from "@/components/HeaderComponent.vue";
+import FormComponent from "@/components/FormComponent.vue";
 
 import { useApisStore } from "@/stores/api";
+import { RouterLink } from "vue-router";
 
 const store = useApisStore();
 </script>
@@ -13,26 +16,7 @@ const store = useApisStore();
   <div class="flex flex-wrap">
     <div class="mb-10 w-full">
       <div class="container mx-auto h-full sm:p-10">
-        <nav class="flex justify-between items-center px-4">
-          <div class="text-4xl font-bold">
-            OHIP Test - Get Access Token<span class="text-green-700">.</span>
-          </div>
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="36px"
-              height="36px"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill="currentColor"
-                class="hover:fill-green-500"
-                fill-rule="evenodd"
-                d="M12.667 6.542A3.208 3.208 0 0 1 8.86 9.694l-.438.492a.44.44 0 0 1-.327.147h-.678v.73a.437.437 0 0 1-.438.437H6.25v.73a.437.437 0 0 1-.437.437H3.77a.437.437 0 0 1-.438-.438v-1.423a.44.44 0 0 1 .128-.31l2.95-2.949a3.208 3.208 0 0 1 3.047-4.214a3.2 3.2 0 0 1 3.209 3.209m-3.209-.875a.875.875 0 1 0 1.75 0a.875.875 0 0 0-1.75 0"
-              />
-            </svg>
-          </div>
-        </nav>
+        <HeaderComponent />
         <header class="container px-4 mt-10 lg:flex lg:mt-16">
           <div class="w-full">
             <h1 class="text-4xl font-bold capitalize lg:text-6xl">
@@ -57,9 +41,13 @@ const store = useApisStore();
             </p>
             <div class="flex flex-col gap-6 w-full">
               <!-- #region getHotelAvailability -->
-              <form
-                @submit.prevent="store.getHotelAvailability"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full bg-green-500 rounded shadow w-fit"
+                buttonText="Search Hotel Availability"
+                :errorMessage="store.errorMessage"
+                :successMessage="store.successMessage"
+                @submit="store.getHotelAvailability"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Start Date:
@@ -335,13 +323,7 @@ const store = useApisStore();
                     class="grow"
                   />
                 </label>
-                <button
-                  :disabled="!store.token ? true : false"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Search Hotel Availability
-                </button>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region getRatePlanDetail -->
@@ -367,6 +349,35 @@ const store = useApisStore();
               </form>
               <!-- #endregion -->
 
+              <!-- #region getMarketCodeForProperty -->
+              <form
+                @submit.prevent="store.getMarketCodes"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              >
+                <label class="flex gap-2 items-center input input-bordered">
+                  Value Name:
+                  <input
+                    type="text"
+                    v-model="store.valueName"
+                    class="grow"
+                    required
+                  />
+                </label>
+                <button
+                  :disabled="!store.token ? true : false"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
+                >
+                  Get Market Code For Property
+                </button>
+                <p
+                  v-if="store.errorMarketCodeMessage"
+                  class="col-span-full font-bold capitalize text-red-500 text-end"
+                >
+                  {{ store.errorMarketCodeMessage }}
+                </p>
+              </form>
+              <!-- #endregion -->
+
               <!-- #region getAvailableGuanranteeCodes  -->
               <form
                 @submit.prevent="store.getAvailableGuarantee"
@@ -375,7 +386,7 @@ const store = useApisStore();
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
                   <input
-                    type="number"
+                    type="text"
                     v-model="store.params.ratePlanCode"
                     class="grow"
                     required
@@ -808,9 +819,9 @@ const store = useApisStore();
               <!-- #region updateReservation -->
               <form
                 @submit.prevent="store.putReservation"
-                class="grid grid-cols-2 gap-4 items-center p-4 rounded-xl border-2 border-green-500"
+                class="grid grid-cols-2 lg:grid-cols-3 gap-4 items-center p-4 rounded-xl border-2 border-green-500"
               >
-                <h3 class="col-span-2 text-xl font-semibold">
+                <h3 class="col-span-full text-xl font-semibold">
                   Update Reservation
                 </h3>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -860,6 +871,20 @@ const store = useApisStore();
                 </p>
               </form>
               <!-- #endregion -->
+
+              <!-- #region getLovNames -->
+              <form
+                @submit.prevent="store.getLovNames"
+                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              >
+                <button
+                  :disabled="!store.token"
+                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
+                >
+                  Get List of Values
+                </button>
+              </form>
+              <!-- #endregion -->
             </div>
           </div>
         </header>
@@ -872,26 +897,11 @@ const store = useApisStore();
         alt="Leafs"
         class="object-cover w-full h-24"
       />
-      <div v-else class="p-5">
-        <JsonViewer
-          :value="store.token"
-          copyable
-          expandable
-          boxed
-          sort
-          theme="jv-dark"
-        />
-      </div>
-      <div v-if="store.jsonData && store.token" class="p-3">
-        <JsonViewer
-          :value="store.jsonData"
-          copyable
-          expandable
-          boxed
-          sort
-          theme="jv-dark"
-        />
-      </div>
+      <JsonViewerComponent v-if="store.token" :data="store.token" />
+      <JsonViewerComponent
+        v-if="store.jsonData && store.token"
+        :data="store.jsonData"
+      />
     </div>
   </div>
 </template>
