@@ -43,10 +43,9 @@ const store = useApisStore();
               <!-- #region getHotelAvailability -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Search Hotel Availability"
-                :errorMessage="store.errorMessage"
-                :successMessage="store.successMessage"
+                :errorMessage="store.errorHotelAvailabilityMessage"
                 @submit="store.getHotelAvailability"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -327,32 +326,31 @@ const store = useApisStore();
               <!-- #endregion -->
 
               <!-- #region getRatePlanDetail -->
-              <form
-                @submit.prevent="store.getRatePlanDetail"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Rate Plan Detail"
+                @submit="store.getRatePlanDetail"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
                   <input
-                    type="number"
+                    type="text"
                     v-model="store.params.ratePlanCode"
                     class="grow"
                     required
                   />
                 </label>
-                <button
-                  :disabled="!store.token ? true : false"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get Rate Plan Code Details
-                </button>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region getMarketCodeForProperty -->
-              <form
-                @submit.prevent="store.getMarketCodes"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Market Code"
+                :errorMessage="store.errorMarketCodeMessage"
+                @submit="store.getMarketCodes"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Value Name:
@@ -363,25 +361,34 @@ const store = useApisStore();
                     required
                   />
                 </label>
-                <button
-                  :disabled="!store.token ? true : false"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get Market Code For Property
-                </button>
-                <p
-                  v-if="store.errorMarketCodeMessage"
-                  class="col-span-full font-bold capitalize text-red-500 text-end"
-                >
-                  {{ store.errorMarketCodeMessage }}
-                </p>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
+              <!-- #region getSourceCodeForProperty -->
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Source Code"
+                :errorMessage="store.errorSourceCodeMessage"
+                @submit="store.getSourceCodes"
+              >
+                <label class="flex gap-2 items-center input input-bordered">
+                  Value Name:
+                  <input
+                    type="text"
+                    v-model="store.valueName"
+                    class="grow"
+                    required
+                  />
+                </label>
+              </FormComponent>
+
               <!-- #region getAvailableGuanranteeCodes  -->
-              <form
-                @submit.prevent="store.getAvailableGuarantee"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Guarantee Code"
+                @submit="store.getAvailableGuarantee"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Rate Plan Code:
@@ -401,19 +408,15 @@ const store = useApisStore();
                     required
                   />
                 </label>
-                <button
-                  :disabled="!store.token ? true : false"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get Available Guarantee
-                </button>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region getPaymentMethods  -->
-              <form
-                @submit.prevent="store.getPaymentMethod"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Payment Methods"
+                @submit="store.getPaymentMethod"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Include Active Flag:
@@ -423,19 +426,15 @@ const store = useApisStore();
                     class="grow"
                   />
                 </label>
-                <button
-                  :disabled="!store.token ? true : false"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get Payment Methods
-                </button>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region getPackages  -->
-              <form
-                @submit.prevent="store.getPackages"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Available Packages"
+                @submit="store.getPackages"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Start Date:
@@ -495,19 +494,15 @@ const store = useApisStore();
                     class="grow"
                   />
                 </label>
-                <button
-                  :disabled="!store.token ? true : false"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get Available Packages
-                </button>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region getGuestProfile -->
-              <form
-                @submit.prevent="store.getGuestProfile"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Guest Profile"
+                @submit="store.getGuestProfile"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Profile Name:
@@ -605,21 +600,18 @@ const store = useApisStore();
                     class="grow"
                   />
                 </label>
-                <button
-                  :disabled="!store.token ? true : false"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get Guest Profile
-                </button>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region createReservation -->
-              <form
-                @submit.prevent="store.createReservationWithExistingGuest"
-                class="grid grid-cols-2 gap-4 items-center p-4 rounded-xl border-2 border-green-500"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-blue-500 rounded shadow w-fit"
+                buttonText="Create Reservation"
+                :errorMessage="store.errorMessage"
+                @submit="store.createReservationWithExistingGuest"
               >
-                <h3 class="col-span-2 text-xl font-semibold">
+                <h3 class="col-span-full text-xl font-semibold">
                   Form Create Reservation with Existing Guest
                 </h3>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -728,44 +720,39 @@ const store = useApisStore();
                     class="grow"
                   />
                 </label>
-                <button
-                  :disabled="!store.token"
-                  class="px-4 py-2 text-lg font-medium text-white bg-blue-500 rounded shadow w-fit"
-                >
-                  Create Reservation
-                </button>
                 <p
                   class="col-span-full font-bold text-red-500 text-end"
                   v-if="store.isGuestProfileNotFound"
                 >
                   *Guest Profile Id Is Not Found
                 </p>
-                <p
-                  v-if="store.errorMessage"
-                  class="col-span-full font-bold text-red-500 text-end"
-                >
-                  {{ store.errorMessage }}
-                </p>
+
                 <p
                   v-if="store.reservationId"
                   class="col-span-full text-xl font-bold text-green-500 text-end"
                 >
                   Reservation Id: {{ store.reservationId }}
                 </p>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region getReservation -->
-              <form
-                @submit.prevent="store.getReservation"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get Reservation By Id"
+                :errorMessage="store.errorGetReservationMessage"
+                @submit="store.getReservation"
               >
-                <button
-                  :disabled="!store.token"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get Reservation
-                </button>
+                <label class="flex gap-2 items-center input input-bordered">
+                  Reservation ID:
+                  <input
+                    type="text"
+                    v-model="store.reservationId"
+                    class="grow"
+                    required
+                  />
+                </label>
                 <div class="col-span-full" v-if="store.guestReservationData">
                   <p class="font-semibold text-green-500">
                     Guest Data by Reservation Id : {{ store.reservationId }}
@@ -778,13 +765,17 @@ const store = useApisStore();
                     theme="jv-dark"
                   />
                 </div>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region guestCancelReservation -->
-              <form
-                @submit.prevent="store.cancelReservation"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-red-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-red-500 rounded shadow w-fit"
+                buttonText="Cancel Reservation"
+                :successMessage="store.cancelSuccessMessage"
+                :errorMessage="store.cancelErrorMessage"
+                @submit="store.cancelReservation"
               >
                 <label class="flex gap-2 items-center input input-bordered">
                   Reservation ID:
@@ -795,31 +786,17 @@ const store = useApisStore();
                     required
                   />
                 </label>
-                <button
-                  :disabled="!store.token"
-                  class="px-4 py-2 text-lg font-medium text-white bg-red-500 rounded shadow w-fit"
-                >
-                  Cancel Reservation
-                </button>
-                <p
-                  v-if="store.cancelSuccessMessage"
-                  class="col-span-full text-xl font-bold text-green-500 text-end"
-                >
-                  {{ store.cancelSuccessMessage }}
-                </p>
-                <p
-                  v-if="store.cancelErrorMessage"
-                  class="col-span-full text-xl font-bold text-red-500 text-end"
-                >
-                  {{ store.cancelErrorMessage }}
-                </p>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region updateReservation -->
-              <form
-                @submit.prevent="store.putReservation"
-                class="grid grid-cols-2 lg:grid-cols-3 gap-4 items-center p-4 rounded-xl border-2 border-green-500"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px]  bg-yellow-500 rounded shadow w-fit"
+                buttonText="Update Reservation"
+                :successMessage="store.updateReservationSuccess"
+                :errorMessage="store.updateReservationError"
+                @submit="store.putReservation"
               >
                 <h3 class="col-span-full text-xl font-semibold">
                   Update Reservation
@@ -851,39 +828,17 @@ const store = useApisStore();
                     class="grow"
                   />
                 </label>
-                <button
-                  :disabled="!store.token"
-                  class="px-4 py-2 text-lg font-medium text-white bg-blue-500 rounded shadow w-fit"
-                >
-                  Update Reservation
-                </button>
-                <p
-                  v-if="store.updateReservationError"
-                  class="col-span-full font-bold text-red-500 text-end"
-                >
-                  {{ store.updateReservationError }}
-                </p>
-                <p
-                  v-if="store.updateReservationSuccess"
-                  class="col-span-full text-xl font-bold text-green-500 text-end"
-                >
-                  {{ store.updateReservationSuccess }}
-                </p>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
 
               <!-- #region getLovNames -->
-              <form
-                @submit.prevent="store.getLovNames"
-                class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
+              <FormComponent
+                formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonText="Get List Of Values Name"
+                @submit="store.cancelReservation"
               >
-                <button
-                  :disabled="!store.token"
-                  class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
-                >
-                  Get List of Values
-                </button>
-              </form>
+              </FormComponent>
               <!-- #endregion -->
             </div>
           </div>
