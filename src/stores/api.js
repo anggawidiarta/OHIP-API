@@ -21,11 +21,13 @@ export const useApisStore = defineStore("apis", () => {
   const listOfValuesData = ref(null);
   const isGuestProfileNotFound = ref(false);
   const errorMessage = ref("");
+  const errorHotelAvailabilityMessage = ref("");
   const errorMarketCodeMessage = ref("");
   const updateReservationError = ref("");
   const updateReservationSuccess = ref("");
   const valueName = ref("");
   const errorSourceCodeMessage = ref("");
+  const errorGetReservationMessage = ref("");
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -171,44 +173,50 @@ export const useApisStore = defineStore("apis", () => {
     );
   };
 
-  const getHotelAvailability = () =>
-    fetchData("jsonData", API_ENDPOINTS.value.hotelAvailability, {
-      roomStayStartDate: params.roomStayStartDate,
-      roomStayEndDate: params.roomStayEndDate,
-      roomStayQuantity: params.roomStayQuantity,
-      adults: params.adults,
-      children: params.children,
-      childAge: params.childAge,
-      ratePlanCode: params.ratePlanCode,
-      roomTypeCode: params.roomTypeCode,
-      includeClosedRates: params.includeClosedRates,
-      includeDefaultRatePlanSet: params.includeDefaultRatePlanSet,
-      ratePlanSet: params.ratePlanSet,
-      pagePointerKey: params.pagePointerKey,
-      bucket1Count: params.bucket1Count,
-      bucket2Count: params.bucket2Count,
-      bucket3Count: params.bucket3Count,
-      bucket4Count: params.bucket4Count,
-      bucket5Count: params.bucket5Count,
-      fullStayTimeSpanStartDate: params.fullStayTimeSpanStartDate,
-      fullStayTimeSpanEndDate: params.fullStayTimeSpanEndDate,
-      prevailingRate: params.prevailingRate,
-      rateCategory: params.rateCategory,
-      rateClass: params.rateClass,
-      rateGroup: params.rateGroup,
-      features: params.features,
-      reservationGuestId: params.reservationGuestId,
-      reservationGuestIdType: params.reservationGuestIdType,
-      hotelReservationId: params.hotelReservationId,
-      hotelReservationIdType: params.hotelReservationIdType,
-      ratePlanInfo: params.ratePlanInfo,
-      returnOnlyAvailableRateCodes: params.returnOnlyAvailableRateCodes,
-      resGuaranteeInfo: params.resGuaranteeInfo,
-      roomTypeInfo: params.roomTypeInfo,
-      membershipIdNumber: params.membershipIdNumber,
-      smokingPreference: params.smokingPreference,
-      limit: params.limit,
-    });
+  const getHotelAvailability = () => {
+    try {
+      fetchData("jsonData", API_ENDPOINTS.value.hotelAvailability, {
+        roomStayStartDate: params.roomStayStartDate,
+        roomStayEndDate: params.roomStayEndDate,
+        roomStayQuantity: params.roomStayQuantity,
+        adults: params.adults,
+        children: params.children,
+        childAge: params.childAge,
+        ratePlanCode: params.ratePlanCode,
+        roomTypeCode: params.roomTypeCode,
+        includeClosedRates: params.includeClosedRates,
+        includeDefaultRatePlanSet: params.includeDefaultRatePlanSet,
+        ratePlanSet: params.ratePlanSet,
+        pagePointerKey: params.pagePointerKey,
+        bucket1Count: params.bucket1Count,
+        bucket2Count: params.bucket2Count,
+        bucket3Count: params.bucket3Count,
+        bucket4Count: params.bucket4Count,
+        bucket5Count: params.bucket5Count,
+        fullStayTimeSpanStartDate: params.fullStayTimeSpanStartDate,
+        fullStayTimeSpanEndDate: params.fullStayTimeSpanEndDate,
+        prevailingRate: params.prevailingRate,
+        rateCategory: params.rateCategory,
+        rateClass: params.rateClass,
+        rateGroup: params.rateGroup,
+        features: params.features,
+        reservationGuestId: params.reservationGuestId,
+        reservationGuestIdType: params.reservationGuestIdType,
+        hotelReservationId: params.hotelReservationId,
+        hotelReservationIdType: params.hotelReservationIdType,
+        ratePlanInfo: params.ratePlanInfo,
+        returnOnlyAvailableRateCodes: params.returnOnlyAvailableRateCodes,
+        resGuaranteeInfo: params.resGuaranteeInfo,
+        roomTypeInfo: params.roomTypeInfo,
+        membershipIdNumber: params.membershipIdNumber,
+        smokingPreference: params.smokingPreference,
+        limit: params.limit,
+      });
+    } catch (error) {
+      errorHotelAvailabilityMessage.value = error.response.data.title;
+      console.log(error);
+    }
+  };
 
   const getRatePlanDetail = () =>
     fetchData("jsonData", API_ENDPOINTS.value.ratePlanDetail);
@@ -397,8 +405,17 @@ export const useApisStore = defineStore("apis", () => {
       : null;
   };
 
-  const getReservation = () =>
-    fetchData("guestReservationData", API_ENDPOINTS.value.getReservation);
+  const getReservation = async () => {
+    errorGetReservationMessage.value = "";
+    try {
+      await fetchData(
+        "guestReservationData",
+        API_ENDPOINTS.value.getReservation
+      );
+    } catch (error) {
+      errorGetReservationMessage.value = error.response.data.title;
+    }
+  };
 
   const putReservation = async () => {
     try {
@@ -499,9 +516,14 @@ export const useApisStore = defineStore("apis", () => {
     params,
     valueName,
     errorMarketCodeMessage,
+    errorSourceCodeMessage,
     cancelErrorMessage,
     cancelSuccessMessage,
+    updateReservationError,
+    updateReservationSuccess,
     errorMessage,
+    errorHotelAvailabilityMessage,
+    errorGetReservationMessage,
     generateAccessToken,
     getHotelAvailability,
     getMarketCodes,
