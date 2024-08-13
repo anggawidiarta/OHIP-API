@@ -836,7 +836,7 @@ const store = useApisStore();
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
                 buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get List Of Values Name"
-                @submit="store.cancelReservation"
+                @submit="store.getLovNames"
               >
               </FormComponent>
               <!-- #endregion -->
