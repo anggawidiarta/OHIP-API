@@ -6,7 +6,7 @@ import {
   makeAxiosRequest,
   extractProfileIds,
 } from "@/services/apiService";
-import { getApiEndpoints, ENV_VARS } from "@/config/constants";
+import { ENV_VARS } from "@/config/constants";
 
 const hotelId = ref("SUMBA");
 
@@ -18,10 +18,14 @@ export const useApisStore = defineStore("apis", () => {
   const guestReservationData = ref();
   const token = ref("");
   const jsonData = ref(null);
+  const listOfValuesData = ref(null);
   const isGuestProfileNotFound = ref(false);
   const errorMessage = ref("");
+  const errorMarketCodeMessage = ref("");
   const updateReservationError = ref("");
   const updateReservationSuccess = ref("");
+  const valueName = ref("");
+  const errorSourceCodeMessage = ref("");
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -103,6 +107,8 @@ export const useApisStore = defineStore("apis", () => {
       ratePlanDetail: `/par/v1/hotels/${ENV_VARS.HOTEL_ID}/rates/${ratePlanCode}`,
       availableGuarantee: `/par/v1/hotels/${ENV_VARS.HOTEL_ID}/guarantees`,
       paymentMethod: `/lov/v1/listOfValues/hotels/${ENV_VARS.HOTEL_ID}/paymentMethods`,
+      propertyCode: `/lov/v1/listOfValues/${valueName.value}`,
+      listOfValues: `/lov/v1/listOfValues`,
       packages: `/rtp/v1/packages`,
       guestProfile: `/crm/v1/profiles`,
       getReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}`,
@@ -151,8 +157,15 @@ export const useApisStore = defineStore("apis", () => {
     endpoint,
     additionalParams = {}
   ) => {
-    const responseVar =
-      responseVarName === "jsonData" ? jsonData : guestReservationData;
+    let responseVar;
+    if (responseVarName === "jsonData") {
+      responseVar = jsonData;
+    } else if (responseVarName === "listOfValuesData") {
+      responseVar = listOfValuesData;
+    } else {
+      responseVar = guestReservationData;
+    }
+
     responseVar.value = await makeAxiosRequest(
       getRequestConfig(endpoint, additionalParams)
     );
@@ -207,6 +220,44 @@ export const useApisStore = defineStore("apis", () => {
       hotelId: hotelId.value,
     });
 
+  // fungsi untuk mengambil list of value dari API
+  const getLovNames = () =>
+    fetchData("listOfValuesData", API_ENDPOINTS.value.listOfValues, {
+      hotelId: hotelId.value,
+    });
+
+  // fungsi untuk melakukan validasi dari salah satu nilai list of value yang diambil
+  const getListOfValues = () => {
+    fetchData("jsonData", API_ENDPOINTS.value.propertyCode);
+  };
+
+  const getSourceCodes = async () => {
+    errorSourceCodeMessage.value = "";
+    try {
+      fetchData("jsonData", API_ENDPOINTS.value.propertyCode, {
+        parameterValue: hotelId.value,
+        parameterName: "HotelCode",
+        includeInactiveFlag: false,
+      });
+    } catch (error) {
+      errorSourceCodeMessage.value = error.response.data.title;
+      console.log(error);
+    }
+  };
+
+  const getMarketCodes = async () => {
+    errorMarketCodeMessage.value = "";
+    try {
+      await fetchData("jsonData", API_ENDPOINTS.value.propertyCode, {
+        hotelId: hotelId.value,
+      });
+    } catch (error) {
+      // TODO: handle error message here
+      errorMarketCodeMessage.value = error.response.data.title;
+      console.log(error);
+    }
+  };
+
   const getPaymentMethod = () =>
     fetchData("jsonData", API_ENDPOINTS.value.paymentMethod, {
       includeInactiveFlag: params.includeInactiveFlag,
@@ -219,11 +270,9 @@ export const useApisStore = defineStore("apis", () => {
       hotelId: hotelId.value,
       startDate: params.startDate,
       endDate: params.endDate,
-      ticketPostingRhythm: params.ticketPostingRhythm,
-      fetchInstructions: params.fetchInstructions,
-      sellSeparate: params.sellSeparate,
-      includeGroup: params.includeGroup,
-      descriptionWildCard: params.descriptionWildCard,
+      fetchInstructions: "Header",
+      fetchInstructions: "Items",
+      packageCode: "CHAMP",
     });
 
   const getGuestProfile = () =>
@@ -448,11 +497,15 @@ export const useApisStore = defineStore("apis", () => {
     jsonData,
     hotelId,
     params,
+    valueName,
+    errorMarketCodeMessage,
     cancelErrorMessage,
     cancelSuccessMessage,
     errorMessage,
     generateAccessToken,
     getHotelAvailability,
+    getMarketCodes,
+    getSourceCodes,
     getRatePlanDetail,
     getAvailableGuarantee,
     getPaymentMethod,
@@ -463,5 +516,6 @@ export const useApisStore = defineStore("apis", () => {
     putReservation,
     postCancelReservation,
     cancelReservation,
+    getLovNames,
   };
 });
