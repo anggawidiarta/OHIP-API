@@ -43,7 +43,7 @@ const store = useApisStore();
               <!-- #region getHotelAvailability -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Search Hotel Availability"
                 :errorMessage="store.errorHotelAvailabilityMessage"
                 @submit="store.getHotelAvailability"
@@ -328,7 +328,7 @@ const store = useApisStore();
               <!-- #region getRatePlanDetail -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Rate Plan Detail"
                 @submit="store.getRatePlanDetail"
               >
@@ -347,7 +347,7 @@ const store = useApisStore();
               <!-- #region getMarketCodeForProperty -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Market Code"
                 :errorMessage="store.errorMarketCodeMessage"
                 @submit="store.getMarketCodes"
@@ -367,7 +367,7 @@ const store = useApisStore();
               <!-- #region getSourceCodeForProperty -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Source Code"
                 :errorMessage="store.errorSourceCodeMessage"
                 @submit="store.getSourceCodes"
@@ -386,7 +386,7 @@ const store = useApisStore();
               <!-- #region getAvailableGuanranteeCodes  -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Guarantee Code"
                 @submit="store.getAvailableGuarantee"
               >
@@ -414,7 +414,7 @@ const store = useApisStore();
               <!-- #region getPaymentMethods  -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Payment Methods"
                 @submit="store.getPaymentMethod"
               >
@@ -432,7 +432,7 @@ const store = useApisStore();
               <!-- #region getPackages  -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Available Packages"
                 @submit="store.getPackages"
               >
@@ -500,7 +500,7 @@ const store = useApisStore();
               <!-- #region getGuestProfile -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Guest Profile"
                 @submit="store.getGuestProfile"
               >
@@ -606,7 +606,7 @@ const store = useApisStore();
               <!-- #region createReservation -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-blue-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-blue-500 rounded shadow w-fit"
                 buttonText="Create Reservation"
                 :errorMessage="store.errorMessage"
                 @submit="store.createReservationWithExistingGuest"
@@ -739,7 +739,7 @@ const store = useApisStore();
               <!-- #region getReservation -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Reservation By Id"
                 :errorMessage="store.errorGetReservationMessage"
                 @submit="store.getReservation"
@@ -771,7 +771,7 @@ const store = useApisStore();
               <!-- #region guestCancelReservation -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-red-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-red-500 rounded shadow w-fit"
                 buttonText="Cancel Reservation"
                 :successMessage="store.cancelSuccessMessage"
                 :errorMessage="store.cancelErrorMessage"
@@ -792,7 +792,7 @@ const store = useApisStore();
               <!-- #region updateReservation -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px]  bg-yellow-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-yellow-500 rounded shadow w-fit"
                 buttonText="Update Reservation"
                 :successMessage="store.updateReservationSuccess"
                 :errorMessage="store.updateReservationError"
@@ -834,7 +834,7 @@ const store = useApisStore();
               <!-- #region getLovNames -->
               <FormComponent
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
-                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-[225px] bg-green-500 rounded shadow w-fit"
+                buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get List Of Values Name"
                 @submit="store.cancelReservation"
               >
