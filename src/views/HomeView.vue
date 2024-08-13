@@ -857,6 +857,10 @@ const store = useApisStore();
         v-if="store.jsonData && store.token"
         :data="store.jsonData"
       />
+      <JsonViewerComponent
+        v-if="store.listOfValuesData && store.token"
+        :data="store.listOfValuesData"
+      />
     </div>
   </div>
 </template>

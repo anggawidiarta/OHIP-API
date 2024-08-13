@@ -512,6 +512,7 @@ export const useApisStore = defineStore("apis", () => {
     reservationId,
     guestReservationData,
     jsonData,
+    listOfValuesData,
     hotelId,
     params,
     valueName,
