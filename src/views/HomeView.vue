@@ -57,7 +57,8 @@ const store = useApisStore();
             </p>
             <div class="flex flex-col gap-6 w-full">
               <!-- #region getHotelAvailability -->
-              <div
+              <form
+                @submit.prevent="store.getHotelAvailability"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -66,6 +67,7 @@ const store = useApisStore();
                     type="date"
                     v-model="store.params.startDate"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -74,6 +76,7 @@ const store = useApisStore();
                     type="date"
                     v-model="store.params.endDate"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -82,6 +85,7 @@ const store = useApisStore();
                     type="number"
                     v-model="store.params.roomStayQuantity"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -90,6 +94,7 @@ const store = useApisStore();
                     type="number"
                     v-model="store.params.adults"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -98,6 +103,7 @@ const store = useApisStore();
                     type="number"
                     v-model="store.params.children"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -331,16 +337,16 @@ const store = useApisStore();
                 </label>
                 <button
                   :disabled="!store.token ? true : false"
-                  @click="store.getHotelAvailability"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Search Hotel Availability
                 </button>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region getRatePlanDetail -->
-              <div
+              <form
+                @submit.prevent="store.getRatePlanDetail"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -349,20 +355,21 @@ const store = useApisStore();
                     type="number"
                     v-model="store.params.ratePlanCode"
                     class="grow"
+                    required
                   />
                 </label>
                 <button
                   :disabled="!store.token ? true : false"
-                  @click="store.getRatePlanDetail"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Rate Plan Code Details
                 </button>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region getAvailableGuanranteeCodes  -->
-              <div
+              <form
+                @submit.prevent="store.getAvailableGuarantee"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -371,6 +378,7 @@ const store = useApisStore();
                     type="number"
                     v-model="store.params.ratePlanCode"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -379,20 +387,21 @@ const store = useApisStore();
                     type="date"
                     v-model="store.params.arrivalDate"
                     class="grow"
+                    required
                   />
                 </label>
                 <button
                   :disabled="!store.token ? true : false"
-                  @click="store.getAvailableGuarantee"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Available Guarantee
                 </button>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region getPaymentMethods  -->
-              <div
+              <form
+                @submit.prevent="store.getPaymentMethod"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -405,16 +414,16 @@ const store = useApisStore();
                 </label>
                 <button
                   :disabled="!store.token ? true : false"
-                  @click="store.getPaymentMethod"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Payment Methods
                 </button>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region getPackages  -->
-              <div
+              <form
+                @submit.prevent="store.getPackages"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -423,6 +432,7 @@ const store = useApisStore();
                     type="date"
                     v-model="store.params.startDate"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -431,6 +441,7 @@ const store = useApisStore();
                     type="date"
                     v-model="store.params.endDate"
                     class="grow"
+                    required
                   />
                 </label>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -475,16 +486,16 @@ const store = useApisStore();
                 </label>
                 <button
                   :disabled="!store.token ? true : false"
-                  @click="store.getPackages"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Available Packages
                 </button>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region getGuestProfile -->
-              <div
+              <form
+                @submit.prevent="store.getGuestProfile"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -585,20 +596,19 @@ const store = useApisStore();
                 </label>
                 <button
                   :disabled="!store.token ? true : false"
-                  @click="store.getGuestProfile"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Guest Profile
                 </button>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region createReservation -->
               <form
                 @submit.prevent="store.createReservationWithExistingGuest"
-                class="grid grid-cols-2 gap-4 items-center p-4 bg-white rounded-lg shadow"
+                class="grid grid-cols-2 gap-4 items-center p-4 rounded-xl border-2 border-green-500"
               >
-                <h3 class="col-span-2 text-xl font-semibold text-black">
+                <h3 class="col-span-2 text-xl font-semibold">
                   Form Create Reservation with Existing Guest
                 </h3>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -735,12 +745,12 @@ const store = useApisStore();
               <!-- #endregion -->
 
               <!-- #region getReservation -->
-              <div
+              <form
+                @submit.prevent="store.getReservation"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-3"
               >
                 <button
                   :disabled="!store.token"
-                  @click="store.getReservation"
                   class="px-4 py-2 text-lg font-medium text-white bg-green-500 rounded shadow w-fit"
                 >
                   Get Reservation
@@ -757,11 +767,12 @@ const store = useApisStore();
                     theme="jv-dark"
                   />
                 </div>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region guestCancelReservation -->
-              <div
+              <form
+                @submit.prevent="store.cancelReservation"
                 class="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-red-500 lg:grid-cols-3"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -770,11 +781,11 @@ const store = useApisStore();
                     type="text"
                     v-model="store.reservationId"
                     class="grow"
+                    required
                   />
                 </label>
                 <button
                   :disabled="!store.token"
-                  @click="store.cancelReservation"
                   class="px-4 py-2 text-lg font-medium text-white bg-red-500 rounded shadow w-fit"
                 >
                   Cancel Reservation
@@ -791,15 +802,15 @@ const store = useApisStore();
                 >
                   {{ store.cancelErrorMessage }}
                 </p>
-              </div>
+              </form>
               <!-- #endregion -->
 
               <!-- #region updateReservation -->
               <form
                 @submit.prevent="store.putReservation"
-                class="grid grid-cols-2 gap-4 items-center p-4 bg-white rounded-lg shadow"
+                class="grid grid-cols-2 gap-4 items-center p-4 rounded-xl border-2 border-green-500"
               >
-                <h3 class="col-span-2 text-xl font-semibold text-black">
+                <h3 class="col-span-2 text-xl font-semibold">
                   Update Reservation
                 </h3>
                 <label class="flex gap-2 items-center input input-bordered">
@@ -884,5 +895,3 @@ const store = useApisStore();
     </div>
   </div>
 </template>
-
-<style scoped></style>
