@@ -1,9 +1,18 @@
+<script setup>
+import { RouterLink } from "vue-router";
+</script>
+
 <template>
   <nav class="flex justify-between items-center px-4">
     <div class="text-4xl font-bold">
       OHIP Test - Get Access Token<span class="text-green-700">.</span>
     </div>
-    <div>
+    <div class="flex items-center gap-4">
+      <RouterLink
+        to="/reservation"
+        class="hover:text-green-500 duration-150 transition-all ease-in-out text-2xl font-semibold"
+        >Reservation</RouterLink
+      >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="36px"
