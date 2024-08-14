@@ -330,6 +330,7 @@ const store = useApisStore();
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
                 buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Rate Plan Detail"
+                :errorMessage="store.errorRatePlanCodeMessage"
                 @submit="store.getRatePlanDetail"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -388,6 +389,7 @@ const store = useApisStore();
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
                 buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Guarantee Code"
+                :errorMessage="store.errorAvailableGuaranteeMessage"
                 @submit="store.getAvailableGuarantee"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -416,6 +418,7 @@ const store = useApisStore();
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
                 buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Payment Methods"
+                :errorMessage="store.errorPaymentMethodMessage"
                 @submit="store.getPaymentMethod"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -434,6 +437,7 @@ const store = useApisStore();
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
                 buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Available Packages"
+                :errorMessage="store.errorAvailablePackageMessage"
                 @submit="store.getPackages"
               >
                 <label class="flex gap-2 items-center input input-bordered">
@@ -502,6 +506,7 @@ const store = useApisStore();
                 formClass="grid grid-cols-1 gap-3 p-3 rounded-xl border-2 border-green-500 lg:grid-cols-2 xl:grid-cols-3"
                 buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-green-500 rounded shadow w-fit"
                 buttonText="Get Guest Profile"
+                :errorMessage="store.errorGuestProfilesMessage"
                 @submit="store.getGuestProfile"
               >
                 <label class="flex gap-2 items-center input input-bordered">
