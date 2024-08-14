@@ -45,7 +45,7 @@ onUnmounted(() => {
 
   <!-- Hero Section -->
   <section class="px-2 py-24 bg-white md:px-0">
-    <div class="container items-center max-w-6xl px-8 mx-auto xl:px-5">
+    <div class="container items-center max-w-7xl px-8 mx-auto xl:px-5">
       <div class="flex flex-wrap items-center sm:-mx-3">
         <div class="w-full md:w-1/2 md:px-3">
           <div
