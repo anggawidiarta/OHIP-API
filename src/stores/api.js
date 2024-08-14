@@ -21,13 +21,18 @@ export const useApisStore = defineStore("apis", () => {
   const listOfValuesData = ref(null);
   const isGuestProfileNotFound = ref(false);
   const errorMessage = ref("");
+  const errorAvailableGuaranteeMessage = ref("");
   const errorHotelAvailabilityMessage = ref("");
   const errorMarketCodeMessage = ref("");
+  const errorRatePlanCodeMessage = ref("");
+  const errorPaymentMethodMessage = ref("");
+  const errorAvailablePackageMessage = ref("");
   const updateReservationError = ref("");
   const updateReservationSuccess = ref("");
   const valueName = ref("");
   const errorSourceCodeMessage = ref("");
   const errorGetReservationMessage = ref("");
+  const errorGuestProfilesMessage = ref("");
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -218,15 +223,27 @@ export const useApisStore = defineStore("apis", () => {
     }
   };
 
-  const getRatePlanDetail = () =>
-    fetchData("jsonData", API_ENDPOINTS.value.ratePlanDetail);
+  const getRatePlanDetail = async () => {
+    errorRatePlanCodeMessage.value = "";
+    try {
+      await fetchData("jsonData", API_ENDPOINTS.value.ratePlanDetail);
+    } catch (error) {
+      errorRatePlanCodeMessage.value =
+        "The Value For Rate Plan Code Is Invalid";
+    }
+  };
 
-  const getAvailableGuarantee = () =>
-    fetchData("jsonData", API_ENDPOINTS.value.availableGuarantee, {
-      ratePlanCode: params.ratePlanCode,
-      arrivalDate: params.arrivalDate,
-      hotelId: hotelId.value,
-    });
+  const getAvailableGuarantee = async () => {
+    try {
+      await fetchData("jsonData", API_ENDPOINTS.value.availableGuarantee, {
+        ratePlanCode: params.ratePlanCode,
+        arrivalDate: params.arrivalDate,
+        hotelId: hotelId.value,
+      });
+    } catch (error) {
+      errorAvailableGuaranteeMessage.value = error.response.data.title;
+    }
+  };
 
   // fungsi untuk mengambil list of value dari API
   const getLovNames = () =>
@@ -260,45 +277,62 @@ export const useApisStore = defineStore("apis", () => {
         hotelId: hotelId.value,
       });
     } catch (error) {
-      // TODO: handle error message here
       errorMarketCodeMessage.value = error.response.data.title;
       console.log(error);
     }
   };
 
-  const getPaymentMethod = () =>
-    fetchData("jsonData", API_ENDPOINTS.value.paymentMethod, {
-      includeInactiveFlag: params.includeInactiveFlag,
-    });
+  const getPaymentMethod = async () => {
+    errorAvailableGuaranteeMessage.value = "";
+    try {
+      await fetchData("jsonData", API_ENDPOINTS.value.paymentMethod, {
+        includeInactiveFlag: params.includeInactiveFlag,
+      });
+    } catch (error) {
+      errorPaymentMethodMessage.value = error.response.data.title;
+    }
+  };
 
-  const getPackages = () =>
-    fetchData("jsonData", API_ENDPOINTS.value.packages, {
-      adults: params.adults,
-      children: params.children,
-      hotelId: hotelId.value,
-      startDate: params.startDate,
-      endDate: params.endDate,
-      fetchInstructions: "Header",
-      fetchInstructions: "Items",
-      packageCode: "CHAMP",
-    });
+  const getPackages = async () => {
+    errorAvailablePackageMessage.value = "";
+    try {
+      await fetchData("jsonData", API_ENDPOINTS.value.packages, {
+        adults: params.adults,
+        children: params.children,
+        hotelId: hotelId.value,
+        startDate: params.startDate,
+        endDate: params.endDate,
+        fetchInstructions: "Header",
+        // eslint-disable-next-line no-dupe-keys
+        fetchInstructions: "Items",
+        packageCode: "CHAMP",
+      });
+    } catch (error) {
+      errorAvailablePackageMessage.value = error.response.data.title;
+    }
+  };
 
-  const getGuestProfile = () =>
-    fetchData("jsonData", API_ENDPOINTS.value.guestProfile, {
-      profileName: params.profileName,
-      givenName: params.givenName,
-      profileType: params.profileType,
-      summaryInfo: params.summaryInfo,
-      hotelId: hotelId.value,
-      limit: params.limit,
-      city: params.city,
-      state: params.state,
-      postalCode: params.postalCode,
-      communication: params.communication,
-      membership: params.membership,
-      searchType: params.searchType,
-      fetchInstructions: params.fetchInstructionsGuest,
-    });
+  const getGuestProfile = async () => {
+    try {
+      fetchData("jsonData", API_ENDPOINTS.value.guestProfile, {
+        profileName: params.profileName,
+        givenName: params.givenName,
+        profileType: params.profileType,
+        summaryInfo: params.summaryInfo,
+        hotelId: hotelId.value,
+        limit: params.limit,
+        city: params.city,
+        state: params.state,
+        postalCode: params.postalCode,
+        communication: params.communication,
+        membership: params.membership,
+        searchType: params.searchType,
+        fetchInstructions: params.fetchInstructionsGuest,
+      });
+    } catch (error) {
+      errorGuestProfilesMessage.value = error.response.data.title;
+    }
+  };
 
   const createReservationWithExistingGuest = async () => {
     try {
@@ -519,12 +553,17 @@ export const useApisStore = defineStore("apis", () => {
     errorMarketCodeMessage,
     errorSourceCodeMessage,
     cancelErrorMessage,
+    errorRatePlanCodeMessage,
+    errorAvailableGuaranteeMessage,
     cancelSuccessMessage,
     updateReservationError,
     updateReservationSuccess,
     errorMessage,
+    errorPaymentMethodMessage,
     errorHotelAvailabilityMessage,
     errorGetReservationMessage,
+    errorAvailablePackageMessage,
+    errorGuestProfilesMessage,
     generateAccessToken,
     getHotelAvailability,
     getMarketCodes,
