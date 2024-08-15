@@ -312,6 +312,15 @@ export const useApisStore = defineStore("apis", () => {
     }
   };
 
+  // TODO: create postGuestProfile, this function used when the guest profile is not found
+  const postGuestProfile = async () => {
+    try {
+      console.log("testFunction");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getGuestProfile = async () => {
     try {
       fetchData("jsonData", API_ENDPOINTS.value.guestProfile, {
