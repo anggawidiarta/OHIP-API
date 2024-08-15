@@ -35,12 +35,14 @@ export const useApisStore = defineStore("apis", () => {
   const errorGuestProfilesMessage = ref("");
   const errorCreateGuestProfileMessage = ref("");
 
+  const guestProfileId = ref("");
+
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
     roomStayEndDate: new Date(new Date().setDate(new Date().getDate() + 1))
       .toISOString()
       .split("T")[0],
-    limit: 5,
+    limit: null,
     children: 0,
     arrivalDate: new Date().toISOString().split("T")[0],
     includeInactiveFlag: false,
@@ -327,6 +329,7 @@ export const useApisStore = defineStore("apis", () => {
     }
   };
 
+  // Create Guest Profile
   const postGuestProfile = async () => {
     errorGuestProfilesMessage.value = "";
     try {
@@ -362,9 +365,11 @@ export const useApisStore = defineStore("apis", () => {
         headers: getHeaders(token.value.access_token),
       });
 
-      const selfLink = await response.data.links.find((link) => link.rel === "self");
+      const selfLink = await response.data.links.find(
+        (link) => link.rel === "self"
+      );
       const profileId = await selfLink.href.match(/\/profiles\/(\d+)/)[1];
-      console.log("Guest profile created successfully:", response.data);
+      guestProfileId.value = profileId;
       console.log("Guest profile ID:", profileId);
     } catch (error) {
       console.error("Error creating guest profile:", error);
@@ -400,6 +405,7 @@ export const useApisStore = defineStore("apis", () => {
       reservationId.value = null;
       await getGuestProfile();
       if (!jsonData.value?.profileSummaries?.profileInfo) {
+        // isGuestProfileNotFound.value = true;
         console.log("No Profile Data Received From GetGuestProfile");
         return;
       }
@@ -608,6 +614,7 @@ export const useApisStore = defineStore("apis", () => {
     jsonData,
     listOfValuesData,
     hotelId,
+    guestProfileId,
     params,
     valueName,
     errorMarketCodeMessage,

@@ -8,6 +8,7 @@ import ReservationFooter from "@/components/reservation/ReservationFooter.vue";
 import ReservationHero from "@/components/reservation/ReservationHero.vue";
 import ReservationAboutUs from "@/components/reservation/ReservationAboutUs.vue";
 import ReservationMetric from "@/components/reservation/ReservationMetric.vue";
+import FormComponent from "@/components/FormComponent.vue";
 
 const store = useApisStore();
 let intervalId;
@@ -53,48 +54,162 @@ onUnmounted(() => {
   <ReservationHero />
   <!-- #endregion -->
 
-  <!-- #region Reservation Form -->
-  <section class="flex items-center justify-center p-12">
+  <!-- #region create reservation profile -->
+
+  <FormComponent
+    formClass="grid grid-cols-1 gap-3 w-full max-xl:p-12 mx-auto max-w-7xl border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+    buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-blue-500 rounded shadow w-fit"
+    buttonText="Create Reservation"
+    :errorMessage="store.errorMessage"
+    @submit="store.createReservationWithExistingGuest"
+  >
+    <h3 class="col-span-full text-xl font-semibold">
+      Form Create Reservation with Existing Guest
+    </h3>
+    <label class="flex gap-2 items-center input input-bordered">
+      Guest Profile ID:
+      <input
+        required
+        type="text"
+        v-model="store.params.guestProfileId"
+        class="grow"
+      />
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Rate Start Date:
+      <input type="date" v-model="store.params.startDate" class="grow" />
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Rate End Date:
+      <input type="date" v-model="store.params.endDate" class="grow" />
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Room Type Charged:
+      <input type="text" v-model="store.params.roomTypeCharged" class="grow" />
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Rate Plan Code:
+      <input
+        type="text"
+        v-model="store.params.ratePlanCode"
+        class="grow"
+        required
+      />
+    </label>
+    <label class="w-full form-control">
+      <select
+        class="w-full select select-bordered"
+        v-model="store.params.roomType"
+        title="Room Type:"
+        required
+      >
+        <option disabled selected>Room Type:</option>
+        <option value="KS1B">KS1B</option>
+        <option value="KT1B">KT1B</option>
+        <option value="LA1B">LA1B</option>
+        <option value="LB1B">LB1B</option>
+        <option value="MR1B">MR1B</option>
+        <option value="RK1B">RK1B</option>
+        <option value="WA1B">WA1B</option>
+      </select>
+    </label>
+    <label class="w-full form-control">
+      <select
+        class="w-full select select-bordered"
+        v-model="store.params.guaranteeCode"
+        title="Room Type:"
+        required
+      >
+        <option disabled selected>Guarantee Code:</option>
+        <option value="CC">CC</option>
+        <option value="CHECK IN">CHECK IN</option>
+        <option value="DRQ">DB</option>
+        <option value="DRV">DRV</option>
+        <option value="PM">PM</option>
+      </select>
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Children:
+      <input type="text" v-model="store.params.children" class="grow" />
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Adults:
+      <input type="text" v-model="store.params.adults" class="grow" />
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Arrival Date:
+      <input type="date" v-model="store.params.arrivalDate" class="grow" />
+    </label>
+    <label class="flex gap-2 items-center input input-bordered">
+      Departure Date:
+      <input type="date" v-model="store.params.departureDate" class="grow" />
+    </label>
+    <p
+      class="col-span-full font-bold text-red-500 text-end"
+      v-if="store.isGuestProfileNotFound"
+    >
+      *Guest Profile Id Is Not Found
+    </p>
+
+    <p
+      v-if="store.reservationId"
+      class="col-span-full text-xl font-bold text-green-500 text-end"
+    >
+      Reservation Id: {{ store.reservationId }}
+    </p>
+  </FormComponent>
+  <!-- #endregion -->
+
+  <!-- #region create guest profile -->
+  <section class="flex justify-center items-center p-12">
     <!-- Author: FormBold Team -->
-    <div class="mx-auto w-full max-w-5xl bg-white dark:bg-[#181818]">
+    <div class="mx-auto w-full xl:max-w-7xl bg-white dark:bg-[#181818]">
       <p class="text-2xl font-bold">Create Guest Profile</p>
+      <p
+        v-if="store.guestProfileId"
+        class="mt-4 mb-6 text-lg text-green-600 dark:text-green-400"
+      >
+        Guest Profile Id: {{ store.guestProfileId }}
+      </p>
       <form @submit.prevent="store.postGuestProfile">
         <div class="mb-5">
           <label
             for="guestGivenName"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Given Name
           </label>
           <input
             v-model="store.params.guestGivenName"
             type="text"
+            required
             name="guestGivenName"
             id="guestGivenName"
             placeholder="Given Name"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestMiddleName"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Middle Name
           </label>
           <input
             v-model="store.params.guestMiddleName"
             type="text"
+            required
             name="guestMiddleName"
             id="guestMiddleName"
             placeholder="Middle Name"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestSurName"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Surname
           </label>
@@ -102,15 +217,16 @@ onUnmounted(() => {
             v-model="store.params.guestSurName"
             type="text"
             name="guestSurName"
+            required
             id="guestSurName"
             placeholder="Surname"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestNameSuffix"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Name Suffix
           </label>
@@ -120,13 +236,13 @@ onUnmounted(() => {
             name="guestNameSuffix"
             id="guestNameSuffix"
             placeholder="Name Suffix"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestNameTitle"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Name Title
           </label>
@@ -134,15 +250,16 @@ onUnmounted(() => {
             v-model="store.params.guestNameTitle"
             type="text"
             name="guestNameTitle"
+            required
             id="guestNameTitle"
             placeholder="Name Title"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestEnveloperGreeting"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Envelope Greeting
           </label>
@@ -152,13 +269,13 @@ onUnmounted(() => {
             name="guestEnveloperGreeting"
             id="guestEnveloperGreeting"
             placeholder="Envelope Greeting"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestSalutation"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Salutation
           </label>
@@ -168,13 +285,13 @@ onUnmounted(() => {
             name="guestSalutation"
             id="guestSalutation"
             placeholder="Salutation"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestNameType"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Name Type
           </label>
@@ -185,45 +302,47 @@ onUnmounted(() => {
             name="guestNameType"
             id="guestNameType"
             placeholder="Name Type"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestLanguage"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Language
           </label>
           <input
             v-model="store.params.guestLanguage"
             type="text"
+            required
             name="guestLanguage"
             id="guestLanguage"
             placeholder="Language"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="guestNationality"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Nationality
           </label>
           <input
             v-model="store.params.guestNationality"
             type="text"
+            required
             name="guestNationality"
             id="guestNationality"
             placeholder="Nationality"
-            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
           <label
             for="markForHistory"
-            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
           >
             Mark for History
           </label>
@@ -232,12 +351,12 @@ onUnmounted(() => {
             type="checkbox"
             name="markForHistory"
             id="markForHistory"
-            class="rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div>
           <button
-            class="hover:shadow-form w-full rounded-md bg-indigo-600 py-3 px-8 text-center text-base font-semibold text-white outline-none"
+            class="px-8 py-3 w-full text-base font-semibold text-center text-white bg-indigo-600 rounded-md outline-none hover:shadow-form"
             :disabled="!store.token"
           >
             Submit
@@ -257,7 +376,7 @@ onUnmounted(() => {
   <!-- #endregion -->
 
   <hr
-    class="h-px my-6 bg-transparent border-t-0 opacity-25 bg-gradient-to-r from-transparent via-neutral-500 to-transparent dark:via-neutral-400"
+    class="my-6 h-px bg-transparent bg-gradient-to-r from-transparent to-transparent border-t-0 opacity-25 via-neutral-500 dark:via-neutral-400"
   />
 
   <!-- #region metrics section -->
@@ -265,7 +384,7 @@ onUnmounted(() => {
   <!-- #endregion -->
 
   <hr
-    class="h-px my-12 bg-transparent border-t-0 opacity-25 bg-gradient-to-r from-transparent via-neutral-500 to-transparent dark:via-neutral-400"
+    class="my-12 h-px bg-transparent bg-gradient-to-r from-transparent to-transparent border-t-0 opacity-25 via-neutral-500 dark:via-neutral-400"
   />
 
   <!-- gallery -->
@@ -280,7 +399,7 @@ onUnmounted(() => {
     </div>
 
     <div
-      class="grid grid-cols-1 gap-4 p-4 pb-8 place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      class="grid grid-cols-1 gap-4 place-items-center p-4 pb-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
     >
       <div class="relative group">
         <img
