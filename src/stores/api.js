@@ -80,7 +80,7 @@ export const useApisStore = defineStore("apis", () => {
     roomTypeInfo: null,
     membershipIdNumber: null,
     smokingPreference: null,
-    adults: null,
+    adults: 0,
     ticketPostingRhythm: null,
     fetchInstructions: "Comment",
     sellSeparate: null,
@@ -101,9 +101,9 @@ export const useApisStore = defineStore("apis", () => {
     departureDate: new Date(new Date().setDate(new Date().getDate() + 1))
       .toISOString()
       .split("T")[0],
-    roomType: null,
+    roomType: "",
     roomTypeCharged: null,
-    guaranteeCode: null,
+    guaranteeCode: "",
     commentTitle: "Reservation General Notes",
     commentText: "Adding a reservation note here",
 

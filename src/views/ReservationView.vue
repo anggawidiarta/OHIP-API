@@ -103,7 +103,7 @@ onUnmounted(() => {
         title="Room Type:"
         required
       >
-        <option disabled selected>Room Type:</option>
+        <option value="" disabled>Room Type:</option>
         <option value="KS1B">KS1B</option>
         <option value="KT1B">KT1B</option>
         <option value="LA1B">LA1B</option>
@@ -120,7 +120,7 @@ onUnmounted(() => {
         title="Room Type:"
         required
       >
-        <option disabled selected>Guarantee Code:</option>
+        <option value="" disabled>Guarantee Code:</option>
         <option value="CC">CC</option>
         <option value="CHECK IN">CHECK IN</option>
         <option value="DRQ">DB</option>
@@ -130,11 +130,21 @@ onUnmounted(() => {
     </label>
     <label class="flex gap-2 items-center input input-bordered">
       Children:
-      <input type="text" v-model="store.params.children" class="grow" />
+      <input
+        type="number"
+        required
+        v-model="store.params.children"
+        class="grow"
+      />
     </label>
     <label class="flex gap-2 items-center input input-bordered">
       Adults:
-      <input type="text" v-model="store.params.adults" class="grow" />
+      <input
+        type="number"
+        v-model="store.params.adults"
+        class="grow"
+        required
+      />
     </label>
     <label class="flex gap-2 items-center input input-bordered">
       Arrival Date:
