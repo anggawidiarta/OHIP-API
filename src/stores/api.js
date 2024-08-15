@@ -33,6 +33,7 @@ export const useApisStore = defineStore("apis", () => {
   const errorSourceCodeMessage = ref("");
   const errorGetReservationMessage = ref("");
   const errorGuestProfilesMessage = ref("");
+  const errorCreateGuestProfileMessage = ref("");
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -103,6 +104,19 @@ export const useApisStore = defineStore("apis", () => {
     guaranteeCode: null,
     commentTitle: "Reservation General Notes",
     commentText: "Adding a reservation note here",
+
+    // params for create guest profile start here
+    guestGivenName: "",
+    guestMiddleName: "",
+    guestSurName: "",
+    guestNameSuffix: "",
+    guestNameTitle: "",
+    guestEnveloperGreeting: "",
+    guestSalutation: "",
+    guestNameType: "PRIMARY",
+    guestLanguage: "",
+    guestNationality: "",
+    markForHistory: false,
   });
 
   const API_ENDPOINTS = computed(() => {
@@ -118,6 +132,7 @@ export const useApisStore = defineStore("apis", () => {
       listOfValues: `/lov/v1/listOfValues`,
       packages: `/rtp/v1/packages`,
       guestProfile: `/crm/v1/profiles`,
+      createGuestProfile: `/crm/v1/guests`,
       getReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}`,
       putReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationIdValue}`,
       postReservation: `/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations`,
@@ -313,43 +328,47 @@ export const useApisStore = defineStore("apis", () => {
   };
 
   const postGuestProfile = async () => {
+    errorGuestProfilesMessage.value = "";
     try {
       const guestProfileData = {
         guestDetails: {
           customer: {
             personName: [
               {
-                givenName: "Ben",
-                middleName: "A",
-                surname: "Smith",
-                nameSuffix: "",
-                nameTitle: "Mr",
-                envelopeGreeting: "",
-                salutation: "",
-                nameType: "PRIMARY",
-                language: "E",
+                givenName: params.guestGivenName,
+                middleName: params.guestMiddleName,
+                surname: params.guestSurName,
+                nameSuffix: params.guestNameSuffix,
+                nameTitle: params.guestNameTitle,
+                envelopeGreeting: params.guestEnveloperGreeting,
+                salutation: params.guestSalutation,
+                nameType: params.guestNameType,
+                language: params.guestLanguage,
               },
             ],
-            language: "E",
-            nationality: "US",
+            language: params.language,
+            nationality: params.guestNationality,
           },
           profileType: "GUEST",
           statusCode: "ACTIVE",
           registeredProperty: hotelId.value,
-          markForHistory: false,
+          markForHistory: params.markForHistory,
         },
       };
-
       const response = await axios({
-        url: `http://localhost:5173/api${API_ENDPOINTS.value.guestProfile}`,
+        url: `http://localhost:5173/api${API_ENDPOINTS.value.createGuestProfile}`,
         method: "POST",
         data: guestProfileData,
         headers: getHeaders(token.value.access_token),
       });
 
+      const selfLink = await response.data.links.find((link) => link.rel === "self");
+      const profileId = await selfLink.href.match(/\/profiles\/(\d+)/)[1];
       console.log("Guest profile created successfully:", response.data);
+      console.log("Guest profile ID:", profileId);
     } catch (error) {
       console.error("Error creating guest profile:", error);
+      errorGuestProfilesMessage.value = error.response.data.title;
     }
   };
 

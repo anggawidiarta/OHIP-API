@@ -53,71 +53,200 @@ onUnmounted(() => {
   <ReservationHero />
   <!-- #endregion -->
 
-  <!-- Reservation Form -->
-  <section id="reservation" class="py-16 bg-gray-800">
-    <div class="container max-w-lg mx-auto">
-      <h3 class="mb-6 text-2xl font-bold">Reservation Form</h3>
-      <form class="p-8 bg-gray-900 rounded-lg">
-        <div class="mb-4">
-          <label for="name" class="block text-sm font-medium">Name</label>
+  <!-- #region Reservation Form -->
+  <section class="flex items-center justify-center p-12">
+    <!-- Author: FormBold Team -->
+    <div class="mx-auto w-full max-w-5xl bg-white dark:bg-[#181818]">
+      <p class="text-2xl font-bold">Create Guest Profile</p>
+      <form @submit.prevent="store.postGuestProfile">
+        <div class="mb-5">
+          <label
+            for="guestGivenName"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Given Name
+          </label>
           <input
+            v-model="store.params.guestGivenName"
             type="text"
-            id="name"
-            class="w-full p-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-lg"
-            placeholder="Your Name"
+            name="guestGivenName"
+            id="guestGivenName"
+            placeholder="Given Name"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
           />
         </div>
-        <div class="mb-4">
-          <label for="email" class="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            id="email"
-            class="w-full p-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-lg"
-            placeholder="Your Email"
-          />
-        </div>
-        <div class="mb-4">
-          <label for="checkin" class="block text-sm font-medium"
-            >Check-in Date</label
+        <div class="mb-5">
+          <label
+            for="guestMiddleName"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
           >
+            Middle Name
+          </label>
           <input
-            type="date"
-            id="checkin"
-            class="w-full p-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-lg"
+            v-model="store.params.guestMiddleName"
+            type="text"
+            name="guestMiddleName"
+            id="guestMiddleName"
+            placeholder="Middle Name"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
           />
         </div>
-        <div class="mb-4">
-          <label for="checkout" class="block text-sm font-medium"
-            >Check-out Date</label
+        <div class="mb-5">
+          <label
+            for="guestSurName"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
           >
+            Surname
+          </label>
           <input
-            type="date"
-            id="checkout"
-            class="w-full p-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-lg"
+            v-model="store.params.guestSurName"
+            type="text"
+            name="guestSurName"
+            id="guestSurName"
+            placeholder="Surname"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
           />
         </div>
-        <div class="mb-6">
-          <label for="guests" class="block text-sm font-medium"
-            >Number of Guests</label
+        <div class="mb-5">
+          <label
+            for="guestNameSuffix"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
           >
+            Name Suffix
+          </label>
           <input
-            type="number"
-            id="guests"
-            class="w-full p-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-lg"
-            min="1"
-            max="10"
-            value="1"
+            v-model="store.params.guestNameSuffix"
+            type="text"
+            name="guestNameSuffix"
+            id="guestNameSuffix"
+            placeholder="Name Suffix"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
           />
         </div>
-        <button
-          type="submit"
-          class="w-full px-6 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700"
-        >
-          Submit Reservation
-        </button>
+        <div class="mb-5">
+          <label
+            for="guestNameTitle"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Name Title
+          </label>
+          <input
+            v-model="store.params.guestNameTitle"
+            type="text"
+            name="guestNameTitle"
+            id="guestNameTitle"
+            placeholder="Name Title"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="guestEnveloperGreeting"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Envelope Greeting
+          </label>
+          <input
+            v-model="store.params.guestEnveloperGreeting"
+            type="text"
+            name="guestEnveloperGreeting"
+            id="guestEnveloperGreeting"
+            placeholder="Envelope Greeting"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="guestSalutation"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Salutation
+          </label>
+          <input
+            v-model="store.params.guestSalutation"
+            type="text"
+            name="guestSalutation"
+            id="guestSalutation"
+            placeholder="Salutation"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="guestNameType"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Name Type
+          </label>
+          <input
+            v-model="store.params.guestNameType"
+            required
+            type="text"
+            name="guestNameType"
+            id="guestNameType"
+            placeholder="Name Type"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="guestLanguage"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Language
+          </label>
+          <input
+            v-model="store.params.guestLanguage"
+            type="text"
+            name="guestLanguage"
+            id="guestLanguage"
+            placeholder="Language"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="guestNationality"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Nationality
+          </label>
+          <input
+            v-model="store.params.guestNationality"
+            type="text"
+            name="guestNationality"
+            id="guestNationality"
+            placeholder="Nationality"
+            class="w-full rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="markForHistory"
+            class="mb-3 block text-base font-medium text-gray-900 dark:text-gray-300"
+          >
+            Mark for History
+          </label>
+          <input
+            v-model="store.params.markForHistory"
+            type="checkbox"
+            name="markForHistory"
+            id="markForHistory"
+            class="rounded-md border border-gray-300 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-indigo-500 focus:shadow-md"
+          />
+        </div>
+        <div>
+          <button
+            class="hover:shadow-form w-full rounded-md bg-indigo-600 py-3 px-8 text-center text-base font-semibold text-white outline-none"
+            :disabled="!store.token"
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   </section>
+  <!-- #endregion -->
 
   <!-- #region feature section -->
   <FeatureSection />
