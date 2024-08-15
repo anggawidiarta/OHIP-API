@@ -148,7 +148,8 @@ onUnmounted(() => {
       class="col-span-full font-bold text-red-500 text-end"
       v-if="store.isGuestProfileNotFound"
     >
-      *Guest Profile Id Is Not Found
+      *Guest Profile Id Is Not Found, Create Guest Profile First To Obtain Guest
+      Profile Id
     </p>
 
     <p

@@ -405,7 +405,7 @@ export const useApisStore = defineStore("apis", () => {
       reservationId.value = null;
       await getGuestProfile();
       if (!jsonData.value?.profileSummaries?.profileInfo) {
-        // isGuestProfileNotFound.value = true;
+        isGuestProfileNotFound.value = true;
         console.log("No Profile Data Received From GetGuestProfile");
         return;
       }
@@ -426,8 +426,9 @@ export const useApisStore = defineStore("apis", () => {
 
       isGuestProfileNotFound.value = false;
     } catch (error) {
-      console.error("Error creating reservation:", error);
-      errorMessage.value = "Error Profile ID Does Not Exist";
+      console.error("Error creating reservation:", error.response.data);
+      errorMessage.value =
+        "Error Profile ID Does Not Exist, You Need To Create Guest Profile Id First";
     }
   };
 
