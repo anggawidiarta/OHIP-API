@@ -312,12 +312,44 @@ export const useApisStore = defineStore("apis", () => {
     }
   };
 
-  // TODO: create postGuestProfile, this function used when the guest profile is not found
   const postGuestProfile = async () => {
     try {
-      console.log("testFunction");
+      const guestProfileData = {
+        guestDetails: {
+          customer: {
+            personName: [
+              {
+                givenName: "Ben",
+                middleName: "A",
+                surname: "Smith",
+                nameSuffix: "",
+                nameTitle: "Mr",
+                envelopeGreeting: "",
+                salutation: "",
+                nameType: "PRIMARY",
+                language: "E",
+              },
+            ],
+            language: "E",
+            nationality: "US",
+          },
+          profileType: "GUEST",
+          statusCode: "ACTIVE",
+          registeredProperty: hotelId.value,
+          markForHistory: false,
+        },
+      };
+
+      const response = await axios({
+        url: `http://localhost:5173/api${API_ENDPOINTS.value.guestProfile}`,
+        method: "POST",
+        data: guestProfileData,
+        headers: getHeaders(token.value.access_token),
+      });
+
+      console.log("Guest profile created successfully:", response.data);
     } catch (error) {
-      console.log(error);
+      console.error("Error creating guest profile:", error);
     }
   };
 
@@ -588,5 +620,6 @@ export const useApisStore = defineStore("apis", () => {
     postCancelReservation,
     cancelReservation,
     getLovNames,
+    postGuestProfile,
   };
 });

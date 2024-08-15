@@ -1,6 +1,6 @@
 <template>
   <footer
-    class="px-5 pb-5 rounded footer footer-center bg-base-200 text-base-content"
+    class="px-5 pb-5 rounded footer footer-center dark:bg-[#181818] bg-base-200 text-base-content"
   >
     <nav class="grid grid-flow-col gap-4">
       <a class="link link-hover">About us</a>
