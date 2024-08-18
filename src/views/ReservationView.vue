@@ -55,8 +55,7 @@ onUnmounted(() => {
   <!-- #endregion -->
 
   <!-- #region create reservation profile -->
-   <!-- TODO: hide reservation guest profile id later -->
-
+  <!-- TODO: hide reservation guest profile id later -->
   <FormComponent
     formClass="grid grid-cols-1 gap-3 w-full max-xl:p-12 mx-auto max-w-7xl border-green-500 lg:grid-cols-2 xl:grid-cols-3"
     buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-blue-500 rounded shadow w-fit"
@@ -64,15 +63,14 @@ onUnmounted(() => {
     :errorMessage="store.errorMessage"
     @submit="store.createReservationWithExistingGuest"
   >
-    <h3 class="col-span-full text-xl font-semibold">
-      Form Create Reservation with Existing Guest
-    </h3>
+    <h3 class="col-span-full text-xl font-semibold">Form Create Reservation</h3>
     <label class="flex gap-2 items-center input input-bordered">
       Guest Profile ID:
       <input
+        disabled
         required
         type="text"
-        v-model="store.params.guestProfileId"
+        v-model="store.guestProfileId"
         class="grow"
       />
     </label>
@@ -300,7 +298,7 @@ onUnmounted(() => {
             class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
-        <div class="mb-5">
+        <!-- <div class="mb-5">
           <label
             for="guestNameType"
             class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
@@ -316,7 +314,7 @@ onUnmounted(() => {
             placeholder="Name Type"
             class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
-        </div>
+        </div> -->
         <div class="mb-5">
           <label
             for="guestLanguage"
