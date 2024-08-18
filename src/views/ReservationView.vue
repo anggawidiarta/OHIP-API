@@ -55,6 +55,7 @@ onUnmounted(() => {
   <!-- #endregion -->
 
   <!-- #region create reservation profile -->
+   <!-- TODO: hide reservation guest profile id later -->
 
   <FormComponent
     formClass="grid grid-cols-1 gap-3 w-full max-xl:p-12 mx-auto max-w-7xl border-green-500 lg:grid-cols-2 xl:grid-cols-3"
