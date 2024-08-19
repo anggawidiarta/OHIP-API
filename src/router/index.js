@@ -17,7 +17,8 @@ const router = createRouter({
     {
       path: "/booking",
       name: "booking",
-      component: () => import("../views/BookingForm.vue"),
+      component: () =>
+        import("../components/reservation/form/FormCreateProfile.vue"),
     },
   ],
 });
