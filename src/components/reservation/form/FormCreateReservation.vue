@@ -1,6 +1,6 @@
 <script setup>
 import { useApisStore } from "@/stores/api";
-import { notification } from "@/utils/notification";
+import { notification, showNotification } from "@/utils/notification";
 
 const store = useApisStore();
 
@@ -12,10 +12,11 @@ const nextReservationStep = () => {
 
 const createReservation = async () => {
   await store.createReservationWithExistingGuest();
-  notification(
-    "Reservation created successfully\nYour Reservation Id Is: " +
-      store.reservationId,
-    "success"
+  showNotification(
+    "Reservation Created",
+    `Your Reservation Id Is: ${store.reservationId}`,
+    "success",
+    "Confirm"
   );
   store.reservationStep = 0;
 };
