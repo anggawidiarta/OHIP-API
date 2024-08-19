@@ -4,7 +4,7 @@ import { scrollToSection } from "@/utils/helper";
 
 <template>
   <section class="px-2 py-24 bg-white dark:bg-[#181818] md:px-0">
-    <div class="container items-center px-8 mx-auto max-w-7xl xl:px-5">
+    <div class="container items-center px-8 mx-auto max-w-7xl xl:px-0">
       <div class="flex flex-wrap items-center sm:-mx-3">
         <div class="w-full md:w-1/2 md:px-3">
           <div
@@ -45,12 +45,6 @@ import { scrollToSection } from "@/utils/helper";
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
               </button>
-              <!-- <a
-                href="#_"
-                class="flex items-center px-6 py-3 text-gray-500 bg-gray-100 rounded-md hover:bg-gray-200 hover:text-gray-600"
-              >
-                Learn More
-              </a> -->
             </div>
           </div>
         </div>

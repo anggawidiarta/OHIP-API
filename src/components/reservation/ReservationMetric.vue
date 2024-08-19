@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white dark:bg-[#181818] py-12">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-6 xl:px-0">
       <div class="mx-auto max-w-2xl lg:max-w-none">
         <div class="text-center">
           <h2

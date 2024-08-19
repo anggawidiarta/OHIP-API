@@ -1,7 +1,6 @@
 <script setup>
-import { ref } from "vue";
-
 import { useApisStore } from "@/stores/api";
+import { notification } from "@/utils/notification";
 
 const store = useApisStore();
 
@@ -11,29 +10,20 @@ const nextReservationStep = () => {
   }
 };
 
-const reservationStep = ref(1);
-const reservation = ref({
-  startDate: "",
-  endDate: "",
-  roomType: "",
-  ratePlanCode: "",
-});
-
-const nextStep = () => {
-  if (reservationStep.value < 3) {
-    reservationStep.value++;
-  }
-};
-
-const submitReservation = () => {
-  reservationStep.value = 4;
-  // Implementasi untuk menyimpan data ke server bisa ditambahkan di sini
+const createReservation = async () => {
+  await store.createReservationWithExistingGuest();
+  notification(
+    "Reservation created successfully\nYour Reservation Id Is: " +
+      store.reservationId,
+    "success"
+  );
+  store.reservationStep = 0;
 };
 </script>
 
 <template>
   <section
-    class="flex items-center justify-center p-12"
+    class="flex justify-center items-center p-12"
     id="create-reservation"
   >
     <div
@@ -60,8 +50,9 @@ const submitReservation = () => {
               required
               name="arrivalDate"
               id="arrivalDate"
+              title="Arrival Date"
               placeholder="Select Arrival Date"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
           <div class="col-span-1 mb-5">
@@ -77,8 +68,45 @@ const submitReservation = () => {
               required
               name="departureDate"
               id="departureDate"
+              title="Departure Date"
               placeholder="Select Departure Date"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            />
+          </div>
+          <div class="col-span-1 mb-5">
+            <label
+              for="rateStartDate"
+              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
+            >
+              Rate Start Date
+            </label>
+            <input
+              v-model="store.params.startDate"
+              type="date"
+              required
+              name="rateStartDate"
+              id="rateStartDate"
+              title="Rate Start Date"
+              placeholder="Select Rate Start Date"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            />
+          </div>
+          <div class="col-span-1 mb-5">
+            <label
+              for="rateEndDate"
+              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
+            >
+              Rate End Date
+            </label>
+            <input
+              v-model="store.params.endDate"
+              type="date"
+              required
+              name="rateEndDate"
+              id="rateEndDate"
+              placeholder="Select Rate End Date"
+              title="Rate End Date"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
         </div>
@@ -101,33 +129,33 @@ const submitReservation = () => {
         <div class="grid grid-cols-2 gap-4">
           <div class="col-span-1 mb-5">
             <label
-              for="departureDate"
+              for="ratePlanCode"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
             >
-              Rate Plan Code:
+              Rate Plan:
             </label>
             <select
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
               v-model="store.params.ratePlanCode"
-              title="Rate Plan:"
+              title="Rate Plan"
               required
             >
-              <option value="" disabled>Room Type:</option>
+              <option value="" disabled>Rate Plan:</option>
               <option value="FITRACK">FITRACK</option>
               <option value="FITRACK - ES">FITRACK - ES</option>
             </select>
           </div>
           <div class="col-span-1 mb-5">
             <label
-              for="departureDate"
+              for="roomType"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
             >
-              Room Type Code:
+              Room Type:
             </label>
             <select
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
               v-model="store.params.roomType"
-              title="Room Type:"
+              title="Room Type"
               required
             >
               <option value="" disabled>Room Type:</option>
@@ -142,24 +170,66 @@ const submitReservation = () => {
           </div>
           <div class="col-span-1 mb-5">
             <label
-              for="departureDate"
+              for="guaranteeCode"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
             >
               Guarantee Code:
             </label>
             <select
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
               v-model="store.params.guaranteeCode"
-              title="Guarantee Code:"
+              title="Guarantee Code"
               required
             >
               <option value="" disabled>Guarantee Code:</option>
-              <option value="CC">CC</option>
-              <option value="CHECK IN">CHECK IN</option>
-              <option value="DB">DB</option>
-              <option value="DRQ">DRQ</option>
-              <option value="DRV">DRV</option>
-              <option value="PM">PM</option>
+              <option value="CC">Credit Card Guaranteed</option>
+              <option value="CHECK IN">Checked In</option>
+              <option value="DB">Direct Bill Guaranteed</option>
+              <option value="DRQ">Deposit Requested</option>
+              <option value="DRV">Deposit Received</option>
+              <option value="PM">Posting Master Use</option>
+            </select>
+          </div>
+          <!-- TODO: package code not been implemented, because the post request is not required it yet -->
+          <div class="col-span-1 mb-5">
+            <label
+              for="departureDate"
+              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
+            >
+              Package Code:
+            </label>
+            <select
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              v-model="store.params.packageCode"
+              title="Package Code"
+              required
+            >
+              <option value="" disabled>Package Code:</option>
+              <option value="SURF">Surf Slot</option>
+              <option value="TKT">Flight Ticket</option>
+              <option value="VIP ASST">VIP Airport Assistance</option>
+            </select>
+          </div>
+          <div class="col-span-1 mb-5">
+            <label
+              for="paymentMethod"
+              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
+            >
+              Payment Method:
+            </label>
+            <select
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              v-model="store.params.paymentMethod"
+              title="Payment Method"
+              required
+            >
+              <option value="" disabled>Payment Method:</option>
+              <option value="AX">American Express</option>
+              <option value="BT">Bank Transfer</option>
+              <option value="CA">Cash</option>
+              <option value="CL">City Ledger</option>
+              <option value="MC">MasterCard</option>
+              <option value="VA">Visa Card</option>
             </select>
           </div>
         </div>
@@ -175,7 +245,7 @@ const submitReservation = () => {
 
       <form
         v-if="store.reservationStep === 3"
-        @submit.prevent="nextReservationStep"
+        @submit.prevent="createReservation"
         data-aos="fade-up"
         data-aos-duration="1500"
       >
@@ -194,7 +264,7 @@ const submitReservation = () => {
               name="adults"
               id="adults"
               placeholder="Enter Adults Count"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
           <div class="col-span-1 mb-5">
@@ -211,7 +281,7 @@ const submitReservation = () => {
               name="children"
               id="children"
               placeholder="Enter Children Count"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
         </div>
@@ -226,65 +296,6 @@ const submitReservation = () => {
       </form>
     </div>
   </section>
-
-  <div class="reservation-form hidden" id="reservation-test">
-    <!-- Form 1: Tanggal Awal dan Tanggal Akhir -->
-    <form v-if="reservationStep === 1" @submit.prevent="nextStep">
-      <h2>Pilih Tanggal</h2>
-      <label for="start-date">Tanggal Awal:</label>
-      <input
-        type="date"
-        v-model="reservation.startDate"
-        id="start-date"
-        required
-      />
-
-      <label for="end-date">Tanggal Akhir:</label>
-      <input type="date" v-model="reservation.endDate" id="end-date" required />
-
-      <button type="submit">Oke</button>
-    </form>
-
-    <!-- Form 2: Pilih Jenis Kamar -->
-    <form
-      v-if="reservationStep === 2"
-      @submit.prevent="nextStep"
-      data-aos="fade-up"
-    >
-      <h2>Pilih Jenis Kamar</h2>
-      <label for="room-type">Jenis Kamar:</label>
-      <select v-model="reservation.roomType" id="room-type" required>
-        <option value="" disabled>Pilih jenis kamar</option>
-        <option value="standard">Standard</option>
-        <option value="deluxe">Deluxe</option>
-        <option value="suite">Suite</option>
-      </select>
-
-      <button type="submit">Lanjutkan</button>
-    </form>
-
-    <!-- Form 3: Pilih Rate Plan Code -->
-    <form v-if="reservationStep === 3" @submit.prevent="submitReservation">
-      <h2>Pilih Rate Plan Code</h2>
-      <label for="rate-plan">Rate Plan Code:</label>
-      <select v-model="reservation.ratePlanCode" id="rate-plan" required>
-        <option value="" disabled>Pilih rate plan code</option>
-        <option value="R1">R1 - Basic Rate</option>
-        <option value="R2">R2 - Flexible Rate</option>
-        <option value="R3">R3 - Non-refundable Rate</option>
-      </select>
-
-      <button type="submit">Simpan</button>
-    </form>
-
-    <!-- Konfirmasi -->
-    <div v-if="reservationStep === 4">
-      <h2>Reservasi Berhasil!</h2>
-      <p>Tanggal: {{ reservation.startDate }} - {{ reservation.endDate }}</p>
-      <p>Jenis Kamar: {{ reservation.roomType }}</p>
-      <p>Rate Plan Code: {{ reservation.ratePlanCode }}</p>
-    </div>
-  </div>
 </template>
 
 <style scoped>

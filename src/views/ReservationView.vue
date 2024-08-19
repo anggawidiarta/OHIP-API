@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, computed, onUnmounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { useApisStore } from "@/stores/api";
 import { RouterLink } from "vue-router";
 
@@ -48,24 +48,18 @@ onUnmounted(() => {
   <FormCreateReservation v-if="store.reservationStep > 0" />
 
   <!-- #region create guest profile -->
-  <section class="flex items-center justify-center p-12" id="create-profile">
+  <section class="flex justify-center items-center p-12" id="create-profile">
     <!-- Author: FormBold Team -->
     <div
       class="mx-auto w-full md:max-w-5xl xl:max-w-7xl bg-white dark:bg-[#181818] border-2 border-gray-300 dark:border-gray-700 rounded-md p-3"
     >
       <p class="text-2xl font-bold">Create Guest Profile</p>
       <p
-        v-if="store.guestProfileId"
-        class="mt-4 mb-6 text-lg text-green-600 dark:text-green-400"
-      >
-        Guest Profile Id: {{ store.guestProfileId }}
-      </p>
-      <p
         v-if="store.errorGuestProfilesMessage"
         class="mt-4 mb-6 text-lg text-red-500 dark:text-red-400"
       ></p>
       <form @submit.prevent="store.postGuestProfile">
-        <div class="mb-5">
+        <div class="mt-5 mb-5">
           <label
             for="guestGivenName"
             class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
@@ -79,7 +73,7 @@ onUnmounted(() => {
             name="guestGivenName"
             id="guestGivenName"
             placeholder="First Name"
-            class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
@@ -95,7 +89,7 @@ onUnmounted(() => {
             name="guestMiddleName"
             id="guestMiddleName"
             placeholder="Middle Name"
-            class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="mb-5">
@@ -112,7 +106,7 @@ onUnmounted(() => {
             required
             id="guestSurName"
             placeholder="Last Name"
-            class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
         <div class="grid grid-cols-2 gap-4">
@@ -129,7 +123,7 @@ onUnmounted(() => {
               name="guestNameSuffix"
               id="guestNameSuffix"
               placeholder="Name Suffix"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
           <div class="col-span-1 mb-5">
@@ -146,13 +140,13 @@ onUnmounted(() => {
               required
               id="guestNameTitle"
               placeholder="Name Title"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-x-4">
-          <div class="mb-5 lg:col-span-1 col-span-full">
+          <div class="col-span-full mb-5 lg:col-span-1">
             <label
               for="guestEnveloperGreeting"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
@@ -165,10 +159,10 @@ onUnmounted(() => {
               name="guestEnveloperGreeting"
               id="guestEnveloperGreeting"
               placeholder="Envelope Greeting"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
-          <div class="mb-5 lg:col-span-1 col-span-full">
+          <div class="col-span-full mb-5 lg:col-span-1">
             <label
               for="guestSalutation"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
@@ -181,44 +175,53 @@ onUnmounted(() => {
               name="guestSalutation"
               id="guestSalutation"
               placeholder="Salutation"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div class="col-span-1 mb-5">
             <label
-              for="guestLanguage"
+              for="language"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
             >
-              Language
+              Language:
             </label>
-            <input
+            <select
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
               v-model="store.params.guestLanguage"
-              type="text"
+              title="Language"
               required
-              name="guestLanguage"
-              id="guestLanguage"
-              placeholder="Language"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-            />
+            >
+              <option value="" disabled>Select Language:</option>
+              <option value="AR">Arabic</option>
+              <option value="E">English</option>
+              <option value="FA">Persian</option>
+              <option value="ZH-T">Chinese Traditional</option>
+            </select>
           </div>
           <div class="col-span-1 mb-5">
             <label
-              for="guestNationality"
+              for="nationality"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
             >
-              Nationality
+              Nationality:
             </label>
-            <input
+            <select
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
               v-model="store.params.guestNationality"
-              type="text"
+              title="Nationality"
               required
-              name="guestNationality"
-              id="guestNationality"
-              placeholder="Nationality"
-              class="w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-            />
+            >
+              <option value="" disabled>Select Nationality:</option>
+              <option value="AU">Australia</option>
+              <option value="GB">United Kingdom</option>
+              <option value="IT">Italy</option>
+              <option value="JP">Japan</option>
+              <option value="RU">Russia</option>
+              <option value="SE">Sweden</option>
+              <option value="SG">Singapore</option>
+            </select>
           </div>
         </div>
         <!-- <div class="mb-5">
@@ -233,12 +236,12 @@ onUnmounted(() => {
             type="checkbox"
             name="markForHistory"
             id="markForHistory"
-            class="px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            class="px-6 py-3 text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div> -->
         <div>
           <button
-            class="w-full px-8 py-3 text-base font-semibold text-center text-white bg-indigo-600 rounded-md outline-none hover:shadow-form"
+            class="px-8 py-3 w-full text-base font-semibold text-center text-white bg-indigo-600 rounded-md outline-none hover:shadow-form"
             :disabled="!store.token"
           >
             Submit
@@ -258,8 +261,8 @@ onUnmounted(() => {
     :errorMessage="store.errorMessage"
     @submit="store.createReservationWithExistingGuest"
   >
-    <h3 class="text-xl font-semibold col-span-full">Form Create Reservation</h3>
-    <label class="flex items-center gap-2 input input-bordered">
+    <h3 class="col-span-full text-xl font-semibold">Form Create Reservation</h3>
+    <label class="flex gap-2 items-center input input-bordered">
       Guest Profile ID:
       <input
         disabled
@@ -269,19 +272,19 @@ onUnmounted(() => {
         class="grow"
       />
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Rate Start Date:
       <input type="date" v-model="store.params.startDate" class="grow" />
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Rate End Date:
       <input type="date" v-model="store.params.endDate" class="grow" />
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Room Type Charged:
-      <input type="text" v-model="store.params.roomTypeCharged" class="grow" />
+      <input type="text" v-model="store.params.roomType" class="grow" />
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Rate Plan Code:
       <input
         type="text"
@@ -315,14 +318,15 @@ onUnmounted(() => {
         required
       >
         <option value="" disabled>Guarantee Code:</option>
-        <option value="CC">CC</option>
-        <option value="CHECK IN">CHECK IN</option>
-        <option value="DRQ">DB</option>
-        <option value="DRV">DRV</option>
-        <option value="PM">PM</option>
+        <option value="CC">Credit Card Guaranteed</option>
+        <option value="CHECK IN">Checked In</option>
+        <option value="DB">Direct Bill Guaranteed</option>
+        <option value="DRQ">Deposit Requested</option>
+        <option value="DRV">Deposit Received</option>
+        <option value="PM">Posting Master Use</option>
       </select>
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Children:
       <input
         type="number"
@@ -331,7 +335,7 @@ onUnmounted(() => {
         class="grow"
       />
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Adults:
       <input
         type="number"
@@ -340,16 +344,16 @@ onUnmounted(() => {
         required
       />
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Arrival Date:
       <input type="date" v-model="store.params.arrivalDate" class="grow" />
     </label>
-    <label class="flex items-center gap-2 input input-bordered">
+    <label class="flex gap-2 items-center input input-bordered">
       Departure Date:
       <input type="date" v-model="store.params.departureDate" class="grow" />
     </label>
     <p
-      class="font-bold text-red-500 col-span-full text-end"
+      class="col-span-full font-bold text-red-500 text-end"
       v-if="store.isGuestProfileNotFound"
     >
       *Guest Profile Id Is Not Found, Create Guest Profile First To Obtain Guest
@@ -358,7 +362,7 @@ onUnmounted(() => {
 
     <p
       v-if="store.reservationId"
-      class="text-xl font-bold text-green-500 col-span-full text-end"
+      class="col-span-full text-xl font-bold text-green-500 text-end"
     >
       Reservation Id: {{ store.reservationId }}
     </p>
@@ -374,7 +378,7 @@ onUnmounted(() => {
   <!-- #endregion -->
 
   <hr
-    class="h-px my-6 bg-transparent border-t-0 opacity-25 bg-gradient-to-r from-transparent to-transparent via-neutral-500 dark:via-neutral-400"
+    class="my-6 h-px bg-transparent bg-gradient-to-r from-transparent to-transparent border-t-0 opacity-25 via-neutral-500 dark:via-neutral-400"
   />
 
   <!-- #region metrics section -->
@@ -382,7 +386,7 @@ onUnmounted(() => {
   <!-- #endregion -->
 
   <hr
-    class="h-px my-12 bg-transparent border-t-0 opacity-25 bg-gradient-to-r from-transparent to-transparent via-neutral-500 dark:via-neutral-400"
+    class="my-12 h-px bg-transparent bg-gradient-to-r from-transparent to-transparent border-t-0 opacity-25 via-neutral-500 dark:via-neutral-400"
   />
 
   <!-- gallery -->
@@ -397,7 +401,7 @@ onUnmounted(() => {
     </div>
 
     <div
-      class="grid grid-cols-1 gap-4 p-4 pb-8 place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      class="grid grid-cols-1 gap-4 place-items-center p-4 pb-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
     >
       <div class="relative group">
         <img

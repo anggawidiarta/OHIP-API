@@ -111,6 +111,7 @@ export const useApisStore = defineStore("apis", () => {
     guaranteeCode: "",
     commentTitle: "Reservation General Notes",
     commentText: "Adding a reservation note here",
+    paymentMethod: "",
 
     // params for create guest profile start here
     guestGivenName: "",
@@ -124,6 +125,7 @@ export const useApisStore = defineStore("apis", () => {
     guestLanguage: "",
     guestNationality: "",
     markForHistory: false,
+    packageCode: "",
   });
 
   const API_ENDPOINTS = computed(() => {
@@ -389,17 +391,17 @@ export const useApisStore = defineStore("apis", () => {
   const getGuestProfile = async () => {
     try {
       fetchData("jsonData", API_ENDPOINTS.value.guestProfile, {
-        profileName: params.profileName,
-        givenName: params.givenName,
+        profileName: params.guestSurName,
+        // givenName: params.givenName,
         profileType: params.profileType,
         summaryInfo: params.summaryInfo,
-        hotelId: hotelId.value,
-        limit: params.limit,
-        city: params.city,
-        state: params.state,
-        postalCode: params.postalCode,
-        communication: params.communication,
-        membership: params.membership,
+        // hotelId: hotelId.value,
+        // limit: params.limit,
+        // city: params.city,
+        // state: params.state,
+        // postalCode: params.postalCode,
+        // communication: params.communication,
+        // membership: params.membership,
         searchType: params.searchType,
         fetchInstructions: params.fetchInstructionsGuest,
       });
@@ -413,32 +415,24 @@ export const useApisStore = defineStore("apis", () => {
       isGuestProfileNotFound.value = false;
       reservationId.value = null;
       await getGuestProfile();
-      if (!jsonData.value?.profileSummaries?.profileInfo) {
-        isGuestProfileNotFound.value = true;
-        console.log("No Profile Data Received From GetGuestProfile");
-        notification(
-          "Profile Id Does Not Exist\nCreate Guest Profile First",
-          "error"
-        );
-        return;
-      }
+      // if (!jsonData.value?.profileSummaries?.profileInfo) {
+      //   isGuestProfileNotFound.value = true;
+      //   console.log("No Profile Data Received From GetGuestProfile");
+      //   notification(
+      //     "Profile Id Does Not Exist\nCreate Guest Profile First",
+      //     "error"
+      //   );
+      //   return;
+      // }
 
-      const profileIds = extractProfileIds(jsonData.value);
-      console.log("Profile IDs:", profileIds);
+      // const profileIds = extractProfileIds(jsonData.value);
+      // console.log("Profile IDs:", profileIds);
 
-      if (!profileIds.includes(params.guestProfileId)) {
-        isGuestProfileNotFound.value = true;
-        notification(
-          "Profile Id Does Not Exist\nCreate Guest Profile First !",
-          "error"
-        );
-        return;
-      }
-      isGuestProfileNotFound.value = false;
-      console.log("Profile Id Exists");
+      // isGuestProfileNotFound.value = false;
+      // console.log("Profile Id Exists");
       const reservationData = createReservationData();
       const response = await postReservation(reservationData);
-      notification("Guest Profile Is Created", "success");
+      // notification("Guest Profile Is Created", "success");
       handleReservationResponse(response);
     } catch (error) {
       console.error("Error creating reservation:", error.response.data);
@@ -453,13 +447,13 @@ export const useApisStore = defineStore("apis", () => {
         reservationGuests: {
           profileInfo: {
             profileIdList: {
-              id: params.guestProfileId,
+              id: guestProfileId.value,
               type: "Profile",
             },
           },
         },
         reservationPaymentMethods: {
-          paymentMethod: "CA",
+          paymentMethod: params.paymentMethod,
         },
         markAsRecentlyAccessed: true,
         hotelId: hotelId.value,
@@ -485,7 +479,7 @@ export const useApisStore = defineStore("apis", () => {
             start: params.startDate,
             marketCode: "LEISURE",
             end: params.endDate,
-            roomTypeCharged: params.roomTypeCharged,
+            roomTypeCharged: params.roomType,
             ratePlanCode: params.ratePlanCode,
             roomType: params.roomType,
             pseudoRoom: false,
@@ -647,6 +641,7 @@ export const useApisStore = defineStore("apis", () => {
     errorGetReservationMessage,
     errorAvailablePackageMessage,
     errorGuestProfilesMessage,
+    errorCreateGuestProfileMessage,
     reservationStep,
     generateAccessToken,
     getHotelAvailability,
