@@ -14,7 +14,6 @@ const store = useApisStore();
 let intervalId;
 
 onMounted(() => {
-  console.log("ReservationView");
   store.generateAccessToken();
   intervalId = setInterval(() => {
     store.generateAccessToken();
@@ -30,14 +29,15 @@ onUnmounted(() => {
   <!-- Header -->
   <div class="navbar">
     <div class="flex-1">
-      <a class="text-xl btn btn-ghost">daisyUI</a>
+      <a class="text-2xl btn btn-ghost">Reservation Authorization</a>
     </div>
     <div class="flex-none">
       <ul class="px-1 menu menu-horizontal">
         <li>
-          <RouterLink to="/">Home</RouterLink>
+          <RouterLink class="text-xl" to="/">Home</RouterLink>
         </li>
-        <li>
+        <!-- <li><button @click="notify">test toastify</button></li> -->
+        <!-- <li>
           <details>
             <summary>Parent</summary>
             <ul class="p-2 rounded-t-none bg-base-100">
@@ -45,7 +45,7 @@ onUnmounted(() => {
               <li><a>Link 2</a></li>
             </ul>
           </details>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
@@ -182,6 +182,10 @@ onUnmounted(() => {
       >
         Guest Profile Id: {{ store.guestProfileId }}
       </p>
+      <p
+        v-if="store.errorGuestProfilesMessage"
+        class="text-red-500 dark:text-red-400 mt-4 mb-6 text-lg"
+      ></p>
       <form @submit.prevent="store.postGuestProfile">
         <div class="mb-5">
           <label
