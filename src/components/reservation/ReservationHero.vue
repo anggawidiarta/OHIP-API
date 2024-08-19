@@ -9,8 +9,8 @@
             <h1
               class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-slate-300 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl"
             >
-              <span class="block xl:inline">Luxurious Stays</span>
-              <span class="block text-indigo-600 xl:inline">
+              <span class="block xl:inline font-semibold">Luxurious Stays</span>
+              <span class="block text-indigo-600 font-semibold xl:inline">
                 At Your Fingertips
               </span>
             </h1>
