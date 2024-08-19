@@ -22,6 +22,6 @@ app
   .use(pinia)
   .use(JsonViewer)
   .use(AOS.init())
-  .use(Vue3Toastify, { autoClose: 5000, limit: 2 });
+  .use(Vue3Toastify, { autoClose: 7500, limit: 2 });
 
 app.mount("#app");
