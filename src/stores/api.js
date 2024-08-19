@@ -10,6 +10,7 @@ import { ENV_VARS } from "@/config/constants";
 
 import { createGuestNotification } from "@/utils/notification";
 import { notification } from "@/utils/notification";
+import { scrollToSection } from "@/utils/helper";
 
 const hotelId = ref("SUMBA");
 
@@ -56,8 +57,8 @@ export const useApisStore = defineStore("apis", () => {
       .split("T")[0],
     roomStayQuantity: null,
     childAge: null,
-    ratePlanCode: "FITRACK",
-    roomTypeCode: null,
+    ratePlanCode: "",
+    roomTypeCode: "",
     includeClosedRates: null,
     includeDefaultRatePlanSet: null,
     ratePlanSet: null,
@@ -379,7 +380,6 @@ export const useApisStore = defineStore("apis", () => {
       }, 0);
       createGuestNotification();
       guestProfileId.value = profileId;
-      console.log("Guest profile ID:", profileId);
     } catch (error) {
       console.error("Error creating guest profile:", error);
       errorGuestProfilesMessage.value = error.response.data.title;
@@ -623,8 +623,8 @@ export const useApisStore = defineStore("apis", () => {
   };
 
   return {
-    isGuestProfileNotFound,
     token,
+    isGuestProfileNotFound,
     reservationId,
     guestReservationData,
     jsonData,
