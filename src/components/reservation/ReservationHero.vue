@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { scrollToSection } from "@/utils/helper";
+</script>
+
 <template>
   <section class="px-2 py-24 bg-white dark:bg-[#181818] md:px-0">
     <div class="container items-center px-8 mx-auto max-w-7xl xl:px-5">
@@ -22,8 +26,8 @@
               away.
             </p>
             <div class="relative flex flex-col sm:flex-row sm:space-x-4">
-              <a
-                href="#reservation"
+              <button
+                @click="scrollToSection('create-profile')"
                 class="flex items-center px-6 py-3 mb-3 text-lg text-white bg-indigo-600 rounded-md w-fit sm:mb-0 hover:bg-indigo-700 sm:w-auto"
               >
                 Book Now
@@ -40,7 +44,7 @@
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
-              </a>
+              </button>
               <!-- <a
                 href="#_"
                 class="flex items-center px-6 py-3 text-gray-500 bg-gray-100 rounded-md hover:bg-gray-200 hover:text-gray-600"
