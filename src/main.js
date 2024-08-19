@@ -11,6 +11,9 @@ import "aos/dist/aos.css";
 import Vue3Toastify from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
 import App from "./App.vue";
 import router from "./router";
 
@@ -22,6 +25,7 @@ app
   .use(pinia)
   .use(JsonViewer)
   .use(AOS.init())
-  .use(Vue3Toastify, { autoClose: 7500, limit: 2 });
+  .use(Vue3Toastify, { autoClose: 7500, limit: 2 })
+  .use(VueSweetalert2);
 
 app.mount("#app");

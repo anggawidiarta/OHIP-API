@@ -8,7 +8,10 @@ import {
 } from "@/services/apiService";
 import { ENV_VARS } from "@/config/constants";
 
-import { createGuestNotification } from "@/utils/notification";
+import {
+  createGuestNotification,
+  showNotification,
+} from "@/utils/notification";
 import { notification } from "@/utils/notification";
 import { scrollToSection } from "@/utils/helper";
 
@@ -372,15 +375,14 @@ export const useApisStore = defineStore("apis", () => {
         headers: getHeaders(token.value.access_token),
       });
 
+      reservationStep.value = 1;
+      scrollToSection("create-reservation");
+      showNotification("Success", "Guest Profile Created !", "success", "OK");
       const selfLink = await response.data.links.find(
         (link) => link.rel === "self"
       );
       const profileId = await selfLink.href.match(/\/profiles\/(\d+)/)[1];
-      reservationStep.value = 1;
-      setTimeout(() => {
-        scrollToSection("create-reservation");
-      }, 0);
-      createGuestNotification();
+
       guestProfileId.value = profileId;
     } catch (error) {
       console.error("Error creating guest profile:", error);

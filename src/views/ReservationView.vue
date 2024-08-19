@@ -389,7 +389,7 @@ onUnmounted(() => {
     class="my-12 h-px bg-transparent bg-gradient-to-r from-transparent to-transparent border-t-0 opacity-25 via-neutral-500 dark:via-neutral-400"
   />
 
-  <!-- gallery -->
+  <!-- #region gallery -->
   <section
     class="pt-8 pb-4 text-gray-700 body-font dark:bg-[#181818] bg-slate-300"
     id="gallery"
@@ -437,6 +437,7 @@ onUnmounted(() => {
     </div>
     <!-- <div class="divider divider-success !m-0 !p-0 !bg-transparent"></div> -->
   </section>
+  <!-- #endregion -->
 
   <!-- Footer -->
   <ReservationFooter />

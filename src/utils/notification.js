@@ -1,4 +1,5 @@
 import { toast } from "vue3-toastify";
+import Swal from "sweetalert2";
 
 export const createGuestNotification = () => {
   toast("Guest Profile Created !", {
@@ -13,5 +14,19 @@ export const notification = (message, type) => {
     theme: "auto",
     type: type,
     dangerouslyHTMLString: true,
+  });
+};
+
+export const showNotification = (
+  title,
+  text,
+  icon = "success",
+  confirmButtonText = "OK"
+) => {
+  Swal.fire({
+    title: title,
+    text: text,
+    icon: icon,
+    confirmButtonText: confirmButtonText,
   });
 };
