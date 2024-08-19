@@ -373,6 +373,10 @@ export const useApisStore = defineStore("apis", () => {
         (link) => link.rel === "self"
       );
       const profileId = await selfLink.href.match(/\/profiles\/(\d+)/)[1];
+      reservationStep.value = 1;
+      setTimeout(() => {
+        scrollToSection("create-reservation");
+      }, 0);
       createGuestNotification();
       guestProfileId.value = profileId;
       console.log("Guest profile ID:", profileId);
@@ -643,6 +647,7 @@ export const useApisStore = defineStore("apis", () => {
     errorGetReservationMessage,
     errorAvailablePackageMessage,
     errorGuestProfilesMessage,
+    reservationStep,
     generateAccessToken,
     getHotelAvailability,
     getMarketCodes,
