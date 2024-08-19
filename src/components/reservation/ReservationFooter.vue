@@ -53,8 +53,8 @@
     </nav>
     <aside>
       <p>
-        Copyright © {{ new Date().getFullYear() }} - All right reserved by ACME
-        Industries Ltd
+        Copyright © {{ new Date().getFullYear() }} - All right reserved by
+        OXINDO
       </p>
     </aside>
   </footer>
