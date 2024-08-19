@@ -101,6 +101,7 @@
       <div class="h-full md:order-first">
         <img
           data-aos="fade-right"
+          data-aos-duration="1500"
           src="/img/air-terjun.jpg"
           alt="#_"
           class="object-cover object-center w-full h-full overflow-hidden bg-gray-200 shadow-box shadow-gray-500/30 aspect-square"
@@ -224,6 +225,7 @@
       <div class="h-full overflow-x-hidden">
         <img
           data-aos="fade-left"
+          data-aos-duration="1500"
           src="/img/lempuyang.jpg"
           alt="#_"
           class="object-cover object-center w-full h-full overflow-hidden bg-gray-200 shadow-box shadow-gray-500/30 aspect-square"
