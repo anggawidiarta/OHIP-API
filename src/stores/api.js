@@ -15,6 +15,7 @@ const hotelId = ref("SUMBA");
 
 export const useApisStore = defineStore("apis", () => {
   const reservationId = ref();
+  const reservationStep = ref(0);
   const cancelSuccessMessage = ref("");
   const cancelErrorMessage = ref("");
   const reservationResponseData = ref();
