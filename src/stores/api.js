@@ -8,6 +8,9 @@ import {
 } from "@/services/apiService";
 import { ENV_VARS } from "@/config/constants";
 
+import { createGuestNotification } from "@/utils/notification";
+import { notification } from "@/utils/notification";
+
 const hotelId = ref("SUMBA");
 
 export const useApisStore = defineStore("apis", () => {
@@ -369,6 +372,7 @@ export const useApisStore = defineStore("apis", () => {
         (link) => link.rel === "self"
       );
       const profileId = await selfLink.href.match(/\/profiles\/(\d+)/)[1];
+      createGuestNotification();
       guestProfileId.value = profileId;
       console.log("Guest profile ID:", profileId);
     } catch (error) {
@@ -407,6 +411,10 @@ export const useApisStore = defineStore("apis", () => {
       if (!jsonData.value?.profileSummaries?.profileInfo) {
         isGuestProfileNotFound.value = true;
         console.log("No Profile Data Received From GetGuestProfile");
+        notification(
+          "Profile Id Does Not Exist\nCreate Guest Profile First",
+          "error"
+        );
         return;
       }
 
@@ -415,16 +423,18 @@ export const useApisStore = defineStore("apis", () => {
 
       if (!profileIds.includes(params.guestProfileId)) {
         isGuestProfileNotFound.value = true;
-        console.log("Profile Id Does Not Exist");
+        notification(
+          "Profile Id Does Not Exist\nCreate Guest Profile First !",
+          "error"
+        );
         return;
       }
-
+      isGuestProfileNotFound.value = false;
       console.log("Profile Id Exists");
       const reservationData = createReservationData();
       const response = await postReservation(reservationData);
+      notification("Guest Profile Is Created", "success");
       handleReservationResponse(response);
-
-      isGuestProfileNotFound.value = false;
     } catch (error) {
       console.error("Error creating reservation:", error.response.data);
       errorMessage.value =
