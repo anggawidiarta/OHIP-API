@@ -3,6 +3,7 @@ const props = defineProps({
   modelValue: [String, Number],
   label: String,
   id: String,
+  placeholder: String,
   type: {
     type: String,
     default: "text",
@@ -36,7 +37,7 @@ const updateValue = (event) => {
       :id="props.id"
       :type="props.type"
       :name="props.id"
-      :placeholder="props.label"
+      :placeholder="props.placeholder"
       :required="props.required"
       :disabled="props.disabled"
       :value="props.modelValue"
