@@ -11,6 +11,7 @@ import ReservationMetric from "@/components/reservation/ReservationMetric.vue";
 import FormCreateReservation from "@/components/reservation/form/FormCreateReservation.vue";
 import FormComponent from "@/components/FormComponent.vue";
 import FormSelect from "@/components/reservation/form/FormSelect.vue";
+import FormInput from "@/components/reservation/form/FormInput.vue";
 
 const store = useApisStore();
 let intervalId;
@@ -77,108 +78,47 @@ onUnmounted(() => {
             class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
           />
         </div>
-        <div class="mb-5">
-          <label
-            for="guestMiddleName"
-            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-          >
-            Middle Name (Optional)
-          </label>
-          <input
-            v-model="store.params.guestMiddleName"
-            type="text"
-            name="guestMiddleName"
-            id="guestMiddleName"
-            placeholder="Middle Name"
-            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-          />
-        </div>
-        <div class="mb-5">
-          <label
-            for="guestSurName"
-            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-          >
-            Last Name
-          </label>
-          <input
-            v-model="store.params.guestSurName"
-            type="text"
-            name="guestSurName"
-            required
-            id="guestSurName"
-            placeholder="Last Name"
-            class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-          />
-        </div>
+        <FormInput
+          v-model="store.params.guestMiddleName"
+          label="Middle Name (Optional)"
+          placeholder="Middle Name"
+          id="guestMiddleName"
+        />
+        <FormInput
+          v-model="store.params.guestSurName"
+          label="Last Name"
+          placeholder="Last Name"
+          id="guestSurName"
+          required
+        />
         <div class="grid grid-cols-2 gap-4">
-          <div class="col-span-1 mb-5">
-            <label
-              for="guestNameSuffix"
-              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-            >
-              Name Suffix
-            </label>
-            <input
-              v-model="store.params.guestNameSuffix"
-              type="text"
-              name="guestNameSuffix"
-              id="guestNameSuffix"
-              placeholder="Name Suffix"
-              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-            />
-          </div>
-          <div class="col-span-1 mb-5">
-            <label
-              for="guestNameTitle"
-              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-            >
-              Name Title
-            </label>
-            <input
-              v-model="store.params.guestNameTitle"
-              type="text"
-              name="guestNameTitle"
-              required
-              id="guestNameTitle"
-              placeholder="Name Title"
-              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-            />
-          </div>
+          <FormInput
+            v-model="store.params.guestNameSuffix"
+            label="Name Suffix"
+            placeholder="Name Suffix"
+            id="guestNameSuffix"
+          />
+          <FormInput
+            v-model="store.params.guestNameTitle"
+            label="Name Title"
+            placeholder="Name Title"
+            id="guestNameTitle"
+            required
+          />
         </div>
-
         <div class="grid grid-cols-2 gap-x-4">
-          <div class="col-span-full mb-5 lg:col-span-1">
-            <label
-              for="guestEnveloperGreeting"
-              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-            >
-              Envelope Greeting (Optional)
-            </label>
-            <input
-              v-model="store.params.guestEnveloperGreeting"
-              type="text"
-              name="guestEnveloperGreeting"
-              id="guestEnveloperGreeting"
-              placeholder="Envelope Greeting"
-              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-            />
-          </div>
-          <div class="col-span-full mb-5 lg:col-span-1">
-            <label
-              for="guestSalutation"
-              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-            >
-              Salutation (Optional)
-            </label>
-            <input
-              v-model="store.params.guestSalutation"
-              type="text"
-              name="guestSalutation"
-              id="guestSalutation"
-              placeholder="Salutation"
-              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-            />
-          </div>
+          <FormInput
+            v-model="store.params.guestEnveloperGreeting"
+            label="Envelope Greeting (Optional)"
+            placeholder="Envelope Greeting"
+            id="guestEnveloperGreeting"
+          />
+          <FormInput
+            v-model="store.params.guestSalutation"
+            label="Salutation (Optional)"
+            placeholder="Salutation"
+            id="guestSalutation"
+          />
         </div>
         <div class="grid grid-cols-2 gap-4">
           <FormSelect
