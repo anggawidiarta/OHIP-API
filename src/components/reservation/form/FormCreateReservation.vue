@@ -1,6 +1,7 @@
 <script setup>
 import { useApisStore } from "@/stores/api";
 import { notification, showNotification } from "@/utils/notification";
+import Swal from "sweetalert2";
 
 const store = useApisStore();
 
@@ -10,14 +11,24 @@ const nextReservationStep = () => {
   }
 };
 
+const showReservationNotification = () => {
+  Swal.fire({
+    title: "Reservation Created",
+    text: `Your Reservation Id Is: ${store.reservationId}`,
+    icon: "success",
+    showCancelButton: true,
+    confirmButtonText: "Get Reservation Detail",
+    cancelButtonText: "Okay",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      store.getReservation();
+    }
+  });
+};
+
 const createReservation = async () => {
   await store.createReservationWithExistingGuest();
-  showNotification(
-    "Reservation Created",
-    `Your Reservation Id Is: ${store.reservationId}`,
-    "success",
-    "Confirm"
-  );
+  showReservationNotification();
   store.reservationStep = 0;
 };
 </script>
