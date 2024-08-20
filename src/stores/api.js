@@ -375,9 +375,9 @@ export const useApisStore = defineStore("apis", () => {
         headers: getHeaders(token.value.access_token),
       });
 
+      showNotification("Success", "Guest Profile Created !", "success", "OK");
       reservationStep.value = 1;
       scrollToSection("create-reservation");
-      showNotification("Success", "Guest Profile Created !", "success", "OK");
       const selfLink = await response.data.links.find(
         (link) => link.rel === "self"
       );

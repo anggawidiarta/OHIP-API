@@ -10,6 +10,7 @@ import ReservationAboutUs from "@/components/reservation/ReservationAboutUs.vue"
 import ReservationMetric from "@/components/reservation/ReservationMetric.vue";
 import FormCreateReservation from "@/components/reservation/form/FormCreateReservation.vue";
 import FormComponent from "@/components/FormComponent.vue";
+import FormSelect from "@/components/reservation/form/FormSelect.vue";
 
 const store = useApisStore();
 let intervalId;
@@ -18,7 +19,7 @@ onMounted(() => {
   store.generateAccessToken();
   intervalId = setInterval(() => {
     store.generateAccessToken();
-  }, 3600 * 1000); // 3600 * 1000 = 1 hour in milliseconds
+  }, 3400 * 1000); // 3600 * 1000 = 1 hour in milliseconds
 });
 
 onUnmounted(() => {
@@ -180,65 +181,33 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
-          <div class="col-span-1 mb-5">
-            <label
-              for="language"
-              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-            >
-              Language:
-            </label>
-            <select
-              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-              v-model="store.params.guestLanguage"
-              title="Language"
-              required
-            >
-              <option value="" disabled>Select Language:</option>
-              <option value="AR">Arabic</option>
-              <option value="E">English</option>
-              <option value="FA">Persian</option>
-              <option value="ZH-T">Chinese Traditional</option>
-            </select>
-          </div>
-          <div class="col-span-1 mb-5">
-            <label
-              for="nationality"
-              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-            >
-              Nationality:
-            </label>
-            <select
-              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
-              v-model="store.params.guestNationality"
-              title="Nationality"
-              required
-            >
-              <option value="" disabled>Select Nationality:</option>
-              <option value="AU">Australia</option>
-              <option value="GB">United Kingdom</option>
-              <option value="IT">Italy</option>
-              <option value="JP">Japan</option>
-              <option value="RU">Russia</option>
-              <option value="SE">Sweden</option>
-              <option value="SG">Singapore</option>
-            </select>
-          </div>
-        </div>
-        <!-- <div class="mb-5">
-          <label
-            for="markForHistory"
-            class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
-          >
-            Mark for History
-          </label>
-          <input
-            v-model="store.params.markForHistory"
-            type="checkbox"
-            name="markForHistory"
-            id="markForHistory"
-            class="px-6 py-3 text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+          <FormSelect
+            v-model="store.params.guestLanguage"
+            label="Language"
+            :options="[
+              { value: 'AR', text: 'Arabic' },
+              { value: 'E', text: 'English' },
+              { value: 'FA', text: 'Persian' },
+              { value: 'ZH-T', text: 'Chinese Traditional' },
+            ]"
+            required
           />
-        </div> -->
+          <FormSelect
+            v-model="store.params.guestNationality"
+            label="Nationality"
+            :options="[
+              { value: 'AU', text: 'Australia' },
+              { value: 'GB', text: 'United Kingdom' },
+              { value: 'IT', text: 'Italy' },
+              { value: 'JP', text: 'Japan' },
+              { value: 'RU', text: 'Russia' },
+              { value: 'SE', text: 'Sweden' },
+              { value: 'SG', text: 'Singapore' },
+            ]"
+            required
+          />
+        </div>
+
         <div>
           <button
             class="px-8 py-3 w-full text-base font-semibold text-center text-white bg-indigo-600 rounded-md outline-none hover:shadow-form"
@@ -253,7 +222,6 @@ onUnmounted(() => {
   <!-- #endregion -->
 
   <!-- #region create reservation -->
-  <!-- TODO: hide reservation guest profile id later -->
   <FormComponent
     formClass="grid grid-cols-1 gap-4 w-full md:max-w-5xl xl:max-w-7xl w-full p-12 lg:p-0 mx-auto border-green-500 lg:grid-cols-2 xl:grid-cols-3"
     buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-blue-500 rounded shadow w-fit"
@@ -435,7 +403,6 @@ onUnmounted(() => {
       </div>
       <!-- Repeat this div for each image -->
     </div>
-    <!-- <div class="divider divider-success !m-0 !p-0 !bg-transparent"></div> -->
   </section>
   <!-- #endregion -->
 
