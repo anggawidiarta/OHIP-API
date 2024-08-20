@@ -291,7 +291,7 @@ const createReservation = async () => {
             class="px-8 py-3 text-base font-semibold text-center text-white bg-indigo-600 rounded-md outline-none w-fit hover:shadow-form"
             :disabled="!store.token"
           >
-            Next
+            Submit
           </button>
         </div>
       </form>
