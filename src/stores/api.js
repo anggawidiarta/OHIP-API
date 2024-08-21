@@ -343,6 +343,7 @@ export const useApisStore = defineStore("apis", () => {
 
   // Create Guest Profile
   const postGuestProfile = async () => {
+    guestReservationData.value = false;
     reservationStep.value = 0;
     errorGuestProfilesMessage.value = "";
     try {
