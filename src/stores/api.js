@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, nextTick } from "vue";
 import axios from "axios";
 import {
   getHeaders,
@@ -19,6 +19,8 @@ const hotelId = ref("SUMBA");
 
 export const useApisStore = defineStore("apis", () => {
   const reservationId = ref();
+  const showReservationDetails = ref(false);
+
   const reservationStep = ref(0);
   const cancelSuccessMessage = ref("");
   const cancelErrorMessage = ref("");
@@ -341,6 +343,7 @@ export const useApisStore = defineStore("apis", () => {
 
   // Create Guest Profile
   const postGuestProfile = async () => {
+    reservationStep.value = 0;
     errorGuestProfilesMessage.value = "";
     try {
       const guestProfileData = {
@@ -375,18 +378,20 @@ export const useApisStore = defineStore("apis", () => {
         headers: getHeaders(token.value.access_token),
       });
 
-      showNotification("Success", "Guest Profile Created !", "success", "OK");
       reservationStep.value = 1;
+      await nextTick();
       scrollToSection("create-reservation");
+
       const selfLink = await response.data.links.find(
         (link) => link.rel === "self"
       );
       const profileId = await selfLink.href.match(/\/profiles\/(\d+)/)[1];
-
       guestProfileId.value = profileId;
     } catch (error) {
       console.error("Error creating guest profile:", error);
       errorGuestProfilesMessage.value = error.response.data.title;
+    } finally {
+      showNotification("Success", "Guest Profile Created !", "success", "OK");
     }
   };
 
@@ -645,6 +650,7 @@ export const useApisStore = defineStore("apis", () => {
     errorGuestProfilesMessage,
     errorCreateGuestProfileMessage,
     reservationStep,
+    showReservationDetails,
     generateAccessToken,
     getHotelAvailability,
     getMarketCodes,

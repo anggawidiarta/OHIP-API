@@ -307,6 +307,25 @@ const createReservation = async () => {
         </div>
       </form>
     </div>
+
+    <!-- <div v-if="store.showReservationDetails" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="store.showReservationDetails = false"
+          >&times;</span
+        >
+        <h2>Reservation Details</h2>
+        <form>
+          <div
+            v-for="(value, key) in store.guestReservationData"
+            :key="key"
+            class="form-group"
+          >
+            <label :for="key">{{ key }}</label>
+            <input :id="key" :value="value" readonly class="form-control" />``
+          </div>
+        </form>
+      </div>
+    </div> -->
   </section>
 </template>
 
@@ -314,5 +333,43 @@ const createReservation = async () => {
 .reservation-form {
   max-width: 400px;
   margin: auto;
+}
+
+/* Add some basic styling for the modal */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 </style>

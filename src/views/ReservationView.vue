@@ -12,6 +12,7 @@ import FormCreateReservation from "@/components/reservation/form/FormCreateReser
 import FormComponent from "@/components/FormComponent.vue";
 import FormSelect from "@/components/reservation/form/FormSelect.vue";
 import FormInput from "@/components/reservation/form/FormInput.vue";
+import JsonViewerComponent from "@/components/JsonViewerComponent.vue";
 
 const store = useApisStore();
 let intervalId;
@@ -47,7 +48,22 @@ onUnmounted(() => {
   <ReservationHero />
   <!-- #endregion -->
 
-  <FormCreateReservation v-if="store.reservationStep > 0" />
+  <FormCreateReservation v-show="store.reservationStep > 0" />
+  <section
+    class="flex justify-center items-center p-12"
+    id="create-profile"
+    v-if="store.guestReservationData"
+  >
+    <div
+      class="mx-auto w-full md:max-w-5xl xl:max-w-7xl bg-white dark:bg-[#181818] border-2 border-gray-300 dark:border-gray-700 rounded-md p-3"
+    >
+      <p class="text-xl text-[#4F46E5] font-bold">Reservation Id Details</p>
+      <JsonViewerComponent
+        v-if="store.guestReservationData"
+        :data="store.guestReservationData"
+      />
+    </div>
+  </section>
 
   <!-- #region create guest profile -->
   <section class="flex justify-center items-center p-12" id="create-profile">
