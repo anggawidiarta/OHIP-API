@@ -31,7 +31,7 @@ export const showNotification = (
     text: text,
     icon: icon,
     confirmButtonText: confirmButtonText,
-  }).then(async (result) => {
+  }).then((result) => {
     if (result.isConfirmed && callback) {
       callback();
     }

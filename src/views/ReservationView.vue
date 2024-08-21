@@ -53,6 +53,8 @@ onUnmounted(() => {
     class="flex justify-center items-center p-12"
     id="create-profile"
     v-if="store.guestReservationData"
+    data-aos="fade-up"
+    data-aos-duration="1500"
   >
     <div
       class="mx-auto w-full md:max-w-5xl xl:max-w-7xl bg-white dark:bg-[#181818] border-2 border-gray-300 dark:border-gray-700 rounded-md p-3"
