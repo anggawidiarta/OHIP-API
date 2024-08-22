@@ -476,8 +476,8 @@ export const useApisStore = defineStore("apis", () => {
             numberOfUnits: 1,
             rates: {
               rate: {
-                start: params.startDate,
-                end: params.endDate,
+                start: params.arrivalDate,
+                end: params.departureDate,
                 base: {
                   amountBeforeTax: 50,
                   currencyCode: "USD",
