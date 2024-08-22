@@ -13,16 +13,21 @@ import FormComponent from "@/components/FormComponent.vue";
 import FormSelect from "@/components/reservation/form/FormSelect.vue";
 import FormInput from "@/components/reservation/form/FormInput.vue";
 import JsonViewerComponent from "@/components/JsonViewerComponent.vue";
+import RoomList from "@/components/reservation/room/RoomList.vue";
 
+import { getToken } from "@/services/auth/auth-service";
+import { useReservationStore } from "@/stores/reservation-store";
+
+const reservationStore = useReservationStore();
 const store = useApisStore();
 let intervalId;
 
 onMounted(() => {
   document.title = "Reservation Authorization";
-  store.generateAccessToken();
+  getToken();
   intervalId = setInterval(() => {
-    store.generateAccessToken();
-  }, 3400 * 1000); // 3600 * 1000 = 1 hour in milliseconds
+    getToken();
+  }, 3600 * 1000); // 3600 * 1000 = 1 hour in milliseconds
 });
 
 onUnmounted(() => {
@@ -49,8 +54,14 @@ onUnmounted(() => {
   <ReservationHero />
   <!-- #endregion -->
 
-  <FormCreateReservation v-show="store.reservationStep > 0" />
-  <section
+  <FormCreateReservation v-if="reservationStore.isBookNowPressed" />
+  <RoomList
+    v-if="
+      reservationStore.hotelAvailabilityData[0]?.roomStays[0]?.roomRates
+        .length > 0
+    "
+  />
+  <!-- <section
     class="flex justify-center items-center p-12"
     id="create-profile"
     v-if="store.guestReservationData"
@@ -66,7 +77,7 @@ onUnmounted(() => {
         :data="store.guestReservationData"
       />
     </div>
-  </section>
+  </section> -->
 
   <!-- #region create guest profile -->
   <section class="flex justify-center items-center p-12" id="create-profile">

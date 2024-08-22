@@ -12,8 +12,8 @@ import { RouterLink } from "vue-router";
 const store = useApisStore();
 
 onMounted(() => {
-  document.title = "OHIP API Integration Testing"
-})
+  document.title = "OHIP API Integration Testing";
+});
 </script>
 
 <template>
