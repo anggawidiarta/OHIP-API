@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import { scrollToSection } from "@/utils/helper";
+import { useReservationStore } from "@/stores/reservation-store";
+import { nextTick } from "vue";
+
+const reservationStore = useReservationStore();
+
+const scrollToCreateProfile = async () => {
+  reservationStore.isBookNowPressed = true;
+  await nextTick();
+  scrollToSection("create-reservation");
+};
 </script>
 
 <template>
@@ -27,7 +37,7 @@ import { scrollToSection } from "@/utils/helper";
             </p>
             <div class="relative flex flex-col sm:flex-row sm:space-x-4">
               <button
-                @click="scrollToSection('create-profile')"
+                @click="scrollToCreateProfile()"
                 class="flex items-center px-6 py-3 mb-3 text-lg text-white bg-indigo-600 rounded-md w-fit sm:mb-0 hover:bg-indigo-700 sm:w-auto"
               >
                 Book Now
