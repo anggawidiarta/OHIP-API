@@ -6,26 +6,56 @@ import Swal from "sweetalert2";
 const reservationStore = useReservationStore();
 
 const handleSubmit = async () => {
-  await reservationStore.getHotelAvailability();
-  if (
-    reservationStore.hotelAvailabilityData[0].roomStays[0].roomRates.length > 0
-  ) {
-    console.log(
-      reservationStore.hotelAvailabilityData[0].roomStays[0].roomRates.length
-    );
+  // Show loading alert
+  Swal.fire({
+    title: "Loading...",
+    text: "Fetching hotel availability",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    await reservationStore.getHotelAvailability();
+
+    // Close loading alert
+    Swal.close();
+
+    if (
+      reservationStore.hotelAvailabilityData[0].roomStays[0].roomRates.length >
+      0
+    ) {
+      console.log(
+        reservationStore.hotelAvailabilityData[0].roomStays[0].roomRates.length
+      );
+      Swal.fire({
+        title: "Hotel Availability Loaded",
+        text: "Please select a room from the available options.",
+        icon: "success",
+        confirmButtonText: "Okay",
+      });
+    } else {
+      Swal.fire({
+        title: "No Rooms Available",
+        text: "No rooms are available for the selected dates.",
+        icon: "info",
+        confirmButtonText: "Okay",
+      });
+    }
+  } catch (error) {
+    // Close loading alert
+    Swal.close();
+
     Swal.fire({
-      title: "Hotel Availability Loaded",
-      text: "Please select a room from the available options.",
-      icon: "success",
-      confirmButtonText: "Okay",
-    });
-  } else {
-    Swal.fire({
-      title: "Hotel Availability Not Loaded",
-      text: "No rooms are available for the selected dates.",
+      title: "Error",
+      text: "An error occurred while fetching hotel availability. Please try again.",
       icon: "error",
       confirmButtonText: "Okay",
     });
+    console.error("Error fetching hotel availability:", error);
   }
 };
 
@@ -63,7 +93,7 @@ const handleSubmit = async () => {
     id="create-reservation"
   >
     <div
-      class="mx-auto w-full md:max-w-5xl xl:max-w-7xl bg-white dark:bg-[#181818] border-2 border-gray-300 dark:border-gray-700 rounded-md p-3"
+      class="mx-auto w-full md:max-w-5xl xl:max-w-[81rem] bg-white dark:bg-[#181818] border-2 border-gray-300 dark:border-gray-700 rounded-md p-3"
     >
       <form
         data-aos="fade-up"
