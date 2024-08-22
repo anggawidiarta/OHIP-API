@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useReservationStore } from "@/stores/reservation-store";
+import { getRatePlanDescription, getRoomDescription } from "@/utils/helper";
 
 const reservationStore = useReservationStore();
 const roomRates = ref(
@@ -14,30 +15,38 @@ const selectRoom = (roomRate) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-aos="fade-up">
+  <section class="flex justify-center items-center">
     <div
-      v-for="(roomRate, index) in roomRates"
-      :key="index"
-      class="card bg-base-100 w-96 shadow-xl"
+      class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+      data-aos="fade-up"
     >
-      <figure>
-        <img src="https://via.placeholder.com/400x300" alt="Room Image" />
-      </figure>
-      <div class="card-body">
-        <h2 class="card-title">{{ roomRate.roomType }}</h2>
-        <p>Rate Plan: {{ roomRate.ratePlanCode }}</p>
-        <p>
-          Price: {{ roomRate.total.amountBeforeTax }}
-          {{ roomRate.total.currencyCode }}
-        </p>
-        <div class="card-actions justify-end">
-          <button class="btn btn-primary" @click="selectRoom(roomRate)">
-            Select
-          </button>
+      <div
+        v-for="(roomRate, index) in roomRates"
+        :key="index"
+        class="shadow-xl card bg-base-100 min-w-72 grow"
+      >
+        <figure>
+          <img src="https://via.placeholder.com/400x300" alt="Room Image" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">
+            {{ getRoomDescription(roomRate.roomType) }}
+          </h2>
+          <p>Room Type: {{ roomRate.roomType }}</p>
+          <p>Rate Plan: {{ getRatePlanDescription(roomRate.ratePlanCode) }}</p>
+          <p>
+            Price: {{ roomRate.total.amountBeforeTax }}
+            {{ roomRate.total.currencyCode }}
+          </p>
+          <div class="justify-end card-actions">
+            <button class="btn btn-primary" @click="selectRoom(roomRate)">
+              Select
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>
