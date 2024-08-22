@@ -4,15 +4,12 @@ import axios from "axios";
 import {
   getHeaders,
   makeAxiosRequest,
-  extractProfileIds,
 } from "@/services/apiService";
 import { ENV_VARS } from "@/config/constants";
 
 import {
-  createGuestNotification,
   showNotification,
 } from "@/utils/notification";
-import { notification } from "@/utils/notification";
 import { scrollToSection } from "@/utils/helper";
 
 const hotelId = ref("SUMBA");
@@ -281,9 +278,9 @@ export const useApisStore = defineStore("apis", () => {
     });
 
   // fungsi untuk melakukan validasi dari salah satu nilai list of value yang diambil
-  const getListOfValues = () => {
-    fetchData("jsonData", API_ENDPOINTS.value.propertyCode);
-  };
+  // const getListOfValues = () => {
+  //   fetchData("jsonData", API_ENDPOINTS.value.propertyCode);
+  // };
 
   const getSourceCodes = async () => {
     errorSourceCodeMessage.value = "";
