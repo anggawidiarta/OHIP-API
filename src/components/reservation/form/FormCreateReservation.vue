@@ -41,13 +41,14 @@ const createReservation = async () => {
     <div
       class="mx-auto w-full md:max-w-5xl xl:max-w-7xl bg-white dark:bg-[#181818] border-2 border-gray-300 dark:border-gray-700 rounded-md p-3"
     >
-      <p class="text-2xl font-bold">Create Reservation</p>
       <form
         v-if="store.reservationStep === 1"
         @submit.prevent="nextReservationStep"
         data-aos="fade-up"
         data-aos-duration="1500"
       >
+        <p class="text-2xl font-bold">How Long Do You Wanna Stay ?</p>
+
         <div class="grid grid-cols-2 gap-4">
           <div class="col-span-1 mb-5">
             <label
@@ -87,6 +88,40 @@ const createReservation = async () => {
           </div>
           <div class="col-span-1 mb-5">
             <label
+              for="adults"
+              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
+            >
+              Adults
+            </label>
+            <input
+              v-model="store.params.adults"
+              type="number"
+              required
+              name="adults"
+              id="adults"
+              placeholder="Enter Adults Count"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            />
+          </div>
+          <div class="col-span-1 mb-5">
+            <label
+              for="children"
+              class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
+            >
+              Children
+            </label>
+            <input
+              v-model="store.params.children"
+              type="number"
+              required
+              name="children"
+              id="children"
+              placeholder="Enter Children Count"
+              class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
+            />
+          </div>
+          <!-- <div class="col-span-1 mb-5">
+            <label
               for="rateStartDate"
               class="block mb-3 text-base font-medium text-gray-900 dark:text-gray-300"
             >
@@ -120,7 +155,7 @@ const createReservation = async () => {
               title="Rate End Date"
               class="px-6 py-3 w-full text-base font-medium text-gray-700 bg-white rounded-md border border-gray-300 outline-none dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:shadow-md"
             />
-          </div>
+          </div> -->
         </div>
         <div>
           <button
@@ -134,7 +169,7 @@ const createReservation = async () => {
 
       <form
         v-if="store.reservationStep === 2"
-        @submit.prevent="nextReservationStep"
+        @submit.prevent="createReservation"
         data-aos="fade-up"
         data-aos-duration="1500"
       >
