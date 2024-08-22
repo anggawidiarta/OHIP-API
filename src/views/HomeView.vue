@@ -1,6 +1,6 @@
 <!-- eslint-disable -->
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { JsonViewer } from "vue3-json-viewer";
 import JsonViewerComponent from "@/components/JsonViewerComponent.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
@@ -10,6 +10,10 @@ import { useApisStore } from "@/stores/api";
 import { RouterLink } from "vue-router";
 
 const store = useApisStore();
+
+onMounted(() => {
+  document.title = "OHIP API Integration Testing"
+})
 </script>
 
 <template>
