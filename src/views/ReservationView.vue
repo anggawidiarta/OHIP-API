@@ -18,6 +18,7 @@ const store = useApisStore();
 let intervalId;
 
 onMounted(() => {
+  document.title = "Reservation Authorization";
   store.generateAccessToken();
   intervalId = setInterval(() => {
     store.generateAccessToken();
