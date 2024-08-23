@@ -9,8 +9,12 @@ const roomRates = ref(
 );
 
 const selectRoom = (roomRate) => {
-  // Handle room selection logic here
-  console.log("Selected Room:", roomRate);
+  reservationStore.params.roomType = roomRate.roomType;
+  reservationStore.params.ratePlanCode = roomRate.ratePlanCode;
+  reservationStore.params.rateStartDate = roomRate.rates.rate[0].start;
+  reservationStore.params.rateEndDate = roomRate.rates.rate[0].end;
+
+  console.log(reservationStore.params);
 };
 </script>
 
@@ -32,7 +36,7 @@ const selectRoom = (roomRate) => {
           <h2 class="card-title">
             {{ getRoomDescription(roomRate.roomType) }}
           </h2>
-          <p>Room Type: {{ roomRate.roomType }}</p>
+          <!-- <p>Room Type: {{ roomRate.roomType }}</p> -->
           <p>Rate Plan: {{ getRatePlanDescription(roomRate.ratePlanCode) }}</p>
           <p>
             Price: {{ roomRate.total.amountBeforeTax }}
