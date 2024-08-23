@@ -10,9 +10,13 @@ const tokenStore = useTokenStore();
 
 export const useReservationStore = defineStore("reservation", () => {
   const reservationId = ref();
+  const profileId = ref();
   const reservationStep = ref(0);
+
   const reservationData = ref({});
+  const ratePlanDetailData = ref({});
   const hotelAvailabilityData = ref({});
+  const cancelReservationData = ref({});
 
   const isBookNowPressed = ref(false);
 
@@ -24,8 +28,14 @@ export const useReservationStore = defineStore("reservation", () => {
     roomStayQuantity: 2,
     limit: 50,
     adults: 2,
+    paymentMethod: "",
     children: 1,
     ratePlanCode: "",
+    roomType: "",
+    rateStartDate: new Date().toISOString().split("T")[0],
+    rateEndDate: new Date(new Date().setDate(new Date().getDate() + 1))
+      .toISOString()
+      .split("T")[0],
   });
 
   const getHotelAvailability = async () => {
@@ -73,7 +83,122 @@ export const useReservationStore = defineStore("reservation", () => {
           Authorization: `Bearer ${tokenStore.token.access_token}`,
         },
       });
-      reservationData.value = response.data;
+      ratePlanDetailData.value = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const postReservationWithExistingProfile = async () => {
+    try {
+      reservationId.value = null;
+      const response = await axios({
+        url: `http://localhost:5173/api/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations`,
+        method: "POST",
+        headers: {
+          "Accept-Language": "*",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "x-hotelid": ENV_VARS.HOTEL_ID,
+          "x-app-key": ENV_VARS.VITE_APP_KEY,
+          Authorization: `Bearer ${tokenStore.token.access_token}`,
+        },
+        data: {
+          reservations: {
+            reservation: {
+              reservationGuests: {
+                profileInfo: {
+                  profileIdList: {
+                    id: profileId.value,
+                    type: "Profile",
+                  },
+                },
+              },
+              reservationPaymentMethods: {
+                paymentMethod: params.paymentMethod,
+              },
+              markAsRecentlyAccessed: true,
+              hotelId: ENV_VARS.HOTEL_ID,
+              reservationStatus: "Reserved",
+              roomStay: {
+                guarantee: {
+                  onHold: false,
+                  guaranteeCode: params.guaranteeCode,
+                },
+                roomRates: {
+                  sourceCode: "WEB",
+                  numberOfUnits: 1,
+                  rates: {
+                    rate: {
+                      start: params.rateStartDate,
+                      end: params.rateEndDate,
+                      base: {
+                        amountBeforeTax: 50,
+                        currencyCode: "USD",
+                      },
+                    },
+                  },
+                  start: params.rateStartDate,
+                  marketCode: "LEISURE",
+                  end: params.rateEndDate,
+                  roomTypeCharged: params.roomType,
+                  ratePlanCode: params.ratePlanCode,
+                  roomType: params.roomType,
+                  pseudoRoom: false,
+                },
+                guestCounts: {
+                  children: params.children,
+                  adults: params.adults,
+                },
+                departureDate: params.roomStayEndDate,
+                arrivalDate: params.roomStayStartDate,
+              },
+            },
+          },
+          fetchInstructions: "Reservation",
+        },
+      });
+      reservationData.value = await response.data;
+      const reservationLink = await reservationData.value.links.find((link) =>
+        link.href.includes("/reservations/")
+      );
+      reservationId.value = reservationLink
+        ? reservationLink.href.match(/(\d+)/)[1]
+        : null;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const postCancelReservation = async (reservationId) => {
+    try {
+      const response = await axios({
+        url: `http://localhost:5173/api/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationId}/cancellations`,
+        method: "POST",
+        headers: {
+          "Accept-Language": "*",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "x-hotelid": ENV_VARS.HOTEL_ID,
+          "x-app-key": ENV_VARS.VITE_APP_KEY,
+          Authorization: `Bearer ${tokenStore.token.access_token}`,
+        },
+        data: {
+          reason: {
+            code: "DUP",
+            description: "Trip Cancelled",
+          },
+          reservations: {
+            reservationIdList: {
+              id: reservationId,
+
+              type: "Reservation",
+            },
+            hotelId: ENV_VARS.HOTEL_ID,
+          },
+        },
+      });
+      cancelReservationData.value = await response.data;
     } catch (error) {
       console.error(error);
     }
@@ -88,5 +213,7 @@ export const useReservationStore = defineStore("reservation", () => {
     isBookNowPressed,
     getHotelAvailability,
     getRatePlanDetail,
+    postReservationWithExistingProfile,
+    postCancelReservation,
   };
 });
