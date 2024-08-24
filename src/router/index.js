@@ -20,6 +20,11 @@ const router = createRouter({
       component: () =>
         import("../components/reservation/form/FormCreateProfile.vue"),
     },
+    {
+      path: "/test",
+      name: "test",
+      component: () => import("../views/reservation/ReservationHomeView.vue"),
+    },
   ],
 });
 
