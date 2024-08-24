@@ -3,6 +3,14 @@ import { onMounted, onUnmounted } from "vue";
 import { useApisStore } from "@/stores/api";
 import { RouterLink } from "vue-router";
 
+import { useColorMode } from "@vueuse/core";
+
+import Button from "@/components/ui/button/Button.vue";
+import DropdownMenu from "@/components/ui/dropdown-menu/DropdownMenu.vue";
+import DropdownMenuItem from "@/components/ui/dropdown-menu/DropdownMenuItem.vue";
+import DropdownMenuTrigger from "@/components/ui/dropdown-menu/DropdownMenuTrigger.vue";
+import DropdownMenuContent from "@/components/ui/dropdown-menu/DropdownMenuContent.vue";
+
 import FeatureSection from "@/components/reservation/FeatureSection.vue";
 import ReservationFooter from "@/components/reservation/ReservationFooter.vue";
 import ReservationHero from "@/components/reservation/ReservationHero.vue";
@@ -22,6 +30,8 @@ const reservationStore = useReservationStore();
 const store = useApisStore();
 let intervalId;
 
+const mode = useColorMode();
+
 onMounted(() => {
   document.title = "Reservation Authorization";
   getToken();
@@ -37,7 +47,7 @@ onUnmounted(() => {
 
 <template>
   <!-- Header -->
-  <div class="navbar">
+  <div class="navbar dark:bg-red-600">
     <div class="flex-1">
       <a class="text-2xl btn btn-ghost">Reservation Authorization</a>
     </div>
@@ -46,6 +56,26 @@ onUnmounted(() => {
         <li>
           <RouterLink class="text-xl" to="/">Home</RouterLink>
         </li>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">
+              <Icon
+                icon="radix-icons:moon"
+                class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+              />
+              <Icon
+                icon="radix-icons:sun"
+                class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+              />
+              <span class="sr-only">Toggle theme</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem @click="mode = 'light'"> Light </DropdownMenuItem>
+            <DropdownMenuItem @click="mode = 'dark'"> Dark </DropdownMenuItem>
+            <DropdownMenuItem @click="mode = 'auto'"> System </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </ul>
     </div>
   </div>
