@@ -14,6 +14,7 @@ export const useReservationStore = defineStore("reservation", () => {
 
   const reservationStep = ref(1);
   const reservationData = ref({});
+  const reservationDetailData = ref({});
   const ratePlanDetailData = ref({});
   const hotelAvailabilityData = ref({});
   const cancelReservationData = ref({});
@@ -237,6 +238,26 @@ export const useReservationStore = defineStore("reservation", () => {
     }
   };
 
+  const getReservation = async () => {
+    try {
+      const response = await axios({
+        url: `http://localhost:5173/api/rsv/v1/hotels/${ENV_VARS.HOTEL_ID}/reservations/${reservationId.value}`,
+        method: "GET",
+        headers: {
+          "Accept-Language": "*",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "x-hotelid": ENV_VARS.HOTEL_ID,
+          "x-app-key": ENV_VARS.VITE_APP_KEY,
+          Authorization: `Bearer ${tokenStore.token.access_token}`,
+        },
+      });
+      reservationDetailData.value = await response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const postCancelReservation = async (reservationId) => {
     try {
       const response = await axios({
@@ -285,6 +306,7 @@ export const useReservationStore = defineStore("reservation", () => {
     isShowRoomList,
     getHotelAvailability,
     getRatePlanDetail,
+    getReservation,
     postReservationWithExistingProfile,
     postCancelReservation,
     postCreateGuestProfile,
