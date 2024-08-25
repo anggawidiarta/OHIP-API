@@ -2,7 +2,11 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
 import { useReservationStore } from "@/stores/reservation-store";
 import { getToken } from "@/services/auth/auth-service";
-import { scrollToSection } from "@/utils/helper";
+import {
+  getRatePlanDescription,
+  getRoomDescription,
+  scrollToSection,
+} from "@/utils/helper";
 import {
   CalendarDate,
   DateFormatter,
@@ -501,15 +505,49 @@ const reservationStepDescription = computed(() => {
   >
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
       <p class="text-gray-600">
-        Your Reservation ID :
+        Reservation ID :
         {{
           reservationDetail.reservations.reservation[0].reservationIdList[0]?.id
         }}
       </p>
       <p class="text-gray-600">
-        Your Confirmation ID :
+        Confirmation ID :
         {{
           reservationDetail.reservations.reservation[0].reservationIdList[1]?.id
+        }}
+      </p>
+      <p class="text-gray-600">
+        Name :
+        {{
+          `${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].nameTitle} ${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].givenName} ${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].surname}`
+        }}
+      </p>
+      <p class="text-gray-600">
+        Room :
+        {{
+          getRoomDescription(
+            reservationDetail.reservations.reservation[0].roomStay
+              .currentRoomInfo.roomType
+          )
+        }}
+      </p>
+      <p class="text-gray-600">
+        RatePlan :
+        {{
+          getRatePlanDescription(
+            reservationDetail.reservations.reservation[0].roomStay.roomRates[0]
+              .ratePlanCode
+          )
+        }}
+      </p>
+      <p class="text-gray-600">
+        Arrival Date :
+        {{ reservationDetail.reservations.reservation[0].roomStay.arrivalDate }}
+      </p>
+      <p class="text-gray-600">
+        Departure Date :
+        {{
+          reservationDetail.reservations.reservation[0].roomStay.departureDate
         }}
       </p>
 
