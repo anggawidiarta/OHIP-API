@@ -371,9 +371,9 @@ const value = ref({
                   required
                 >
                   <option value="" disabled>Select a payment method</option>
-                  <option value="credit_card">Credit Card</option>
-                  <option value="paypal">PayPal</option>
-                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="AX">American Express</option>
+                  <option value="BT">Bank Transfer</option>
+                  <option value="CA">Cash</option>
                 </select>
               </div>
               <button
