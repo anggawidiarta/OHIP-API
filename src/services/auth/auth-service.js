@@ -2,9 +2,8 @@ import { ENV_VARS } from "@/config/constants";
 import { useTokenStore } from "@/stores/token-store";
 import axios from "axios";
 
-const tokenStore = useTokenStore();
-
 export const getToken = async () => {
+  const tokenStore = useTokenStore();
   try {
     const response = await axios({
       url: "http://localhost:5173/api/oauth/v1/tokens",

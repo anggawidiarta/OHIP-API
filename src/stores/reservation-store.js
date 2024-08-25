@@ -6,9 +6,9 @@ import { ENV_VARS } from "@/config/constants";
 
 import { useTokenStore } from "./token-store";
 
-const tokenStore = useTokenStore();
-
 export const useReservationStore = defineStore("reservation", () => {
+  const tokenStore = useTokenStore();
+
   const reservationId = ref();
   const profileId = ref();
 

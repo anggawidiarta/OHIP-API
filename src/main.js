@@ -21,8 +21,8 @@ const app = createApp(App);
 const pinia = createPinia();
 
 app
-  .use(router)
   .use(pinia)
+  .use(router)
   .use(JsonViewer)
   .use(AOS.init())
   .use(Vue3Toastify, { autoClose: 7500, limit: 2 })

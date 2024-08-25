@@ -1,4 +1,4 @@
-import HomeView from "@/views/home/HomeView.vue";
+import ReservationHomeView from "../views/reservation/ReservationHomeView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -6,24 +6,18 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: HomeView,
+      name: "reservation-home",
+      component: ReservationHomeView,
     },
     {
-      path: "/reservation",
-      name: "reservation",
-      component: () => import("../views/reservation/ReservationView.vue"),
+      path: "/ohip-api-test",
+      name: "ohip-api-test",
+      component: () => import("../views/home/HomeView.vue"),
     },
     {
-      path: "/booking",
+      path: "/reservation-before",
       name: "booking",
-      component: () =>
-        import("../components/reservation/form/FormCreateProfile.vue"),
-    },
-    {
-      path: "/test",
-      name: "test",
-      component: () => import("../views/reservation/ReservationHomeView.vue"),
+      component: () => import("../views/reservation/ReservationView.vue"),
     },
   ],
 });

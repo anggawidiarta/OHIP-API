@@ -18,9 +18,9 @@ const toggleColorMode = () => {
 
 <template>
   <header
-    class="flex fixed top-0 right-0 left-0 z-50 items-center px-4 py-3 bg-white dark:bg-gray-900 lg:px-6"
+    class="fixed top-0 left-0 right-0 z-50 flex items-center px-4 py-3 bg-gray-200 dark:bg-gray-900 lg:px-6"
   >
-    <a class="flex justify-center items-center" href="#">
+    <a class="flex items-center justify-center" href="#">
       <!-- <span class="sr-only">Luxury Hotel</span> -->
       <img
         src="/img/reserved.png"
@@ -55,7 +55,10 @@ const toggleColorMode = () => {
       <component :is="mobileMenuOpen ? XIcon : MenuIcon" />
     </Button>
   </header>
-  <nav v-if="mobileMenuOpen" class="px-4 py-2 border-b md:hidden bg-background">
+  <nav
+    v-if="isMobileMenuOpen"
+    class="fixed left-0 right-0 z-40 px-4 pt-6 sm:py-3 border-b top-16 md:hidden h-auto bg-background"
+  >
     <Button variant="ghost" class="justify-start w-full">
       <a href="#services">Services</a>
     </Button>
