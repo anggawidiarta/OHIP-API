@@ -52,7 +52,7 @@ const toggleColorMode = () => {
     </div>
 
     <Button variant="ghost" class="md:hidden" @click="toggleMobileMenu">
-      <component :is="mobileMenuOpen ? XIcon : MenuIcon" />
+      <component :is="isMobileMenuOpen ? XIcon : MenuIcon" />
     </Button>
   </header>
   <nav
