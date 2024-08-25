@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useReservationStore } from "@/stores/reservation-store";
-import { getRatePlanDescription, getRoomDescription } from "@/utils/helper";
+import { getRatePlanDescription, getRoomDescription, scrollToSection } from "@/utils/helper";
 
 const reservationStore = useReservationStore();
 const roomRates = ref(
@@ -15,10 +15,13 @@ const selectRoom = (roomRate) => {
   reservationStore.params.rateEndDate = roomRate.rates.rate[0].end;
 
   console.log(reservationStore.params);
+  scrollToSection("create-reservation");
+  reservationStore.isShowRoomList = false;
 };
 </script>
 
 <template>
+  <p class="text-xl text-white font-semibold text-center">Select Room</p>
   <section class="flex justify-center items-center">
     <div
       class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"

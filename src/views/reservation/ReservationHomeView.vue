@@ -14,6 +14,7 @@ import HomeHeader from "@/components/reservation/home/HomeHeader.vue";
 import AboutUs from "@/components/reservation/home/AboutUs.vue";
 import HeroSection from "@/components/reservation/home/HeroSection.vue";
 import OurServices from "@/components/reservation/home/OurServices.vue";
+import RoomList from "@/components/reservation/room/RoomList.vue";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -24,6 +25,78 @@ import { RangeCalendar } from "@/components/ui/range-calendar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { CalendarIcon } from "lucide-vue-next";
+
+import Swal from "sweetalert2";
+// sweetalert2
+const handleSubmit = async () => {
+  // Show loading alert
+  Swal.fire({
+    title: "Loading...",
+    text: "Fetching hotel availability",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    // Convert CalendarDate to JavaScript Date
+    const startDate = value.value.start.toDate(getLocalTimeZone());
+    const endDate = value.value.end.toDate(getLocalTimeZone());
+
+    // Format dates as ISO strings (YYYY-MM-DD)
+    reservationStore.params.roomStayStartDate = startDate
+      .toLocaleDateString("en-CA")
+      .split("T")[0];
+    reservationStore.params.roomStayEndDate = endDate
+      .toLocaleDateString("en-CA")
+      .split("T")[0];
+
+    console.log("Reservation params:", reservationStore.params);
+    // Here you can call your reservation function, e.g., reservationStore.getHotelAvailability()
+    await reservationStore.getHotelAvailability();
+
+    // Close loading alert
+    Swal.close();
+
+    if (
+      reservationStore.hotelAvailabilityData[0].roomStays[0].roomRates.length >
+      0
+    ) {
+      console.log(
+        reservationStore.hotelAvailabilityData[0].roomStays[0].roomRates.length
+      );
+      Swal.fire({
+        title: "Hotel Availability Loaded",
+        text: "Please select a room from the available options.",
+        icon: "success",
+        confirmButtonText: "Okay",
+      });
+    } else {
+      Swal.fire({
+        title: "No Rooms Available",
+        text: "No rooms are available for the selected dates.",
+        icon: "info",
+        confirmButtonText: "Okay",
+      });
+    }
+  } catch (error) {
+    // Close loading alert
+    Swal.close();
+
+    Swal.fire({
+      title: "Error",
+      text: "An error occurred while fetching hotel availability. Please try again.",
+      icon: "error",
+      confirmButtonText: "Okay",
+    });
+    console.error("Error fetching hotel availability:", error);
+  } finally {
+    reservationStore.isShowRoomList = true;
+  }
+};
 
 // Functionality
 const reservationStore = useReservationStore();
@@ -62,23 +135,6 @@ const value = ref({
     tomorrow.getDate()
   ),
 });
-
-const handleSubmit = () => {
-  // Convert CalendarDate to JavaScript Date
-  const startDate = value.value.start.toDate(getLocalTimeZone());
-  const endDate = value.value.end.toDate(getLocalTimeZone());
-
-  // Format dates as ISO strings (YYYY-MM-DD)
-  reservationStore.params.roomStayStartDate = startDate
-    .toLocaleDateString("en-CA")
-    .split("T")[0];
-  reservationStore.params.roomStayEndDate = endDate
-    .toLocaleDateString("en-CA")
-    .split("T")[0];
-
-  console.log("Reservation params:", reservationStore.params);
-  // Here you can call your reservation function, e.g., reservationStore.getHotelAvailability()
-};
 </script>
 
 <template>
@@ -90,7 +146,7 @@ const handleSubmit = () => {
 
       <AboutUs />
 
-      <section class="py-14">
+      <section class="py-14" id="create-reservation">
         <div
           class="px-4 mx-auto max-w-screen-xl text-gray-600 dark:text-gray-300 md:px-8"
         >
@@ -191,6 +247,19 @@ const handleSubmit = () => {
               >Book Now</Button
             >
           </form>
+        </div>
+      </section>
+
+      <section class="py-14">
+        <div
+          class="px-4 mx-auto max-w-screen-xl text-gray-600 dark:text-gray-300 md:px-8"
+        >
+          <RoomList
+            v-if="
+              reservationStore.hotelAvailabilityData[0]?.roomStays[0]?.roomRates
+                .length > 0 && reservationStore.isShowRoomList
+            "
+          />
         </div>
       </section>
 

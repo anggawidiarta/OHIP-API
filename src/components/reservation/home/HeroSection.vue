@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 </script>
 <template>
   <section
-    class="items-center px-4 pb-12 mx-auto mt-24 max-w-screen-xl lg:flex md:px-8"
+    class="items-center px-4 pb-12 mx-auto mt-24 max-w-screen-xl pt-8 lg:pt-20 lg:flex md:px-8"
   >
     <div class="flex-1 space-y-4 sm:text-center lg:text-left">
       <h1 class="dark:text-white text-[#232b2b] font-bold text-4xl xl:text-5xl">

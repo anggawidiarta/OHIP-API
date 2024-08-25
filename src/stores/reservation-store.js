@@ -19,6 +19,7 @@ export const useReservationStore = defineStore("reservation", () => {
   const cancelReservationData = ref({});
 
   const isBookNowPressed = ref(false);
+  const isShowRoomList = ref(false);
 
   const params = reactive({
     roomStayStartDate: new Date().toISOString().split("T")[0],
@@ -211,6 +212,7 @@ export const useReservationStore = defineStore("reservation", () => {
     reservationData,
     hotelAvailabilityData,
     isBookNowPressed,
+    isShowRoomList,
     getHotelAvailability,
     getRatePlanDetail,
     postReservationWithExistingProfile,
