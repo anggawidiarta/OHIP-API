@@ -108,17 +108,17 @@ const features = ref([
 const reservationStore = useReservationStore();
 
 let intervalId;
-// onMounted(() => {
-//   document.title = "Reservation Authorization";
-//   getToken();
-//   intervalId = setInterval(() => {
-//     getToken();
-//   }, 3600 * 1000); // 3600 * 1000 = 1 hour in milliseconds
-// });
+onMounted(() => {
+  document.title = "Reservation Authorization";
+  getToken();
+  intervalId = setInterval(() => {
+    getToken();
+  }, 3600 * 1000); // 3600 * 1000 = 1 hour in milliseconds
+});
 
-// onUnmounted(() => {
-//   clearInterval(intervalId);
-// });
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
 
 // calendar date picker
 const df = new DateFormatter("en-US", {
@@ -141,26 +141,43 @@ const value = ref({
     tomorrow.getDate()
   ),
 });
+
+const handleSubmit = () => {
+  // Convert CalendarDate to JavaScript Date
+  const startDate = value.value.start.toDate(getLocalTimeZone());
+  const endDate = value.value.end.toDate(getLocalTimeZone());
+
+  // Format dates as ISO strings (YYYY-MM-DD)
+  reservationStore.params.roomStayStartDate = startDate
+    .toLocaleDateString("en-CA")
+    .split("T")[0];
+  reservationStore.params.roomStayEndDate = endDate
+    .toLocaleDateString("en-CA")
+    .split("T")[0];
+
+  console.log("Reservation params:", reservationStore.params);
+  // Here you can call your reservation function, e.g., reservationStore.getHotelAvailability()
+};
 </script>
 
 <template>
   <div class="flex flex-col min-h-screen">
     <header
-      class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 px-4 lg:px-6 flex items-center py-3"
+      class="flex fixed top-0 right-0 left-0 z-50 items-center px-4 py-3 bg-white dark:bg-gray-900 lg:px-6"
     >
-      <a class="flex items-center justify-center" href="#">
+      <a class="flex justify-center items-center" href="#">
         <!-- <span class="sr-only">Luxury Hotel</span> -->
         <img
           src="/img/reserved.png"
           alt="Reservation Authorization"
-          class="h-12 w-12"
+          class="w-12 h-12"
         />
         <span class="ml-2 text-2xl font-bold">Reservation Authorization</span>
       </a>
-      <div class="ml-auto flex items-center">
+      <div class="flex items-center ml-auto">
         <Button variant="ghost" class="" @click="toggleColorMode">
-          <Sun v-if="mode === 'dark'" class="h-6 w-6" />
-          <Moon v-else class="h-6 w-6" />
+          <Sun v-if="mode === 'dark'" class="w-6 h-6" />
+          <Moon v-else class="w-6 h-6" />
           <span class="sr-only">Toggle color mode</span>
         </Button>
         <nav class="flex gap-3 sm:gap-6">
@@ -185,27 +202,27 @@ const value = ref({
     </header>
     <nav
       v-if="mobileMenuOpen"
-      class="md:hidden px-4 py-2 bg-background border-b"
+      class="px-4 py-2 border-b md:hidden bg-background"
     >
-      <Button variant="ghost" class="w-full justify-start">
+      <Button variant="ghost" class="justify-start w-full">
         <a href="#services">Services</a>
       </Button>
-      <Button variant="ghost" class="w-full justify-start">
+      <Button variant="ghost" class="justify-start w-full">
         <a href="#about">About</a>
       </Button>
-      <Button variant="ghost" class="w-full justify-start">
+      <Button variant="ghost" class="justify-start w-full">
         <a href="#reservation">Book Now</a>
       </Button>
-      <Button variant="ghost" class="w-full justify-start">
+      <Button variant="ghost" class="justify-start w-full">
         <a href="#gallery">Gallery</a>
       </Button>
     </nav>
 
     <main class="flex-1">
       <section
-        class="mt-24 mx-auto max-w-screen-xl pb-12 px-4 items-center lg:flex md:px-8"
+        class="items-center px-4 pb-12 mx-auto mt-24 max-w-screen-xl lg:flex md:px-8"
       >
-        <div class="space-y-4 flex-1 sm:text-center lg:text-left">
+        <div class="flex-1 space-y-4 sm:text-center lg:text-left">
           <h1
             class="dark:text-white text-[#232b2b] font-bold text-4xl xl:text-5xl"
           >
@@ -213,39 +230,39 @@ const value = ref({
             <span class="text-indigo-400"> Digital agency</span>
           </h1>
           <p
-            class="dark:text-gray-300 text-slate-500 max-w-xl leading-relaxed sm:mx-auto lg:ml-0"
+            class="max-w-xl leading-relaxed dark:text-gray-300 text-slate-500 sm:mx-auto lg:ml-0"
           >
             It is a long established fact that a reader will be distracted by
             the readable content of a page when looking at its layout. The point
             of using Lorem Ipsum
           </p>
           <div
-            class="pt-10 items-center justify-center space-y-3 sm:space-x-6 sm:space-y-0 sm:flex lg:justify-start"
+            class="justify-center items-center pt-10 space-y-3 sm:space-x-6 sm:space-y-0 sm:flex lg:justify-start"
           >
             <Button
               @click="scrollToSection('create-reservation')"
               href="javascript:void(0)"
-              class="w-full bg-teal-500 text-gray-50 dark:text-white text-center h-auto text-lg rounded-md shadow-md block sm:w-auto"
+              class="block w-full h-auto text-lg text-center text-gray-50 bg-teal-500 rounded-md shadow-md dark:text-white sm:w-auto"
             >
               Book Now
             </Button>
           </div>
         </div>
-        <div class="flex-1 text-center mt-7 lg:mt-0 lg:ml-3">
+        <div class="flex-1 mt-7 text-center lg:mt-0 lg:ml-3">
           <img
             src="/img/beach.jpg"
-            class="w-full mx-auto sm:w-10/12 lg:w-full rounded-lg shadow-md"
+            class="mx-auto w-full rounded-lg shadow-md sm:w-10/12 lg:w-full"
           />
         </div>
       </section>
 
       <section class="py-14">
         <div
-          class="max-w-screen-xl mx-auto px-4 text-gray-600 dark:text-gray-300 md:px-8"
+          class="px-4 mx-auto max-w-screen-xl text-gray-600 dark:text-gray-300 md:px-8"
         >
-          <div class="space-y-3 sm:text-right mb-12">
+          <div class="mb-12 space-y-3 sm:text-right">
             <p
-              class="text-teal-600 dark:text-teal-400 text-3xl font-semibold sm:text-4xl"
+              class="text-3xl font-semibold text-teal-600 dark:text-teal-400 sm:text-4xl"
             >
               Our Story
             </p>
@@ -253,7 +270,7 @@ const value = ref({
           </div>
           <div class="mt-12">
             <p
-              class="text-lg lg:text-xl text-gray-600 text-justify dark:text-gray-300 mb-12"
+              class="mb-12 text-lg text-justify text-gray-600 lg:text-xl dark:text-gray-300"
             >
               At [Hotel Name], we believe that every stay should be a memorable
               experience. Our hotel blends luxury with comfort, providing a
@@ -262,10 +279,10 @@ const value = ref({
               exceptional service, and a commitment to making your stay
               unforgettable.
             </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div class="bg-teal-50 dark:bg-teal-900 p-6 rounded-lg">
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div class="p-6 bg-teal-50 rounded-lg dark:bg-teal-900">
                 <h3
-                  class="text-2xl font-semibold text-teal-600 dark:text-teal-400 mb-2"
+                  class="mb-2 text-2xl font-semibold text-teal-600 dark:text-teal-400"
                 >
                   Our Mission
                 </h3>
@@ -275,9 +292,9 @@ const value = ref({
                   guests.
                 </p>
               </div>
-              <div class="bg-teal-50 dark:bg-teal-900 p-6 rounded-lg">
+              <div class="p-6 bg-teal-50 rounded-lg dark:bg-teal-900">
                 <h3
-                  class="text-2xl font-semibold text-teal-600 dark:text-teal-400 mb-2"
+                  class="mb-2 text-2xl font-semibold text-teal-600 dark:text-teal-400"
                 >
                   Our Vision
                 </h3>
@@ -287,9 +304,9 @@ const value = ref({
                   excellence.
                 </p>
               </div>
-              <div class="bg-teal-50 dark:bg-teal-900 p-6 rounded-lg">
+              <div class="p-6 bg-teal-50 rounded-lg dark:bg-teal-900">
                 <h3
-                  class="text-2xl font-semibold text-teal-600 dark:text-teal-400 mb-2"
+                  class="mb-2 text-2xl font-semibold text-teal-600 dark:text-teal-400"
                 >
                   Our Values
                 </h3>
@@ -306,14 +323,14 @@ const value = ref({
 
       <section class="py-14">
         <div
-          class="max-w-screen-xl mx-auto px-4 text-gray-600 dark:text-gray-300 md:px-8"
+          class="px-4 mx-auto max-w-screen-xl text-gray-600 dark:text-gray-300 md:px-8"
         >
-          <div class="max-w-xl mx-auto space-y-3 sm:text-center">
-            <h3 class="text-teal-600 dark:text-teal-400 font-semibold">
+          <div class="mx-auto space-y-3 max-w-xl sm:text-center">
+            <h3 class="font-semibold text-teal-600 dark:text-teal-400">
               Our Amenities
             </h3>
             <p
-              class="text-gray-800 dark:text-white text-3xl font-semibold sm:text-4xl"
+              class="text-3xl font-semibold text-gray-800 dark:text-white sm:text-4xl"
             >
               Luxury at Your Fingertips
             </p>
@@ -331,7 +348,7 @@ const value = ref({
                 class="flex gap-x-4"
               >
                 <div
-                  class="flex-none w-12 h-12 bg-teal-50 dark:bg-teal-900 text-teal-600 dark:text-teal-400 rounded-lg flex items-center justify-center"
+                  class="flex flex-none justify-center items-center w-12 h-12 text-teal-600 bg-teal-50 rounded-lg dark:bg-teal-900 dark:text-teal-400"
                 >
                   <svg
                     v-html="item.icon"
@@ -345,7 +362,7 @@ const value = ref({
                 </div>
                 <div>
                   <h4
-                    class="text-lg text-gray-800 dark:text-white font-semibold"
+                    class="text-lg font-semibold text-gray-800 dark:text-white"
                   >
                     {{ item.title }}
                   </h4>
@@ -361,14 +378,14 @@ const value = ref({
 
       <section class="py-14">
         <div
-          class="max-w-screen-xl mx-auto px-4 text-gray-600 dark:text-gray-300 md:px-8"
+          class="px-4 mx-auto max-w-screen-xl text-gray-600 dark:text-gray-300 md:px-8"
         >
-          <div class="max-w-xl mx-auto space-y-3 sm:text-center mb-12">
-            <h3 class="text-teal-600 dark:text-teal-400 font-semibold">
+          <div class="mx-auto mb-12 space-y-3 max-w-xl sm:text-center">
+            <h3 class="font-semibold text-teal-600 dark:text-teal-400">
               Reserve Your Stay
             </h3>
             <p
-              class="text-gray-800 dark:text-white text-3xl font-semibold sm:text-4xl"
+              class="text-3xl font-semibold text-gray-800 dark:text-white sm:text-4xl"
             >
               Book Your Perfect Getaway
             </p>
@@ -378,14 +395,8 @@ const value = ref({
             </p>
           </div>
           <form
-            class="max-w-2xl mx-auto space-y-6"
-            @submit.prevent="
-              () => {
-                console.log(
-                  `start date : ${value.start}, end date : ${value.end}`
-                );
-              }
-            "
+            class="mx-auto space-y-6 max-w-2xl"
+            @submit.prevent="handleSubmit"
           >
             <div class="space-y-2">
               <Label class="text-gray-800 dark:text-white">Stay Dates</Label>
@@ -401,7 +412,7 @@ const value = ref({
                         )
                       "
                     >
-                      <CalendarIcon class="mr-2 h-4 w-4" />
+                      <CalendarIcon class="mr-2 w-4 h-4" />
                       <template v-if="value.start">
                         <template v-if="value.end">
                           {{
@@ -420,7 +431,7 @@ const value = ref({
                       <template v-else> Pick a date </template>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent class="w-auto p-0">
+                  <PopoverContent class="p-0 w-auto">
                     <RangeCalendar
                       v-model="value"
                       initial-focus
@@ -433,55 +444,62 @@ const value = ref({
                 </Popover>
               </div>
             </div>
-            <div class="space-y-2">
-              <Label for="guests" class="text-gray-800 dark:text-white"
-                >Number of Guests</Label
-              >
-              <Select>
-                <SelectTrigger
-                  id="guests"
-                  class="bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <Label for="adults" class="text-gray-800 dark:text-white"
+                  >Adults</Label
                 >
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent class="bg-white dark:bg-gray-800">
-                  <SelectItem value="1">1 Guest</SelectItem>
-                  <SelectItem value="2">2 Guests</SelectItem>
-                  <SelectItem value="3">3 Guests</SelectItem>
-                  <SelectItem value="4">4 Guests</SelectItem>
-                </SelectContent>
-              </Select>
+                <Input
+                  id="adults"
+                  v-model="reservationStore.params.adults"
+                  type="number"
+                  min="1"
+                  class="text-gray-800 bg-white dark:bg-gray-800 dark:text-white"
+                />
+              </div>
+              <div class="space-y-2">
+                <Label for="children" class="text-gray-800 dark:text-white"
+                  >Children</Label
+                >
+                <Input
+                  id="children"
+                  v-model="reservationStore.params.children"
+                  type="number"
+                  min="0"
+                  class="text-gray-800 bg-white dark:bg-gray-800 dark:text-white"
+                />
+              </div>
             </div>
 
             <Button
               type="submit"
-              class="w-full bg-teal-600 hover:bg-teal-700 text-white"
+              class="w-full text-white bg-teal-600 hover:bg-teal-700"
               >Book Now</Button
             >
           </form>
         </div>
       </section>
 
-      <section id="gallery" class="w-full py-12 md:py-24 lg:py-32">
+      <section id="gallery" class="py-12 w-full md:py-24 lg:py-32">
         <div class="container px-4 md:px-6">
           <h2
-            class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8"
+            class="mb-8 text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl"
           >
             Gallery
           </h2>
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             <img
               v-for="n in 8"
               :key="n"
               src=""
               alt="Gallery Image"
-              class="rounded-lg object-cover"
+              class="object-cover rounded-lg"
             />
           </div>
         </div>
       </section>
     </main>
-    <footer class="px-4 lg:px-6 h-14 flex items-center justify-center">
+    <footer class="flex justify-center items-center px-4 h-14 lg:px-6">
       <p class="text-xs text-gray-500">
         &copy; 2023 Luxury Hotel. All rights reserved.
       </p>
