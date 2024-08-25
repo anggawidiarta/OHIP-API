@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 import { useReservationStore } from "@/stores/reservation-store";
 import { getToken } from "@/services/auth/auth-service";
 import { scrollToSection } from "@/utils/helper";
@@ -14,7 +14,6 @@ import HomeHeader from "@/components/reservation/home/HomeHeader.vue";
 import AboutUs from "@/components/reservation/home/AboutUs.vue";
 import HeroSection from "@/components/reservation/home/HeroSection.vue";
 import OurServices from "@/components/reservation/home/OurServices.vue";
-import RoomList from "@/components/reservation/room/RoomList.vue";
 import FormInput from "@/components/reservation/form/FormInput.vue";
 import FormSelect from "@/components/reservation/form/FormSelect.vue";
 import { Button } from "@/components/ui/button";
@@ -31,6 +30,7 @@ import { CalendarIcon } from "lucide-vue-next";
 import Swal from "sweetalert2";
 import { paymentMethods, nationalities, languages } from "@/config/constants";
 import HomeFooter from "@/components/reservation/home/HomeFooter.vue";
+import RoomSection from "@/components/reservation/room/RoomSection.vue";
 // sweetalert2
 const handleSubmit = async () => {
   // Show loading alert
@@ -58,8 +58,6 @@ const handleSubmit = async () => {
       .toLocaleDateString("en-CA")
       .split("T")[0];
 
-    console.log("Reservation params:", reservationStore.params);
-    // Here you can call your reservation function, e.g., reservationStore.getHotelAvailability()
     await reservationStore.getHotelAvailability();
 
     // Close loading alert
@@ -74,6 +72,9 @@ const handleSubmit = async () => {
         text: "Please select a room from the available options.",
         icon: "success",
         confirmButtonText: "Okay",
+        didClose: () => {
+          scrollToSection("room-list");
+        },
       });
     } else {
       Swal.fire({
@@ -141,6 +142,32 @@ const value = ref({
     tomorrow.getDate()
   ),
 });
+
+const reservationStepTitle = computed(() => {
+  switch (reservationStore.reservationStep) {
+    case 1:
+      return "Book Your Perfect Getaway";
+    case 2:
+      return "Create Your Profile";
+    case 3:
+      return "Select Your Payment Method";
+    default:
+      return "Reserve Your Stay";
+  }
+});
+
+const reservationStepDescription = computed(() => {
+  switch (reservationStore.reservationStep) {
+    case 1:
+      return "Experience luxury and comfort by reserving your stay with us. Our easy booking process ensures a seamless experience.";
+    case 2:
+      return "Please provide your personal details to create your profile.";
+    case 3:
+      return "Choose your preferred payment method to complete the reservation.";
+    default:
+      return "Follow the steps to complete your reservation.";
+  }
+});
 </script>
 
 <template>
@@ -163,11 +190,10 @@ const value = ref({
             <p
               class="text-3xl font-semibold text-gray-800 dark:text-white sm:text-4xl"
             >
-              Book Your Perfect Getaway
+              {{ reservationStepTitle }}
             </p>
-            <p>
-              Experience luxury and comfort by reserving your stay with us. Our
-              easy booking process ensures a seamless experience.
+            <p class="text-gray-600 dark:text-gray-300 capitalize">
+              {{ reservationStepDescription }}
             </p>
           </div>
           <form
@@ -336,9 +362,6 @@ const value = ref({
             data-aos="fade-up"
             data-aos-duration="1000"
           >
-            <h2 class="font-medium dark:text-white text-gray-700 capitalize">
-              Select your payment method
-            </h2>
             <form
               @submit.prevent="
                 reservationStore.postReservationWithExistingProfile
@@ -403,40 +426,15 @@ const value = ref({
         </div>
       </section>
 
-      <section
-        class="py-14"
+      <RoomSection
         v-if="
           reservationStore.hotelAvailabilityData[0]?.roomStays[0]?.roomRates
             .length > 0 && reservationStore.isShowRoomList
         "
-      >
-        <div
-          class="px-4 mx-auto max-w-screen-xl text-gray-600 dark:text-gray-300 md:px-8"
-        >
-          <RoomList />
-        </div>
-      </section>
+      />
 
       <OurServices />
 
-      <section id="gallery" class="py-12 w-full md:py-24 lg:py-32">
-        <div class="container px-4 md:px-6">
-          <h2
-            class="mb-8 text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl"
-          >
-            Gallery
-          </h2>
-          <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            <img
-              v-for="n in 8"
-              :key="n"
-              src=""
-              alt="Gallery Image"
-              class="object-cover rounded-lg"
-            />
-          </div>
-        </div>
-      </section>
       <div
         class="h-0.5 bg-gradient-to-r from-transparent via-teal-400 to-transparent dark:via-teal-600"
       ></div>
