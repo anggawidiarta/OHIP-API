@@ -10,7 +10,7 @@ import {
 const reservationStore = useReservationStore();
 
 const roomRates = ref(
-  reservationStore.hotelAvailabilityData[0].roomStays[0].roomRates
+  reservationStore.hotelAvailabilityData[0]?.roomStays[0]?.roomRates
 );
 
 const selectRoom = (roomRate) => {
