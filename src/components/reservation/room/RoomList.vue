@@ -1,7 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useReservationStore } from "@/stores/reservation-store";
-import { getRatePlanDescription, getRoomDescription, scrollToSection } from "@/utils/helper";
+import {
+  getRatePlanDescription,
+  getRoomDescription,
+  scrollToSection,
+} from "@/utils/helper";
 
 const reservationStore = useReservationStore();
 const roomRates = ref(
@@ -15,6 +19,7 @@ const selectRoom = (roomRate) => {
   reservationStore.params.rateEndDate = roomRate.rates.rate[0].end;
 
   console.log(reservationStore.params);
+  reservationStore.reservationStep = 2;
   scrollToSection("create-reservation");
   reservationStore.isShowRoomList = false;
 };

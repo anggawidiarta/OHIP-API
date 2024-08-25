@@ -15,6 +15,8 @@ import AboutUs from "@/components/reservation/home/AboutUs.vue";
 import HeroSection from "@/components/reservation/home/HeroSection.vue";
 import OurServices from "@/components/reservation/home/OurServices.vue";
 import RoomList from "@/components/reservation/room/RoomList.vue";
+import FormInput from "@/components/reservation/form/FormInput.vue";
+import FormSelect from "@/components/reservation/form/FormSelect.vue";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -25,6 +27,23 @@ import { RangeCalendar } from "@/components/ui/range-calendar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { CalendarIcon } from "lucide-vue-next";
+
+const languages = [
+  { value: "AR", text: "Arabic" },
+  { value: "E", text: "English" },
+  { value: "FA", text: "Persian" },
+  { value: "ZH-T", text: "Chinese Traditional" },
+];
+
+const nationalities = [
+  { value: "AU", text: "Australia" },
+  { value: "GB", text: "United Kingdom" },
+  { value: "IT", text: "Italy" },
+  { value: "JP", text: "Japan" },
+  { value: "RU", text: "Russia" },
+  { value: "SE", text: "Sweden" },
+  { value: "SG", text: "Singapore" },
+];
 
 import Swal from "sweetalert2";
 // sweetalert2
@@ -167,6 +186,9 @@ const value = ref({
           <form
             class="mx-auto space-y-6 max-w-2xl"
             @submit.prevent="handleSubmit"
+            data-aos="fade-up"
+            data-aos-duration="1000"
+            v-if="reservationStore.reservationStep === 1"
           >
             <div class="space-y-2">
               <Label class="text-gray-800 dark:text-white">Stay Dates</Label>
@@ -237,6 +259,68 @@ const value = ref({
                   type="number"
                   min="0"
                   class="text-gray-800 bg-white dark:bg-gray-800 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              class="w-full text-white bg-teal-600 hover:bg-teal-700"
+              >Book Now</Button
+            >
+          </form>
+          <form
+            class="mx-auto space-y-6 max-w-2xl"
+            @submit.prevent="handleSubmit"
+            data-aos="fade-up"
+            data-aos-duration="1000"
+            v-if="reservationStore.reservationStep === 2"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <FormInput
+                  v-model="reservationStore.params.givenName"
+                  label="First Name"
+                  placeholder="Enter First Name"
+                  id="givenName"
+                  required
+                />
+                <FormInput
+                  v-model="reservationStore.params.middleName"
+                  label="Middle Name"
+                  placeholder="Enter Middle Name"
+                  id="middleName"
+                />
+                <FormInput
+                  v-model="reservationStore.params.surName"
+                  label="Last Name"
+                  placeholder="Enter Last Name"
+                  id="surName"
+                  required
+                />
+                <FormInput
+                  v-model="reservationStore.params.nameTitle"
+                  label="Name Title"
+                  placeholder="Enter Name Title"
+                  id="nameTitle"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <FormSelect
+                  v-model="reservationStore.params.language"
+                  label="Language"
+                  :options="languages"
+                  placeholder="Select Language"
+                  required
+                />
+                <FormSelect
+                  v-model="reservationStore.params.nationality"
+                  label="Nationality"
+                  :options="nationalities"
+                  placeholder="Select Nationality"
+                  required
+                  multiple
                 />
               </div>
             </div>

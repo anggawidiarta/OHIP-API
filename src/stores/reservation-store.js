@@ -11,7 +11,7 @@ const tokenStore = useTokenStore();
 export const useReservationStore = defineStore("reservation", () => {
   const reservationId = ref();
   const profileId = ref();
-  const reservationStep = ref(0);
+  const reservationStep = ref(1);
 
   const reservationData = ref({});
   const ratePlanDetailData = ref({});
