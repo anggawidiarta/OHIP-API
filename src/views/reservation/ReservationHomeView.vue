@@ -1,22 +1,44 @@
 <script setup>
-import { ref } from "vue";
-// import {
-//   Calendar,
-//   Popover,
-//   PopoverTrigger,
-//   PopoverContent,
-//   Button,
-//   Label,
-//   Input,
-//   Select,
-//   SelectTrigger,
-//   SelectValue,
-//   SelectContent,
-//   SelectItem,
-// } from "@components";
+import { onMounted, onUnmounted, ref } from "vue";
+import { useReservationStore } from "@/stores/reservation-store";
+import { getToken } from "@/services/auth/auth-service";
+import { scrollToSection } from "@/utils/helper";
+import {
+  CalendarDate,
+  DateFormatter,
+  getLocalTimeZone,
+} from "@internationalized/date";
+import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RangeCalendar } from "@/components/ui/range-calendar";
+
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useColorMode } from "@vueuse/core";
-import { XIcon, MenuIcon, CalendarIcon, Sun, Moon } from "lucide-vue-next";
+import {
+  XIcon,
+  MenuIcon,
+  CalendarIcon,
+  Sun,
+  Moon,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-vue-next";
 
 const mode = useColorMode();
 
@@ -25,20 +47,6 @@ const toggleColorMode = () => {
 };
 
 const mobileMenuOpen = ref(false);
-const services = ref([
-  {
-    title: "Spa & Wellness",
-    description: "Relax and rejuvenate at our world-class spa.",
-  },
-  {
-    title: "Fine Dining",
-    description: "Enjoy gourmet cuisine crafted by renowned chefs.",
-  },
-  {
-    title: "Infinity Pool",
-    description: "Take a dip in our luxurious infinity pool with ocean views.",
-  },
-]);
 
 const checkIn = ref(null);
 const checkOut = ref(null);
@@ -95,11 +103,51 @@ const features = ref([
     desc: "Stay connected and productive in our fully-equipped business center with high-speed internet and printing services.",
   },
 ]);
+
+// Functionality
+const reservationStore = useReservationStore();
+
+let intervalId;
+// onMounted(() => {
+//   document.title = "Reservation Authorization";
+//   getToken();
+//   intervalId = setInterval(() => {
+//     getToken();
+//   }, 3600 * 1000); // 3600 * 1000 = 1 hour in milliseconds
+// });
+
+// onUnmounted(() => {
+//   clearInterval(intervalId);
+// });
+
+// calendar date picker
+const df = new DateFormatter("en-US", {
+  dateStyle: "medium",
+});
+
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+
+const value = ref({
+  start: new CalendarDate(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    today.getDate()
+  ),
+  end: new CalendarDate(
+    tomorrow.getFullYear(),
+    tomorrow.getMonth() + 1,
+    tomorrow.getDate()
+  ),
+});
 </script>
 
 <template>
   <div class="flex flex-col min-h-screen">
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 px-4 lg:px-6 flex items-center py-3">
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 px-4 lg:px-6 flex items-center py-3"
+    >
       <a class="flex items-center justify-center" href="#">
         <!-- <span class="sr-only">Luxury Hotel</span> -->
         <img
@@ -175,10 +223,11 @@ const features = ref([
             class="pt-10 items-center justify-center space-y-3 sm:space-x-6 sm:space-y-0 sm:flex lg:justify-start"
           >
             <Button
+              @click="scrollToSection('create-reservation')"
               href="javascript:void(0)"
               class="w-full bg-teal-500 text-gray-50 dark:text-white text-center h-auto text-lg rounded-md shadow-md block sm:w-auto"
             >
-              Get started
+              Book Now
             </Button>
           </div>
         </div>
@@ -310,89 +359,92 @@ const features = ref([
         </div>
       </section>
 
-      <section id="about" class="w-full py-12 md:py-24 lg:py-32">
-        <div class="container px-4 md:px-6"></div>
-      </section>
-
-      <section
-        id="reservation"
-        class="w-full py-12 md:py-24 lg:py-32 bg-gray-100"
-      >
-        <div class="container px-4 md:px-6">
-          <h2
-            class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8"
+      <section class="py-14">
+        <div
+          class="max-w-screen-xl mx-auto px-4 text-gray-600 dark:text-gray-300 md:px-8"
+        >
+          <div class="max-w-xl mx-auto space-y-3 sm:text-center mb-12">
+            <h3 class="text-teal-600 dark:text-teal-400 font-semibold">
+              Reserve Your Stay
+            </h3>
+            <p
+              class="text-gray-800 dark:text-white text-3xl font-semibold sm:text-4xl"
+            >
+              Book Your Perfect Getaway
+            </p>
+            <p>
+              Experience luxury and comfort by reserving your stay with us. Our
+              easy booking process ensures a seamless experience.
+            </p>
+          </div>
+          <form
+            class="max-w-2xl mx-auto space-y-6"
+            @submit.prevent="
+              () => {
+                console.log(
+                  `start date : ${value.start}, end date : ${value.end}`
+                );
+              }
+            "
           >
-            Book Your Stay
-          </h2>
-          <form class="max-w-2xl mx-auto space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="space-y-2">
-                <Label for="name">Full Name</Label>
-                <Input id="name" placeholder="John Doe" required />
-              </div>
-              <div class="space-y-2">
-                <Label for="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  required
-                />
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="space-y-2">
-                <Label>Check-in Date</Label>
+            <div class="space-y-2">
+              <Label class="text-gray-800 dark:text-white">Stay Dates</Label>
+              <div>
                 <Popover>
-                  <PopoverTrigger asChild>
+                  <PopoverTrigger as-child>
                     <Button
                       variant="outline"
-                      class="w-full justify-start text-left font-normal"
+                      :class="
+                        cn(
+                          'w-[280px] justify-start text-left font-normal',
+                          !value && 'text-muted-foreground'
+                        )
+                      "
                     >
                       <CalendarIcon class="mr-2 h-4 w-4" />
-                      {{ checkIn ? formatDate(checkIn) : "Pick a date" }}
+                      <template v-if="value.start">
+                        <template v-if="value.end">
+                          {{
+                            df.format(value.start.toDate(getLocalTimeZone()))
+                          }}
+                          -
+                          {{ df.format(value.end.toDate(getLocalTimeZone())) }}
+                        </template>
+
+                        <template v-else>
+                          {{
+                            df.format(value.start.toDate(getLocalTimeZone()))
+                          }}
+                        </template>
+                      </template>
+                      <template v-else> Pick a date </template>
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent class="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      :selected="checkIn"
-                      @select="setCheckIn"
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div class="space-y-2">
-                <Label>Check-out Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      class="w-full justify-start text-left font-normal"
-                    >
-                      <CalendarIcon class="mr-2 h-4 w-4" />
-                      {{ checkOut ? formatDate(checkOut) : "Pick a date" }}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent class="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      :selected="checkOut"
-                      @select="setCheckOut"
-                      initialFocus
+                    <RangeCalendar
+                      v-model="value"
+                      initial-focus
+                      :number-of-months="2"
+                      @update:start-value="
+                        (startDate) => (value.start = startDate)
+                      "
                     />
                   </PopoverContent>
                 </Popover>
               </div>
             </div>
             <div class="space-y-2">
-              <Label for="guests">Number of Guests</Label>
+              <Label for="guests" class="text-gray-800 dark:text-white"
+                >Number of Guests</Label
+              >
               <Select>
-                <SelectTrigger id="guests">
+                <SelectTrigger
+                  id="guests"
+                  class="bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+                >
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
-                <SelectContent position="popper">
+                <SelectContent class="bg-white dark:bg-gray-800">
                   <SelectItem value="1">1 Guest</SelectItem>
                   <SelectItem value="2">2 Guests</SelectItem>
                   <SelectItem value="3">3 Guests</SelectItem>
@@ -400,21 +452,12 @@ const features = ref([
                 </SelectContent>
               </Select>
             </div>
-            <div class="space-y-2">
-              <Label for="room-type">Room Type</Label>
-              <Select>
-                <SelectTrigger id="room-type">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="standard">Standard Room</SelectItem>
-                  <SelectItem value="deluxe">Deluxe Room</SelectItem>
-                  <SelectItem value="suite">Suite</SelectItem>
-                  <SelectItem value="penthouse">Penthouse</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button type="submit" class="w-full">Book Now</Button>
+
+            <Button
+              type="submit"
+              class="w-full bg-teal-600 hover:bg-teal-700 text-white"
+              >Book Now</Button
+            >
           </form>
         </div>
       </section>
