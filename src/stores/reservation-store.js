@@ -44,10 +44,12 @@ export const useReservationStore = defineStore("reservation", () => {
     nameTitle: "",
     envelopeGreetingGreeting: "",
     salutation: "",
-    nameType: "",
+    nameType: "PRIMARY",
     language: "",
     nationality: "",
-    nameType: "PRIMARY",
+    amountBeforeTax: 0,
+    marketCode: "",
+    sourceCode: "WEB",
     markForHistory: false,
   });
 
@@ -191,20 +193,20 @@ export const useReservationStore = defineStore("reservation", () => {
                   guaranteeCode: params.guaranteeCode,
                 },
                 roomRates: {
-                  sourceCode: "WEB",
+                  sourceCode: params.sourceCode,
                   numberOfUnits: 1,
                   rates: {
                     rate: {
                       start: params.rateStartDate,
                       end: params.rateEndDate,
                       base: {
-                        amountBeforeTax: 50,
+                        amountBeforeTax: params.amountBeforeTax,
                         currencyCode: "USD",
                       },
                     },
                   },
                   start: params.rateStartDate,
-                  marketCode: "LEISURE",
+                  marketCode: params.marketCode,
                   end: params.rateEndDate,
                   roomTypeCharged: params.roomType,
                   ratePlanCode: params.ratePlanCode,

@@ -1,11 +1,12 @@
 <script setup>
-import { nextTick, onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useReservationStore } from "@/stores/reservation-store";
 import {
   getRatePlanDescription,
   getRoomDescription,
   scrollToSection,
 } from "@/utils/helper";
+import { Button } from "@/components/ui/button";
 
 const reservationStore = useReservationStore();
 
@@ -18,18 +19,32 @@ const selectRoom = (roomRate) => {
   reservationStore.params.ratePlanCode = roomRate.ratePlanCode;
   reservationStore.params.rateStartDate = roomRate.rates.rate[0].start;
   reservationStore.params.rateEndDate = roomRate.rates.rate[0].end;
+  reservationStore.params.amountBeforeTax = roomRate.total.amountBeforeTax;
+  reservationStore.params.marketCode = roomRate.marketCode;
+  reservationStore.params.sourceCode = roomRate.sourceCode;
 
-  console.log(reservationStore.params);
   reservationStore.setReservationStep(2);
 
   scrollToSection("create-reservation");
   reservationStore.isShowRoomList = false;
-  console.log(reservationStore.reservationStep);
 };
 </script>
 
 <template>
-  <p class="text-xl text-white font-semibold text-center">Select Room</p>
+  <div class="mx-auto mb-12 space-y-3 max-w-xl sm:text-center">
+    <h3 class="font-semibold text-teal-600 dark:text-teal-400">
+      Choose Your Ideal Room
+    </h3>
+    <p class="text-3xl font-semibold text-gray-800 dark:text-white sm:text-4xl">
+      Find Your Perfect Retreat
+    </p>
+    <p>
+      Discover the ultimate in luxury and comfort by selecting the room type
+      that suits you best. Our streamlined booking process makes it easy and
+      memorable.
+    </p>
+  </div>
+
   <section class="flex justify-center items-center">
     <div
       class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
@@ -38,25 +53,33 @@ const selectRoom = (roomRate) => {
       <div
         v-for="(roomRate, index) in roomRates"
         :key="index"
-        class="shadow-xl card bg-base-100 min-w-72 grow"
+        class="shadow-xl card bg-white dark:bg-gray-800 min-w-72 grow"
       >
         <figure>
-          <img src="https://via.placeholder.com/400x300" alt="Room Image" />
+          <img
+            src="https://via.placeholder.com/400x300"
+            alt="Room Image"
+            class="rounded-t-lg"
+          />
         </figure>
-        <div class="card-body">
-          <h2 class="card-title">
+        <div class="card-body p-4">
+          <h2 class="card-title text-gray-800 dark:text-white">
             {{ getRoomDescription(roomRate.roomType) }}
           </h2>
-          <!-- <p>Room Type: {{ roomRate.roomType }}</p> -->
-          <p>Rate Plan: {{ getRatePlanDescription(roomRate.ratePlanCode) }}</p>
-          <p>
+          <p class="text-gray-600 dark:text-gray-300">
+            Rate Plan: {{ getRatePlanDescription(roomRate.ratePlanCode) }}
+          </p>
+          <p class="text-gray-600 dark:text-gray-300">
             Price: {{ roomRate.total.amountBeforeTax }}
             {{ roomRate.total.currencyCode }}
           </p>
-          <div class="justify-end card-actions">
-            <button class="btn btn-primary" @click="selectRoom(roomRate)">
+          <div class="justify-end card-actions mt-4">
+            <Button
+              class="btn-primary bg-teal-600 tracking-wider hover:bg-teal-700 text-white"
+              @click="selectRoom(roomRate)"
+            >
               Select
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -67,5 +90,10 @@ const selectRoom = (roomRate) => {
 <style scoped>
 .card {
   margin: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.card-body {
+  background-color: var(--color-bg);
 }
 </style>
