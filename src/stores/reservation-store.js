@@ -194,7 +194,7 @@ export const useReservationStore = defineStore("reservation", () => {
                   guaranteeCode: params.guaranteeCode,
                 },
                 roomRates: {
-                  sourceCode: params.sourceCode,
+                  sourceCode: params.sourceCode || "WEB",
                   numberOfUnits: 1,
                   rates: {
                     rate: {
@@ -207,7 +207,7 @@ export const useReservationStore = defineStore("reservation", () => {
                     },
                   },
                   start: params.rateStartDate,
-                  marketCode: params.marketCode,
+                  marketCode: params.marketCode || "LEISURE",
                   end: params.rateEndDate,
                   roomTypeCharged: params.roomType,
                   ratePlanCode: params.ratePlanCode,
@@ -231,8 +231,11 @@ export const useReservationStore = defineStore("reservation", () => {
         link.href.includes("/reservations/")
       );
       reservationId.value = reservationLink
-        ? reservationLink.href.match(/(\d+)/)[1]
+        ? reservationLink.href.match(/reservations\/(\d+)/)[1]
         : null;
+
+      await getReservation();
+      return reservationDetailData.value;
     } catch (error) {
       console.error(error);
     }

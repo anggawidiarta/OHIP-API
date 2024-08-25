@@ -31,7 +31,59 @@ import Swal from "sweetalert2";
 import { paymentMethods, nationalities, languages } from "@/config/constants";
 import HomeFooter from "@/components/reservation/home/HomeFooter.vue";
 import RoomSection from "@/components/reservation/room/RoomSection.vue";
-// sweetalert2
+
+const showReservationDetailModal = ref(false);
+const reservationDetail = ref(null);
+
+const handlePostReservation = async () => {
+  // Show loading alert
+  Swal.fire({
+    title: "Processing...",
+    text: "Creating your reservation",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    const reservationDetails =
+      await reservationStore.postReservationWithExistingProfile();
+
+    // Close loading alert
+    Swal.close();
+
+    Swal.fire({
+      title: "Reservation Created",
+      text: "Your reservation has been successfully created.",
+      icon: "success",
+      showCancelButton: true,
+      confirmButtonText: "View Details",
+      cancelButtonText: "Okay",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        reservationDetail.value = reservationDetails;
+        console.log(reservationDetail.value);
+        showReservationDetailModal.value = true;
+      }
+    });
+  } catch (error) {
+    // Close loading alert
+    Swal.close();
+
+    Swal.fire({
+      title: "Error",
+      text: "An error occurred while creating the reservation. Please try again.",
+      icon: "error",
+      confirmButtonText: "Okay",
+    });
+  } finally {
+    reservationStore.setReservationStep(1);
+  }
+};
+
 const handleSubmit = async () => {
   // Show loading alert
   Swal.fire({
@@ -192,7 +244,7 @@ const reservationStepDescription = computed(() => {
             >
               {{ reservationStepTitle }}
             </p>
-            <p class="text-gray-600 dark:text-gray-300 capitalize">
+            <p class="text-gray-600 capitalize dark:text-gray-300">
               {{ reservationStepDescription }}
             </p>
           </div>
@@ -362,11 +414,7 @@ const reservationStepDescription = computed(() => {
             data-aos="fade-up"
             data-aos-duration="1000"
           >
-            <form
-              @submit.prevent="
-                reservationStore.postReservationWithExistingProfile
-              "
-            >
+            <form @submit.prevent="handlePostReservation">
               <ul class="mt-6 space-y-3">
                 <li v-for="(item, idx) in paymentMethods" :key="idx">
                   <label :for="item.name" class="block relative">
@@ -393,7 +441,7 @@ const reservationStepDescription = computed(() => {
                         <h3 class="pr-3 font-medium leading-none text-gray-800">
                           {{ item.name }}
                         </h3>
-                        <p class="mt-1 text-sm capitalize text-gray-600">
+                        <p class="mt-1 text-sm text-gray-600 capitalize">
                           {{ item.description }}
                         </p>
                       </div>
@@ -417,11 +465,14 @@ const reservationStepDescription = computed(() => {
               <div class="flex items-center">
                 <Button
                   type="submit"
-                  class="w-full mt-3 text-white tracking-wide bg-teal-600 hover:bg-teal-700"
+                  class="mt-3 w-full tracking-wide text-white bg-teal-600 hover:bg-teal-700"
                   >Submit</Button
                 >
               </div>
             </form>
+
+            <!-- Modal for reservation details -->
+            <!-- Modal for reservation details -->
           </div>
         </div>
       </section>
@@ -441,6 +492,34 @@ const reservationStepDescription = computed(() => {
 
       <HomeFooter />
     </main>
+  </div>
+
+  <div
+    v-if="showReservationDetailModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    @click.self="showReservationDetailModal = false"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+      <p class="text-gray-600">
+        Your Reservation ID :
+        {{
+          reservationDetail.reservations.reservation[0].reservationIdList[0]?.id
+        }}
+      </p>
+      <p class="text-gray-600">
+        Your Confirmation ID :
+        {{
+          reservationDetail.reservations.reservation[0].reservationIdList[1]?.id
+        }}
+      </p>
+
+      <button
+        @click="showReservationDetailModal = false"
+        class="mt-4 px-4 py-2 bg-teal-600 text-white rounded-lg"
+      >
+        Close
+      </button>
+    </div>
   </div>
 </template>
 
