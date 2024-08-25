@@ -19,8 +19,9 @@ const toggleColorMode = () => {
 <template>
   <header
     class="fixed top-0 left-0 right-0 z-50 flex items-center px-4 py-3 bg-gray-200 dark:bg-gray-900 lg:px-6"
+    id="header"
   >
-    <a class="flex items-center justify-center" href="#">
+    <a class="flex items-center justify-center" href="/">
       <!-- <span class="sr-only">Luxury Hotel</span> -->
       <img
         src="/img/reserved.png"
@@ -43,7 +44,7 @@ const toggleColorMode = () => {
           <a href="#about">About</a>
         </Button>
         <Button variant="ghost" class="hidden md:flex text-[1rem]">
-          <a href="#reservation">Book Now</a>
+          <a href="#create-reservation">Book Now</a>
         </Button>
         <Button variant="ghost" class="hidden md:flex text-[1rem]">
           <a href="#gallery">Gallery</a>

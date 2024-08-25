@@ -503,57 +503,67 @@ const reservationStepDescription = computed(() => {
     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
     @click.self="showReservationDetailModal = false"
   >
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-      <p class="text-gray-600">
-        Reservation ID :
-        {{
-          reservationDetail.reservations.reservation[0].reservationIdList[0]?.id
-        }}
-      </p>
-      <p class="text-gray-600">
-        Confirmation ID :
-        {{
-          reservationDetail.reservations.reservation[0].reservationIdList[1]?.id
-        }}
-      </p>
-      <p class="text-gray-600">
-        Name :
-        {{
-          `${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].nameTitle} ${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].givenName} ${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].surname}`
-        }}
-      </p>
-      <p class="text-gray-600">
-        Room :
-        {{
-          getRoomDescription(
-            reservationDetail.reservations.reservation[0].roomStay
-              .currentRoomInfo.roomType
-          )
-        }}
-      </p>
-      <p class="text-gray-600">
-        RatePlan :
-        {{
-          getRatePlanDescription(
-            reservationDetail.reservations.reservation[0].roomStay.roomRates[0]
-              .ratePlanCode
-          )
-        }}
-      </p>
-      <p class="text-gray-600">
-        Arrival Date :
-        {{ reservationDetail.reservations.reservation[0].roomStay.arrivalDate }}
-      </p>
-      <p class="text-gray-600">
-        Departure Date :
-        {{
-          reservationDetail.reservations.reservation[0].roomStay.departureDate
-        }}
-      </p>
-
+    <div
+      class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full"
+    >
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+        Reservation Details
+      </h2>
+      <div class="space-y-2">
+        <p class="text-gray-600 dark:text-gray-300">
+          <span class="font-semibold">Reservation ID:</span>
+          {{
+            reservationDetail.reservations.reservation[0].reservationIdList[0]
+              ?.id
+          }}
+        </p>
+        <p class="text-gray-600 dark:text-gray-300">
+          <span class="font-semibold">Confirmation ID:</span>
+          {{
+            reservationDetail.reservations.reservation[0].reservationIdList[1]
+              ?.id
+          }}
+        </p>
+        <p class="text-gray-600 dark:text-gray-300">
+          <span class="font-semibold">Name:</span>
+          {{
+            `${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].nameTitle} ${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].givenName} ${reservationDetail.reservations.reservation[0].reservationGuests[0].profileInfo.profile.customer.personName[0].surname}`
+          }}
+        </p>
+        <p class="text-gray-600 dark:text-gray-300">
+          <span class="font-semibold">Room:</span>
+          {{
+            getRoomDescription(
+              reservationDetail.reservations.reservation[0].roomStay
+                .currentRoomInfo.roomType
+            )
+          }}
+        </p>
+        <p class="text-gray-600 dark:text-gray-300">
+          <span class="font-semibold">Rate Plan:</span>
+          {{
+            getRatePlanDescription(
+              reservationDetail.reservations.reservation[0].roomStay
+                .roomRates[0].ratePlanCode
+            )
+          }}
+        </p>
+        <p class="text-gray-600 dark:text-gray-300">
+          <span class="font-semibold">Arrival Date:</span>
+          {{
+            reservationDetail.reservations.reservation[0].roomStay.arrivalDate
+          }}
+        </p>
+        <p class="text-gray-600 dark:text-gray-300">
+          <span class="font-semibold">Departure Date:</span>
+          {{
+            reservationDetail.reservations.reservation[0].roomStay.departureDate
+          }}
+        </p>
+      </div>
       <button
         @click="showReservationDetailModal = false"
-        class="mt-4 px-4 py-2 bg-teal-600 text-white rounded-lg"
+        class="mt-4 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg"
       >
         Close
       </button>

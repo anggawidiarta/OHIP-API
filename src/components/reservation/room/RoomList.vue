@@ -57,9 +57,9 @@ const selectRoom = (roomRate) => {
       >
         <figure>
           <img
-            src="https://via.placeholder.com/400x300"
+            :src="`/img/room/room-${index + 1}.jpg`"
             alt="Room Image"
-            class="rounded-t-lg"
+            class="rounded-t-lg max-h-[250px] object-cover w-full h-[250px]"
           />
         </figure>
         <div class="card-body p-4">
