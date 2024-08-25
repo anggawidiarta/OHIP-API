@@ -207,7 +207,7 @@ onUnmounted(() => {
   <!-- #region create reservation -->
   <!-- TODO: this form is hidden, you can use to see the back system of reservation -->
   <FormComponent
-    formClass="grid grid-cols-1 gap-4 w-full hidden md:max-w-5xl xl:max-w-7xl w-full p-12 lg:p-0 mx-auto border-green-500 lg:grid-cols-2 xl:grid-cols-3"
+    formClass="grid grid-cols-1 gap-4 w-full  md:max-w-5xl xl:max-w-7xl w-full p-12 lg:p-0 mx-auto border-green-500 lg:grid-cols-2 xl:grid-cols-3"
     buttonClass="p-3 text-lg font-medium text-white col-span-full !w-full sm:!w-[225px] bg-blue-500 rounded shadow w-fit"
     buttonText="Create Reservation"
     :errorMessage="store.errorMessage"

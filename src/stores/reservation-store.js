@@ -11,8 +11,8 @@ const tokenStore = useTokenStore();
 export const useReservationStore = defineStore("reservation", () => {
   const reservationId = ref();
   const profileId = ref();
-  const reservationStep = ref(1);
 
+  const reservationStep = ref(1);
   const reservationData = ref({});
   const ratePlanDetailData = ref({});
   const hotelAvailabilityData = ref({});
@@ -205,6 +205,10 @@ export const useReservationStore = defineStore("reservation", () => {
     }
   };
 
+  const setReservationStep = (step) => {
+    reservationStep.value = step;
+  };
+
   return {
     params,
     reservationId,
@@ -217,5 +221,6 @@ export const useReservationStore = defineStore("reservation", () => {
     getRatePlanDetail,
     postReservationWithExistingProfile,
     postCancelReservation,
+    setReservationStep,
   };
 });

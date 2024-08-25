@@ -269,6 +269,7 @@ const value = ref({
               >Book Now</Button
             >
           </form>
+
           <form
             class="mx-auto space-y-6 max-w-2xl"
             @submit.prevent="handleSubmit"
@@ -287,7 +288,7 @@ const value = ref({
                 />
                 <FormInput
                   v-model="reservationStore.params.middleName"
-                  label="Middle Name"
+                  label="Middle Name (Optional)"
                   placeholder="Enter Middle Name"
                   id="middleName"
                 />
@@ -305,7 +306,6 @@ const value = ref({
                   id="nameTitle"
                 />
               </div>
-
               <div class="space-y-2">
                 <FormSelect
                   v-model="reservationStore.params.language"
@@ -322,28 +322,42 @@ const value = ref({
                   required
                   multiple
                 />
+                <FormInput
+                  v-model="reservationStore.params.guestEnveloperGreeting"
+                  label="Envelope Greeting (Optional)"
+                  placeholder="Envelope Greeting"
+                  id="guestEnveloperGreeting"
+                />
+                <FormInput
+                  v-model="reservationStore.params.guestSalutation"
+                  label="Salutation (Optional)"
+                  placeholder="Salutation"
+                  id="guestSalutation"
+                />
               </div>
             </div>
-
             <Button
               type="submit"
               class="w-full text-white bg-teal-600 hover:bg-teal-700"
-              >Book Now</Button
+              >Submit</Button
             >
           </form>
+
+          <div v-if="reservationStore.reservationStep === 3"></div>
         </div>
       </section>
 
-      <section class="py-14">
+      <section
+        class="py-14"
+        v-if="
+          reservationStore.hotelAvailabilityData[0]?.roomStays[0]?.roomRates
+            .length > 0 && reservationStore.isShowRoomList
+        "
+      >
         <div
           class="px-4 mx-auto max-w-screen-xl text-gray-600 dark:text-gray-300 md:px-8"
         >
-          <RoomList
-            v-if="
-              reservationStore.hotelAvailabilityData[0]?.roomStays[0]?.roomRates
-                .length > 0 && reservationStore.isShowRoomList
-            "
-          />
+          <RoomList />
         </div>
       </section>
 
