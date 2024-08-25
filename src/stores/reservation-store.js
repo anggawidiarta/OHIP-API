@@ -26,6 +26,10 @@ export const useReservationStore = defineStore("reservation", () => {
     roomStayEndDate: new Date(new Date().setDate(new Date().getDate() + 1))
       .toISOString()
       .split("T")[0],
+    rateStartDate: new Date().toISOString().split("T")[0],
+    rateEndDate: new Date(new Date().setDate(new Date().getDate() + 1))
+      .toISOString()
+      .split("T")[0],
     roomStayQuantity: 2,
     limit: 50,
     adults: 2,
@@ -33,10 +37,18 @@ export const useReservationStore = defineStore("reservation", () => {
     children: 1,
     ratePlanCode: "",
     roomType: "",
-    rateStartDate: new Date().toISOString().split("T")[0],
-    rateEndDate: new Date(new Date().setDate(new Date().getDate() + 1))
-      .toISOString()
-      .split("T")[0],
+    givenName: "",
+    middleName: "",
+    surName: "",
+    nameSuffix: "",
+    nameTitle: "",
+    envelopeGreetingGreeting: "",
+    salutation: "",
+    nameType: "",
+    language: "",
+    nationality: "",
+    nameType: "PRIMARY",
+    markForHistory: false,
   });
 
   const getHotelAvailability = async () => {
@@ -87,6 +99,58 @@ export const useReservationStore = defineStore("reservation", () => {
       ratePlanDetailData.value = response.data;
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const postCreateGuestProfile = async () => {
+    try {
+      const guestProfileData = {
+        guestDetails: {
+          customer: {
+            personName: [
+              {
+                givenName: params.givenName,
+                middleName: params.middleName,
+                surname: params.surName,
+                nameSuffix: params.nameSuffix,
+                nameTitle: params.nameTitle,
+                envelopeGreeting: params.envelopeGreetingGreeting,
+                salutation: params.salutation,
+                nameType: params.nameType,
+                language: params.language,
+              },
+            ],
+            language: params.language,
+            nationality: params.nationality,
+          },
+          profileType: "GUEST",
+          statusCode: "ACTIVE",
+          registeredProperty: ENV_VARS.HOTEL_ID,
+          markForHistory: params.markForHistory,
+        },
+      };
+      const response = await axios({
+        url: `http://localhost:5173/api/crm/v1/guests`,
+        method: "POST",
+        data: guestProfileData,
+        headers: {
+          "Accept-Language": "*",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "x-hotelid": ENV_VARS.HOTEL_ID,
+          "x-app-key": ENV_VARS.VITE_APP_KEY,
+          Authorization: `Bearer ${tokenStore.token.access_token}`,
+        },
+      });
+      const selfLink = await response.data.links.find(
+        (link) => link.rel === "self"
+      );
+      const profileIdTemp = await selfLink.href.match(/\/profiles\/(\d+)/)[1];
+      profileId.value = profileIdTemp;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.log("successfully created guest profile");
     }
   };
 
@@ -221,6 +285,7 @@ export const useReservationStore = defineStore("reservation", () => {
     getRatePlanDetail,
     postReservationWithExistingProfile,
     postCancelReservation,
+    postCreateGuestProfile,
     setReservationStep,
   };
 });

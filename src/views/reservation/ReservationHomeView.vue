@@ -117,6 +117,12 @@ const handleSubmit = async () => {
   }
 };
 
+// function to createProfile function
+const handleCreateProfile = async () => {
+  reservationStore.postCreateGuestProfile();
+  reservationStore.setReservationStep(3);
+};
+
 // Functionality
 const reservationStore = useReservationStore();
 
@@ -272,7 +278,7 @@ const value = ref({
 
           <form
             class="mx-auto space-y-6 max-w-2xl"
-            @submit.prevent="handleSubmit"
+            @submit.prevent="handleCreateProfile"
             data-aos="fade-up"
             data-aos-duration="1000"
             v-if="reservationStore.reservationStep === 2"
@@ -343,7 +349,41 @@ const value = ref({
             >
           </form>
 
-          <div v-if="reservationStore.reservationStep === 3"></div>
+          <div
+            v-if="reservationStore.reservationStep === 3"
+            class="mx-auto space-y-6 max-w-2xl"
+            data-aos="fade-up"
+            data-aos-duration="1000"
+          >
+            <form
+              @submit.prevent="
+                reservationStore.postReservationWithExistingProfile
+              "
+            >
+              <div class="space-y-2">
+                <label for="paymentMethod" class="text-gray-800 dark:text-white"
+                  >Payment Method</label
+                >
+                <select
+                  id="paymentMethod"
+                  v-model="reservationStore.params.paymentMethod"
+                  class="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:text-white"
+                  required
+                >
+                  <option value="" disabled>Select a payment method</option>
+                  <option value="credit_card">Credit Card</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                class="w-full px-4 py-2 mt-4 text-white bg-teal-600 rounded-md hover:bg-teal-700"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
         </div>
       </section>
 
