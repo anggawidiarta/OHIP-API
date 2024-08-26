@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import { Sparkles } from "lucide-vue-next";
+</script>
 <template>
   <section class="py-14">
     <div

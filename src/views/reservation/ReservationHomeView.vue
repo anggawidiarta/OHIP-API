@@ -29,7 +29,7 @@ import {
 import { RangeCalendar } from "@/components/ui/range-calendar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { CalendarIcon } from "lucide-vue-next";
+import { CalendarIcon, BookUser } from "lucide-vue-next";
 
 import Swal from "sweetalert2";
 import { paymentMethods, nationalities, languages } from "@/config/constants";
@@ -506,7 +506,12 @@ const reservationStepDescription = computed(() => {
     <div
       class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full"
     >
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+      <span class="flex justify-center"
+        ><BookUser color="#fbeeee" :stroke-width="2" size="32"
+      /></span>
+      <h2
+        class="text-xl font-semibold text-center text-teal-600 dark:text-teal-400 mb-4"
+      >
         Reservation Details
       </h2>
       <div class="space-y-2">
