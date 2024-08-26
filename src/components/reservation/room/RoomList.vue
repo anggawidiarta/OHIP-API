@@ -57,7 +57,7 @@ const selectRoom = (roomRate) => {
       >
         <figure>
           <img
-            :src="`/img/room/room-${index + 1}.jpg`"
+            :src="`/img/room/room-${index + 1}.webp`"
             alt="Room Image"
             class="rounded-t-lg max-h-[250px] object-cover w-full h-[250px]"
           />
