@@ -36,18 +36,15 @@ const toggleColorMode = () => {
         <Moon v-else class="w-6 h-6" />
         <span class="sr-only">Toggle color mode</span>
       </Button>
-      <nav class="flex gap-3 sm:gap-6">
+      <nav class="flex gap-3">
         <Button variant="ghost" class="hidden md:flex text-[1rem]">
-          <a href="#services">Services</a>
+          <a href="/ohip-api-test">Api Testing</a>
         </Button>
         <Button variant="ghost" class="hidden md:flex text-[1rem]">
-          <a href="#about">About</a>
+          <a href="/reservation-before">Reservation Before</a>
         </Button>
         <Button variant="ghost" class="hidden md:flex text-[1rem]">
           <a href="#create-reservation">Book Now</a>
-        </Button>
-        <Button variant="ghost" class="hidden md:flex text-[1rem]">
-          <a href="#gallery">Gallery</a>
         </Button>
       </nav>
     </div>
