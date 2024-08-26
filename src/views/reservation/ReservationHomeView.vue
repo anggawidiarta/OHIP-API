@@ -13,7 +13,10 @@ import {
   getLocalTimeZone,
 } from "@internationalized/date";
 import { cn } from "@/lib/utils";
+import { paymentMethods, nationalities, languages } from "@/config/constants";
 
+import HomeFooter from "@/components/reservation/home/HomeFooter.vue";
+import RoomSection from "@/components/reservation/room/RoomSection.vue";
 import HomeHeader from "@/components/reservation/home/HomeHeader.vue";
 import AboutUs from "@/components/reservation/home/AboutUs.vue";
 import HeroSection from "@/components/reservation/home/HeroSection.vue";
@@ -30,11 +33,7 @@ import { RangeCalendar } from "@/components/ui/range-calendar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { CalendarIcon, BookUser } from "lucide-vue-next";
-
 import Swal from "sweetalert2";
-import { paymentMethods, nationalities, languages } from "@/config/constants";
-import HomeFooter from "@/components/reservation/home/HomeFooter.vue";
-import RoomSection from "@/components/reservation/room/RoomSection.vue";
 
 const showReservationDetailModal = ref(false);
 const reservationDetail = ref(null);

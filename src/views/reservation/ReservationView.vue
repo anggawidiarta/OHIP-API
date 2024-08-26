@@ -1,15 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted } from "vue";
 import { useApisStore } from "@/stores/api";
-import { RouterLink } from "vue-router";
-
-import { useColorMode } from "@vueuse/core";
-
-import Button from "@/components/ui/button/Button.vue";
-import DropdownMenu from "@/components/ui/dropdown-menu/DropdownMenu.vue";
-import DropdownMenuItem from "@/components/ui/dropdown-menu/DropdownMenuItem.vue";
-import DropdownMenuTrigger from "@/components/ui/dropdown-menu/DropdownMenuTrigger.vue";
-import DropdownMenuContent from "@/components/ui/dropdown-menu/DropdownMenuContent.vue";
 
 import FeatureSection from "@/components/reservation/FeatureSection.vue";
 import ReservationFooter from "@/components/reservation/ReservationFooter.vue";
@@ -20,7 +11,6 @@ import FormCreateReservation from "@/components/reservation/form/FormCreateReser
 import FormComponent from "@/components/FormComponent.vue";
 import FormSelect from "@/components/reservation/form/FormSelect.vue";
 import FormInput from "@/components/reservation/form/FormInput.vue";
-import JsonViewerComponent from "@/components/JsonViewerComponent.vue";
 import RoomList from "@/components/reservation/room/RoomList.vue";
 
 import { getToken } from "@/services/auth/auth-service";
@@ -30,8 +20,6 @@ import HomeHeader from "@/components/reservation/home/HomeHeader.vue";
 const reservationStore = useReservationStore();
 const store = useApisStore();
 let intervalId;
-
-const mode = useColorMode();
 
 onMounted(() => {
   document.title = "Reservation Authorization";
