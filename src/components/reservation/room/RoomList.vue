@@ -67,10 +67,10 @@ const selectRoom = (roomRate) => {
             {{ getRoomDescription(roomRate.roomType) }}
           </h2>
           <p class="text-gray-600 dark:text-gray-300">
-            Rate Plan: {{ getRatePlanDescription(roomRate.ratePlanCode) }}
+            {{ getRatePlanDescription(roomRate.ratePlanCode) }}
           </p>
           <p class="text-gray-600 dark:text-gray-300">
-            Price: {{ roomRate.total.amountBeforeTax }}
+            {{ roomRate.total.amountBeforeTax }}
             {{ roomRate.total.currencyCode }}
           </p>
           <div class="justify-end card-actions mt-4">
