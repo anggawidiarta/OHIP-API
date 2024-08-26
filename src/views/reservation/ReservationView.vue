@@ -25,6 +25,7 @@ import RoomList from "@/components/reservation/room/RoomList.vue";
 
 import { getToken } from "@/services/auth/auth-service";
 import { useReservationStore } from "@/stores/reservation-store";
+import HomeHeader from "@/components/reservation/home/HomeHeader.vue";
 
 const reservationStore = useReservationStore();
 const store = useApisStore();
@@ -47,38 +48,7 @@ onUnmounted(() => {
 
 <template>
   <!-- Header -->
-  <div class="navbar dark:bg-red-600">
-    <div class="flex-1">
-      <a class="text-2xl btn btn-ghost">Reservation Authorization</a>
-    </div>
-    <div class="flex-none">
-      <ul class="px-1 menu menu-horizontal">
-        <li>
-          <RouterLink class="text-xl" to="/">Home</RouterLink>
-        </li>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              <Icon
-                icon="radix-icons:moon"
-                class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-              />
-              <Icon
-                icon="radix-icons:sun"
-                class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-              />
-              <span class="sr-only">Toggle theme</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem @click="mode = 'light'"> Light </DropdownMenuItem>
-            <DropdownMenuItem @click="mode = 'dark'"> Dark </DropdownMenuItem>
-            <DropdownMenuItem @click="mode = 'auto'"> System </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </ul>
-    </div>
-  </div>
+  <HomeHeader />
 
   <!-- #region Hero Section -->
   <ReservationHero />

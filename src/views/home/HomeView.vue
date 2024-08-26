@@ -8,6 +8,7 @@ import FormComponent from "@/components/FormComponent.vue";
 
 import { useApisStore } from "@/stores/api";
 import { RouterLink } from "vue-router";
+import HomeHeader from "@/components/reservation/home/HomeHeader.vue";
 
 const store = useApisStore();
 
@@ -20,7 +21,7 @@ onMounted(() => {
   <div class="flex flex-wrap">
     <div class="mb-10 w-full">
       <div class="container mx-auto h-full sm:p-10">
-        <HeaderComponent />
+        <HomeHeader />
         <header class="container px-4 mt-10 lg:flex lg:mt-16">
           <div class="w-full">
             <h1 class="text-4xl font-bold capitalize lg:text-6xl">
